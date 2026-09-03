@@ -1,3 +1,12 @@
 .venv/
 __pycache__/
 *.pyc
+
+# Synthesized audio -- regenerable, and large. The scores/reports derived from
+# it (json, csv, md) ARE tracked; they're the deliverable.
+evaluation/results/**/audio/
+
+# DNSMOS model files -- downloaded from microsoft/DNS-Challenge, see
+# evaluation/README.md
+evaluation/dnsmos_models/
+*.onnx

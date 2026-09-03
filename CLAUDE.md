@@ -37,6 +37,28 @@ It writes `evaluation/qc_report.md` and checks: schema/id validity, category-dis
 
 **Not automatable, needs manual review instead:** pure_khmer word-count bounds per category (e.g. "short = 5–8 words"). Khmer script has no inter-word spacing, so a naive `str.split()` word count is meaningless — the script deliberately skips this rather than faking it, and prints a note saying so.
 
+## Evaluation harness
+
+`evaluation/` also holds the synthesize → score → compare pipeline. Full runbook in `evaluation/README.md`. Three stages, each a CLI:
+
+```
+python evaluation/synthesize.py --model {mms,voxcpm2,fish-s2}   # audio + RTF
+python evaluation/score.py      --model {mms,voxcpm2,fish-s2}   # CER, UTMOS, DNSMOS
+python evaluation/report.py                                     # 3-model comparison
+```
+
+Four metrics, per `docs/03-evaluation-benchmarking.md`: **CER** (primary; Whisper-large-v3 via faster-whisper, `language="km"`), **UTMOS** and **DNSMOS** (naturalness/perceptual quality), **RTF** (speed). RTF is measured in `synthesize.py` because it cannot be recovered from a `.wav` afterwards; `score.py` carries it through.
+
+Layout — `common.py` (paths, wav io, resampling), `backends/` (one module per model, lazily imported so a missing `voxcpm` doesn't block running MMS), `metrics/` (`khmer_text.py` is stdlib-only and defines CER exactly: NFC → drop whitespace/ZWSP/punctuation → Khmer digits to ASCII → lowercase Latin → char edit distance ÷ ref length). Outputs land in `evaluation/results/<model>/` (audio gitignored; json/csv/md tracked) and `evaluation/results_report.md`.
+
+**None of it writes to `eval-set/eval.json`** — synthesis is driven by that file so all 3 models see the identical fixed set.
+
+Things to keep in mind when touching it:
+- `backends/mms.py` reseeds torch per utterance from `(seed, sentence)` using a CRC32, not `hash()` — VITS's duration predictor is stochastic, and `hash()` is salted per process, so removing this breaks run-to-run comparability.
+- `backends/fish_s2.py` is the one unverified module: fish-speech pins no stable Python entrypoint and the repo's docs give no example, so it probes known names and reports which function to wire in.
+- CER has a nonzero floor — Whisper's own Khmer accuracy is limited (docs/03 §3.4). Raw transcripts are always persisted for exactly this reason.
+- DNSMOS needs two `.onnx` files from `microsoft/DNS-Challenge` placed in `evaluation/dnsmos_models/`; they are never auto-downloaded.
+
 ## 2026-09-03 QC pass — findings and disposition
 
 Ran the QC script against the DeepSeek-generated `eval.json`. Result: **0 structural FAILs, 6 WARNs, no changes made to `eval.json`.** Distribution counts, IDs, and schema all matched the spec exactly on first generation.

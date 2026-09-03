@@ -1,8 +1,34 @@
-# evaluation/filter.py uses only the Python standard library (json, re,
-# difflib, collections, pathlib) -- no third-party packages required.
+# Dependencies for the evaluation harness. NOTHING HERE IS INSTALLED YET --
+# install in the order below, into .venv (Python 3.11).
 #
-# This file is kept as the place to pin dependencies once the pipeline grows
-# beyond QC -- e.g. running the 3 TTS models and scoring CER (see
-# docs/03-evaluation-benchmarking.md), which will need packages like
-# openai-whisper/faster-whisper, torch, jiwer, etc. Add them here as that
-# work happens.
+# describe.py and filter.py (the eval-set QC scripts) need none of this; they
+# are stdlib-only and still run in a bare interpreter.
+
+# --- 1. torch first, from the CUDA index -------------------------------
+# Do NOT let a transitive dependency pull the CPU-only wheel first. VoxCPM2
+# needs torch >= 2.5.0 and CUDA >= 12.0 (docs/06).
+#   pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+torch>=2.5.0
+torchaudio>=2.5.0
+
+# --- 2. harness core (common.py, synthesize.py, score.py, report.py) ---
+numpy>=1.24
+soundfile>=0.12.1
+
+# --- 3. metrics --------------------------------------------------------
+faster-whisper>=1.0.3   # metrics/cer.py -- Whisper-large-v3, CTranslate2 backend
+librosa>=0.10.1         # metrics/dnsmos.py -- log-mel features for the P.808 model
+onnxruntime>=1.17       # metrics/dnsmos.py  (swap for onnxruntime-gpu to use CUDA;
+                        # do not install both -- they conflict)
+# metrics/utmos.py pulls the utmos22_strong checkpoint from torch.hub
+# (tarepan/SpeechMOS) on first use -- no pip package, but needs network once.
+#
+# DNSMOS also needs two .onnx files that pip cannot provide; see
+# evaluation/README.md for where to put them.
+
+# --- 4. model backends (install only the ones you intend to run) -------
+transformers>=4.33      # backends/mms.py -- VitsModel, facebook/mms-tts-khm
+voxcpm                  # backends/voxcpm2.py -- openbmb/VoxCPM2 (needs CUDA)
+# backends/fish_s2.py is not a pip package: clone
+# https://github.com/fishaudio/fish-speech, install its own requirements, and
+# point FISH_SPEECH_DIR at the checkout.
