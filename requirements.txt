@@ -1,0 +1,8 @@
+# evaluation/filter.py uses only the Python standard library (json, re,
+# difflib, collections, pathlib) -- no third-party packages required.
+#
+# This file is kept as the place to pin dependencies once the pipeline grows
+# beyond QC -- e.g. running the 3 TTS models and scoring CER (see
+# docs/03-evaluation-benchmarking.md), which will need packages like
+# openai-whisper/faster-whisper, torch, jiwer, etc. Add them here as that
+# work happens.

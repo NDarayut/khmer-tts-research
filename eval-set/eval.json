@@ -1,0 +1,602 @@
+[
+  {
+    "id": "A01",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ខ្ញុំចង់ញ៉ាំបបរសាច់ជ្រូកនៅព្រឹកស្អែក។"
+  },
+  {
+    "id": "A02",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "គាត់ដើរទៅផ្សាររាល់ថ្ងៃល្ងាច។"
+  },
+  {
+    "id": "A03",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ។"
+  },
+  {
+    "id": "A04",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់។"
+  },
+  {
+    "id": "A05",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។"
+  },
+  {
+    "id": "A06",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ពួកយើងត្រូវរៀបចំឯកសារឲ្យរួចរាល់មុនពេលប្រជុំ។"
+  },
+  {
+    "id": "A07",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "អាកាសធាតុថ្ងៃនេះក្តៅខ្លាំងជាងម្សិលមិញ។"
+  },
+  {
+    "id": "A08",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "គាត់មិនទាន់បានញ៉ាំបាយពេលព្រឹកទេ។"
+  },
+  {
+    "id": "A09",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ខ្ញុំបានទិញសៀវភៅថ្មីមួយក្បាលពីហាងក្បែរផ្ទះ។"
+  },
+  {
+    "id": "A10",
+    "group": "pure_khmer",
+    "category": "short",
+    "sentence": "ឆ្កែរបស់អ្នកជិតខាងព្រុសខ្លាំងពេកនៅពេលយប់។"
+  },
+  {
+    "id": "A11",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "បន្ទាប់ពីបញ្ចប់ការងារនៅការិយាល័យ គាត់តែងតែទៅហាត់ប្រាណនៅក្លឹបកីឡាដែលមានគ្រូបង្វឹកជំនាញ។"
+  },
+  {
+    "id": "A12",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ការដាំបន្លែដោយមិនប្រើជីគីមីកំពុងទទួលបានការគាំទ្រច្រើនពីប្រជាពលរដ្ឋនៅតំបន់ជនបទ។"
+  },
+  {
+    "id": "A13",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ខ្ញុំបានចំណាយពេលពេញមួយថ្ងៃដើម្បីរៀបចំបន្ទប់ធ្វើការថ្មី ព្រោះតុចាស់ខូចហើយក៏តូចពេក។"
+  },
+  {
+    "id": "A14",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "អ្នកភូមិបានរួមគ្នាសាងសង់ស្ពានឈើមួយឆ្លងកាត់អូរ ដើម្បីងាយស្រួលដឹកកូនទៅសាលារៀន។"
+  },
+  {
+    "id": "A15",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ម្សិលមិញខ្ញុំបានសាកល្បងធ្វើនំអន្សមជ្រូកដោយខ្លួនឯង តែលទ្ធផលមិនសូវល្អដូចអ្វីដែលម្ដាយខ្ញុំធ្វើនោះទេ។"
+  },
+  {
+    "id": "A16",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "គណៈកម្មការបានសម្រេចពន្យារពេលកិច្ចប្រជុំប្រចាំខែនេះ ដោយសារតែសមាជិកជាច្រើនមិនអាចចូលរួមបានទាន់ពេល។"
+  },
+  {
+    "id": "A17",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ការសិក្សាពីចម្ងាយបានក្លាយជាជម្រើសដ៏សំខាន់សម្រាប់សិស្សានុសិស្សនៅតាមទីជនបទដែលខ្វះគ្រូបង្រៀន។"
+  },
+  {
+    "id": "A18",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ខ្ញុំមិននឹកស្មានថាផ្លូវនេះនឹងមានការកកស្ទះខ្លាំងបែបនេះទេ ព្រោះពេលនេះមិនមែនជាម៉ោងប្រញាប់ប្រញាល់ឡើយ។"
+  },
+  {
+    "id": "A19",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណ្ហៗឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។"
+  },
+  {
+    "id": "A20",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "កសិករនៅក្នុងខេត្តបាត់ដំបងកំពុងប្រើប្រាស់បច្ចេកទេសថ្មីដើម្បីបង្កើនទិន្នផលស្រូវឲ្យកាន់តែខ្ពស់ជាងឆ្នាំមុន។"
+  },
+  {
+    "id": "A21",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "បងស្រីខ្ញុំតែងតែចំណាយពេលរៀងរាល់ចុងសប្តាហ៍ដើម្បីអានសៀវភៅប្រលោមលោកនៅក្នុងបន្ទប់របស់គាត់។"
+  },
+  {
+    "id": "A22",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "បើទោះបីជាការងារនេះមានការលំបាកយ៉ាងណាក៏ដោយ ក្រុមការងារយើងនៅតែរក្សាក្តីសង្ឃឹមថានឹងទទួលបានជោគជ័យនៅទីបំផុត។"
+  },
+  {
+    "id": "A23",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "ការប្រកួតបាល់ទាត់មិត្តភាពរវាងក្រុមការងារពីរបានធ្វើឡើងនៅពហុកីឡាដ្ឋានចាស់កាលពីល្ងាចម្សិលមិញ។"
+  },
+  {
+    "id": "A24",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។"
+  },
+  {
+    "id": "A25",
+    "group": "pure_khmer",
+    "category": "medium",
+    "sentence": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានហ្មត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។"
+  },
+  {
+    "id": "A26",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "ទោះបីជាគម្រោងសាងសង់ផ្លូវថ្មីនេះត្រូវបានពន្យារពេលជាច្រើនដងក៏ដោយ ក៏អាជ្ញាធរខេត្តបានធានាថាការងារនឹងបញ្ចប់មុនរដូវវស្សាខាងមុខនេះ ព្រោះវាមានសារៈសំខាន់ខ្លាំងណាស់សម្រាប់ការដឹកជញ្ជូនផលិតផលកសិកម្មរបស់ប្រជាពលរដ្ឋ។"
+  },
+  {
+    "id": "A27",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "នៅពេលដែលខ្ញុំបានឃើញលទ្ធផលតេស្តរបស់កូន ខ្ញុំមានអារម្មណ៍សប្បាយចិត្តជាខ្លាំង ប៉ុន្តែក៏ដឹងថាយើងនៅតែត្រូវការពេលវេលាច្រើនទៀតដើម្បីជួយឲ្យគាត់មានភាពរីកចម្រើនក្នុងការសិក្សា។"
+  },
+  {
+    "id": "A28",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "អ្នកជំនាញផ្នែកបរិស្ថានបានលើកឡើងថា ការកើនឡើងនៃការប្រើប្រាស់ថង់ប្លាស្ទិកបានបង្កផលប៉ះពាល់យ៉ាងធ្ងន់ធ្ងរដល់ប្រព័ន្ធអេកូឡូស៊ី ហើយជាហេតុផលចម្បងដែលយើងត្រូវផ្លាស់ប្តូរឥរិយាបថប្រើប្រាស់របស់យើងជាបន្ទាន់។"
+  },
+  {
+    "id": "A29",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "កាលពីឆ្នាំមុន ខ្ញុំបានទៅលេងស្រុកកំណើតរបស់ជីដូនជីតាខ្ញុំ ហើយបានរកឃើញថាភូមិនោះមានការផ្លាស់ប្តូរច្រើនណាស់ ទាំងផ្លូវថ្នល់ សាលារៀន និងមន្ទីរពេទ្យ បើធៀបនឹងអ្វីដែលខ្ញុំធ្លាប់ចងចាំកាលពីនៅក្មេង។"
+  },
+  {
+    "id": "A30",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "កិច្ចប្រជុំដែលបានអូសបន្លាយជាងបីម៉ោងបានបញ្ចប់ទៅដោយគ្មានការសម្រេចចិត្តច្បាស់លាស់ ពីព្រោះសមាជិកមួយចំនួននៅតែមិនទាន់យល់ស្របលើចំណុចស្នូលនៃបញ្ហាដែលត្រូវបានលើកយកមកពិភាក្សានោះទេ។"
+  },
+  {
+    "id": "A31",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "ប្រសិនបើអ្នកមានគម្រោងធ្វើដំណើរទៅកាន់ខេត្តកែប អ្នកគួរតែកក់បន្ទប់ស្នាក់នៅជាមុនសិន ព្រោះថាក្នុងរដូវវិស្សមកាល ឬថ្ងៃបុណ្យធំៗ រមណីយដ្ឋានភាគច្រើនតែងតែពេញដោយភ្ញៀវទេសចរណ៍។"
+  },
+  {
+    "id": "A32",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "ខ្ញុំមានអារម្មណ៍ថាម៉ោងសិក្សាបន្ថែមនៅពេលល្ងាចពិតជាមានប្រយោជន៍ ប៉ុន្តែវាក៏ត្រូវការការលះបង់ពេលវេលាសម្រាករបស់យើងដែរ ដូច្នេះយើងត្រូវតែចេះបែងចែកពេលវេលាឲ្យមានតុល្យភាព។"
+  },
+  {
+    "id": "A33",
+    "group": "pure_khmer",
+    "category": "long_complex",
+    "sentence": "ការនាំចេញផលិតផលកាត់ដេររបស់កម្ពុជាទៅកាន់ទីផ្សារអន្តរជាតិបានកើនឡើងគួរឱ្យកត់សម្គាល់ ប៉ុន្តែអ្នកវិភាគសេដ្ឋកិច្ចបានព្រមានថា យើងមិនគួរពឹងផ្អែកលើវិស័យតែមួយនេះខ្លាំងពេកនោះទេ។"
+  },
+  {
+    "id": "A34",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "តើអ្នកបានញ៉ាំបាយនៅឯណាកាលពីថ្ងៃត្រង់ម្សិលមិញ?"
+  },
+  {
+    "id": "A35",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ?"
+  },
+  {
+    "id": "A36",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "តើថ្ងៃណាដែលអ្នកទំនេរអាចជួយខ្ញុំរើឥវ៉ាន់ទៅផ្ទះថ្មីបាន?"
+  },
+  {
+    "id": "A37",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?"
+  },
+  {
+    "id": "A38",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "តើអ្នកអាចពន្យល់ខ្ញុំបានទេថាម៉ាស៊ីននេះដំណើរការយ៉ាងដូចម្តេច?"
+  },
+  {
+    "id": "A39",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "ហេតុអ្វីបានជាតម្លៃទំនិញនៅផ្សារនេះឡើងថ្លៃជាងមុនដល់ម្ល៉ឹងហ្នឹង?"
+  },
+  {
+    "id": "A40",
+    "group": "pure_khmer",
+    "category": "question",
+    "sentence": "ក្មួយចង់ឲ្យពូជួយយកកង់ទៅជួសជុលឲ្យបន្តិចបានទេ?"
+  },
+  {
+    "id": "A41",
+    "group": "pure_khmer",
+    "category": "exclamatory",
+    "sentence": "ប្រយ័ត្នឡានពីក្រោយខ្នងផង!"
+  },
+  {
+    "id": "A42",
+    "group": "pure_khmer",
+    "category": "exclamatory",
+    "sentence": "វិភាគទានរបស់អ្នកទាំងអស់គ្នាពិតជាអស្ចារ្យណាស់!"
+  },
+  {
+    "id": "A43",
+    "group": "pure_khmer",
+    "category": "exclamatory",
+    "sentence": "ឆាប់ឡើង! ភ្លៀងហើយកុំឈរអែបអបអ្វីទៀតហើយ!"
+  },
+  {
+    "id": "A44",
+    "group": "pure_khmer",
+    "category": "exclamatory",
+    "sentence": "ម៉ែអើយ! លទ្ធផលនេះខ្ញុំនឹកស្មានមិនដល់សោះ!"
+  },
+  {
+    "id": "A45",
+    "group": "pure_khmer",
+    "category": "exclamatory",
+    "sentence": "ក្លាហានណាស់ហ្នឹង! ធ្វើម្ដេចបានហ៊ានដើរកាត់ព្រៃយប់ជ្រៅម្នាក់ឯង?"
+  },
+  {
+    "id": "A46",
+    "group": "pure_khmer",
+    "category": "numbers_dates",
+    "sentence": "កម្មវិធីសិក្ខាសាលានឹងប្រព្រឹត្តទៅនៅថ្ងៃទីដប់ប្រាំ ខែមករា ឆ្នាំក្រោយ នៅសណ្ឋាគារក្បែរមាត់ទន្លេ។"
+  },
+  {
+    "id": "A47",
+    "group": "pure_khmer",
+    "category": "numbers_dates",
+    "sentence": "ចំនួនអ្នកចូលរួមក្នុងពិធីបុណ្យអុំទូកឆ្នាំនេះមានប្រមាណជាងបីលានប្រាំសែននាក់។"
+  },
+  {
+    "id": "A48",
+    "group": "pure_khmer",
+    "category": "numbers_dates",
+    "sentence": "ខ្ញុំបានបង់រំលោះផ្ទះរយៈពេលដប់ប្រាំមួយឆ្នាំមកហើយ នៅសល់តែបួនឆ្នាំទៀតប៉ុណ្ណោះ។"
+  },
+  {
+    "id": "A49",
+    "group": "pure_khmer",
+    "category": "numbers_dates",
+    "sentence": "តម្លៃសំបុត្រចូលទស្សនាការប្រគំតន្ត្រីមានចាប់ពីម្ភៃប្រាំពាន់រៀលឡើងទៅអាស្រ័យលើទីតាំងអង្គុយ។"
+  },
+  {
+    "id": "A50",
+    "group": "pure_khmer",
+    "category": "numbers_dates",
+    "sentence": "គាត់បានចាប់ផ្តើមរៀនហែលទឹកតាំងពីអាយុប្រាំពីរឆ្នាំ ហើយឥឡូវគាត់អាចហែលបានជាងដប់គីឡូម៉ែត្រដោយមិនឈប់សម្រាក។"
+  },
+  {
+    "id": "B01",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ខ្ញុំត្រូវធ្វើបច្ចុប្បន្នភាពកម្មវិធី software នៅលើកុំព្យូទ័រឲ្យរួចរាល់មុនពេលចេញទៅញ៉ាំបាយ។"
+  },
+  {
+    "id": "B02",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ការប្រជុំព្រឹកនេះត្រូវបានលុបចោលព្រោះអ្នកគ្រប់គ្រងជាប់រវល់ធ្វើ presentation ថ្មី។"
+  },
+  {
+    "id": "B03",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ខ្ញុំចូលចិត្តធ្វើការងារនៅកន្លែងដែលមាន internet ល្បឿនលឿន ព្រោះវាជួយសន្សំសំចៃពេលវេលាបានច្រើន។"
+  },
+  {
+    "id": "B04",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ក្រុមការងារយើងត្រូវការអ្នកជំនាញផ្នែក marketing បន្ថែមមួយរូបទៀតសម្រាប់យុទ្ធនាការថ្មី។"
+  },
+  {
+    "id": "B05",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "សូមជួយថតរូបមួយសន្លឹកផ្ញើមកខ្ញុំតាម email ផងបានទេ?"
+  },
+  {
+    "id": "B06",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "រោគសញ្ញានៃជំងឺនេះអាចជាការហត់នឿយ និងមានអារម្មណ៍ stress ខ្លាំង។"
+  },
+  {
+    "id": "B07",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "គាត់មាន talent ខាងការរចនាយ៉ាងពិតប្រាកដ ខ្ញុំគិតថាគាត់គួរតែរៀនជំនាញនេះបន្តទៀត។"
+  },
+  {
+    "id": "B08",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "មិត្តរួមការងារខ្ញុំភាគច្រើនចូលចិត្តធ្វើការតាមប្រព័ន្ធ remote ព្រោះវាអាចបត់បែនបានច្រើនជាង។"
+  },
+  {
+    "id": "B09",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ខ្ញុំបានចំណាយពេលពេញមួយចុងសប្តាហ៍ដើម្បីរៀបចំ budget សម្រាប់គម្រោងឆ្នាំក្រោយ។"
+  },
+  {
+    "id": "B10",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "គម្រោងនេះមាន deadline ខ្លីណាស់ យើងត្រូវធ្វើការងារឲ្យលឿនជាងមុនទើបអាចដាក់ឲ្យទាន់ពេល។"
+  },
+  {
+    "id": "B11",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ខ្ញុំកំពុងព្យាយាមរៀនជំនាញ coding បន្ថែមដើម្បីអាចដាក់ពាក្យទៅកាន់តំណែងថ្មីនេះបាន។"
+  },
+  {
+    "id": "B12",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "អ្នកជិតខាងខ្ញុំទើបតែទិញឡាន brand ថ្មីមួយគ្រឿងតម្លៃថ្លៃណាស់។"
+  },
+  {
+    "id": "B13",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ចំពោះការងារក្រៅម៉ោង ខ្ញុំចង់ធ្វើអ្វីដែលមាន flexibility ខ្ពស់បន្តិច។"
+  },
+  {
+    "id": "B14",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "យើងគួរតែពិនិត្យមើល feedback ពីអតិថិជនឲ្យបានហ្មត់ចត់មុននឹងកែប្រែផែនការ។"
+  },
+  {
+    "id": "B15",
+    "group": "code_switched",
+    "category": "single_word",
+    "sentence": "ខ្ញុំចូលចិត្តធ្វើការជាមួយក្រុមដែលមាន mindset បើកចំហរចំពោះគំនិតថ្មីៗ។"
+  },
+  {
+    "id": "B16",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំគិតថាយើងគួរតែ save the date សម្រាប់កម្មវិធីជប់លៀងចុងឆ្នាំឲ្យបានឆាប់។"
+  },
+  {
+    "id": "B17",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "គម្រោងនេះមានការផ្លាស់ប្តូរ last minute ជាច្រើនដែលធ្វើឲ្យក្រុមការងារមានការភ័ន្តច្រឡំ។"
+  },
+  {
+    "id": "B18",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "អ្នកគ្រប់គ្រងបានសុំឲ្យពួកយើងរៀបចំរបាយការណ៍នេះឡើងវិញឲ្យមានលក្ខណៈ more professional ជាងមុន។"
+  },
+  {
+    "id": "B19",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ក្រុមហ៊ុនកំពុងស្ថិតក្នុងដំណាក់កាល scaling up ដែលទាមទារឲ្យមានការវិនិយោគបន្ថែមលើធនធានមនុស្ស។"
+  },
+  {
+    "id": "B20",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំមិនអាចចូលរួមកិច្ចប្រជុំព្រឹកស្អែកបានទេព្រោះខ្ញុំមាន doctor appointment នៅម៉ោងដប់។"
+  },
+  {
+    "id": "B21",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ការធ្វើដំណើរទៅធ្វើការនៅពេលម៉ោងកកស្ទះពិតជាធ្វើឲ្យខ្ញុំមានអារម្មណ៍ stressed out ខ្លាំងណាស់។"
+  },
+  {
+    "id": "B22",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "យើងត្រូវរៀបចំឯកសារទាំងអស់ឲ្យរួចរាល់មុនពេលចូលរួម kick-off meeting នាពេលរសៀលនេះ។"
+  },
+  {
+    "id": "B23",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំពិតជាចូលចិត្តវិធីសាស្រ្ត learning by doing ព្រោះវាអាចជួយឲ្យខ្ញុំយល់ពីការងារបានច្បាស់ជាងការអានតែទ្រឹស្តី។"
+  },
+  {
+    "id": "B24",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "បើអ្នកមានបញ្ហាអ្វីក៏ដោយ កុំភ្លេច reach out មកខ្ញុំដោយផ្ទាល់តាមរយៈសារលីនេ។"
+  },
+  {
+    "id": "B25",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ការបញ្ចប់ការងារឲ្យមានគុណភាពខ្ពស់ជាមួយនឹងពេលវេលាកំណត់ដ៏ខ្លីគឺជាបញ្ហា challenging សម្រាប់ក្រុមការងារវ័យក្មេងយើង។"
+  },
+  {
+    "id": "B26",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំបានចុះឈ្មោះចូលរៀនវគ្គ online course ស្តីពីការគ្រប់គ្រងហិរញ្ញវត្ថុផ្ទាល់ខ្លួនកាលពីសប្តាហ៍មុន។"
+  },
+  {
+    "id": "B27",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "យើងត្រូវការពេលវេលាបន្ថែមទៀតដើម្បីធ្វើការវាយតម្លៃ impact នៃការផ្លាស់ប្តូរនេះទៅលើអាជីវកម្ម។"
+  },
+  {
+    "id": "B28",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "សូមប្រាកដថាអ្នកបានអានឯកសារ terms and conditions ឲ្យបានច្បាស់មុនពេលចុចយល់ព្រម។"
+  },
+  {
+    "id": "B29",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំចង់ណែនាំឲ្យអ្នកសាកល្បងវិធីថ្មីនេះមើល ព្រោះវាជា game changer សម្រាប់របៀបធ្វើការងាររបស់យើង។"
+  },
+  {
+    "id": "B30",
+    "group": "code_switched",
+    "category": "short_phrase",
+    "sentence": "ខ្ញុំបានចំណាយពេលច្រើនក្នុងការដោះស្រាយបញ្ហាកូដ error ដែលកើតឡើងដដែលៗនៅក្នុងប្រព័ន្ធ។"
+  },
+  {
+    "id": "B31",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "I think the new strategy is quite risky, ប៉ុន្តែប្រសិនបើយើងអាចអនុវត្តបានល្អ លទ្ធផលនឹងអស្ចារ្យជាក់ជាមិនខាន។"
+  },
+  {
+    "id": "B32",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "អ្នកគ្រប់គ្រងបាននិយាយថា we need to cut costs, ដូច្នេះយើងគួរតែពិនិត្យមើលការចំណាយដែលមិនចាំបាច់ទាំងអស់។"
+  },
+  {
+    "id": "B33",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "ខ្ញុំមិនប្រាកដថាគាត់នឹងមកទេ, but let's just wait and see, ប្រហែលជាគាត់គ្រាន់តែមកយឺតបន្តិចប៉ុណ្ណោះ។"
+  },
+  {
+    "id": "B34",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "The meeting was really productive, យើងបានពិភាក្សាគ្នាអំពីផែនការសម្រាប់ឆ្នាំក្រោយ និងបានកំណត់គោលដៅរួមគ្នាជាច្រើន។"
+  },
+  {
+    "id": "B35",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "ប្រសិនបើអ្នកត្រូវការជំនួយបន្ថែម, just let me know, ខ្ញុំរីករាយជួយអ្នកជានិច្ចមិនថាពេលណាក៏ដោយ។"
+  },
+  {
+    "id": "B36",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "We've been through many challenges together, ហើយខ្ញុំជឿជាក់ថាក្រុមយើងនៅតែអាចបន្តរីកចម្រើនទៅមុខបានទៀត។"
+  },
+  {
+    "id": "B37",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "គាត់មានបំណងចង់ផ្លាស់ការងារថ្មី, but it's easier said than done, ព្រោះទីផ្សារការងារសព្វថ្ងៃមានការប្រកួតប្រជែងខ្ពស់ណាស់។"
+  },
+  {
+    "id": "B38",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "Let's focus on what we can control right now, កុំខ្ជះខ្ជាយពេលវេលាច្រើនពេកលើរឿងដែលយើងមិនអាចកែប្រែបាននោះទេ។"
+  },
+  {
+    "id": "B39",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "I understand your concern, ប៉ុន្តែយើងត្រូវតែធ្វើការសម្រេចចិត្តដោយផ្អែកលើទិន្នន័យ មិនមែនអារម្មណ៍នោះទេ។"
+  },
+  {
+    "id": "B40",
+    "group": "code_switched",
+    "category": "mixed_clause",
+    "sentence": "ការបណ្តុះបណ្តាលនេះគឺ intensive ខ្លាំង, but it's definitely worth it, ព្រោះជំនាញដែលយើងទទួលបានអាចយកទៅប្រើបានជាក់ស្តែង។"
+  },
+  {
+    "id": "B41",
+    "group": "code_switched",
+    "category": "numbers_units",
+    "sentence": "អត្រាកំណើនសេដ្ឋកិច្ចឆ្នាំនេះត្រូវបានព្យាករណ៍ថានឹងឈានដល់ 5.5 percent បើធៀបនឹងឆ្នាំមុន។"
+  },
+  {
+    "id": "B42",
+    "group": "code_switched",
+    "category": "numbers_units",
+    "sentence": "ខ្ញុំបានទិញទឹកផ្លែឈើមួយដបទំហំ 1.5 liters ក្នុងតម្លៃបីដុល្លារកន្លះ។"
+  },
+  {
+    "id": "B43",
+    "group": "code_switched",
+    "category": "numbers_units",
+    "sentence": "ចម្ងាយពីផ្ទះខ្ញុំទៅកន្លែងធ្វើការគឺប្រហែល 12 kilometers ដែលចំណាយពេលប្រហែលសែសិបនាទីបើជិះម៉ូតូ។"
+  },
+  {
+    "id": "B44",
+    "group": "code_switched",
+    "category": "numbers_units",
+    "sentence": "គាត់អាចរកប្រាក់ចំណូលបានជាង 2,000 dollars ក្នុងមួយខែពីការងារឯករាជ្យរបស់គាត់។"
+  },
+  {
+    "id": "B45",
+    "group": "code_switched",
+    "category": "numbers_units",
+    "sentence": "សីតុណ្ហភាពនៅខាងក្រៅពេលថ្ងៃត្រង់ឡើងដល់ 38 degrees ដែលក្តៅខ្លាំងជាងធម្មតា។"
+  },
+  {
+    "id": "B46",
+    "group": "code_switched",
+    "category": "proper_noun",
+    "sentence": "ក្រុមហ៊ុន Microsoft បានប្រកាសពីគម្រោងវិនិយោគថ្មីមួយនៅក្នុងតំបន់អាស៊ីអាគ្នេយ៍។"
+  },
+  {
+    "id": "B47",
+    "group": "code_switched",
+    "category": "proper_noun",
+    "sentence": "ខ្ញុំទើបតែបានមើលភាពយន្តឯកសារមួយអំពីជីវិតនៅទីក្រុង Paris កាលពីយប់មិញ។"
+  },
+  {
+    "id": "B48",
+    "group": "code_switched",
+    "category": "proper_noun",
+    "sentence": "លោក David ដែលជាអ្នកប្រឹក្សាគម្រោងរបស់យើង នឹងមកដល់ខេត្តសៀមរាបនៅសប្តាហ៍ក្រោយនេះ។"
+  },
+  {
+    "id": "B49",
+    "group": "code_switched",
+    "category": "proper_noun",
+    "sentence": "ក្រុមបាល់ទាត់ Liverpool នឹងធ្វើការប្រកួតមិត្តភាពជាមួយក្រុមជម្រើសជាតិកម្ពុជានៅពហុកីឡដ្ឋានជាតិ។"
+  },
+  {
+    "id": "B50",
+    "group": "code_switched",
+    "category": "proper_noun",
+    "sentence": "ខ្ញុំបានកក់សំបុត្រយន្តហោះទៅ Singapore រួចហើយសម្រាប់វិស្សមកាលខែក្រោយនេះ។"
+  }
+]
