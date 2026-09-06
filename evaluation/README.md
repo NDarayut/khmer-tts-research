@@ -15,18 +15,22 @@ benchmark set (see CLAUDE.md).
 
 ## Setup
 
-Nothing is installed yet. Order matters:
+Order matters:
 
-```powershell
-.venv\Scripts\activate
+```bash
+python3.11 -m venv .venv
 
 # 1. torch FIRST, from the CUDA index -- otherwise a transitive dep pulls the
 #    CPU-only wheel and VoxCPM2 won't run.
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu124
+.venv/bin/python -m pip install torch torchaudio \
+    --index-url https://download.pytorch.org/whl/cu124
 
 # 2. everything else
-pip install -r requirements.txt
+.venv/bin/python -m pip install -r requirements.txt
 ```
+
+This venv runs `mms` and `voxcpm2`, plus all of `score.py` and `report.py`.
+`fish-s2` needs a second one -- see below.
 
 ### DNSMOS model files (manual, one time)
 
@@ -45,14 +49,37 @@ first time it runs.
 
 ### Fish S2-Pro (manual, one time)
 
-Not a pip package, and non-commercial licensed (docs/05):
+Not a pip package, and non-commercial licensed (docs/05). **It needs its own
+venv**: fish-speech pins `torch==2.8.0`, which would replace the CUDA build the
+other two backends run on.
 
-```powershell
+```bash
 git clone https://github.com/fishaudio/fish-speech
-pip install -e fish-speech
-huggingface-cli download fishaudio/s2-pro --local-dir fish-speech\checkpoints\s2-pro
-$env:FISH_SPEECH_DIR = "<abs path>\fish-speech"
+python3.11 -m venv .venv-fish
+
+# pyaudio is in its dependency list, needs system portaudio headers to build,
+# and is only used for live mic I/O -- drop it and install the rest.
+grep -v '^pyaudio' <(python -c "import tomllib;print('\n'.join(
+    tomllib.load(open('fish-speech/pyproject.toml','rb'))['project']['dependencies']))") \
+    > /tmp/fish-deps.txt
+.venv-fish/bin/python -m pip install -r /tmp/fish-deps.txt
+.venv-fish/bin/python -m pip install --no-deps -e ./fish-speech
+
+hf download fishaudio/s2-pro --local-dir fish-speech/checkpoints/s2-pro  # 11 GB
+export FISH_SPEECH_DIR=$PWD/fish-speech
 ```
+
+Then run *only this backend* under that interpreter:
+
+```bash
+FISH_SPEECH_DIR=$PWD/fish-speech \
+    .venv-fish/bin/python evaluation/synthesize.py --model fish-s2
+```
+
+Scoring still runs from the main venv -- it only reads wavs.
+
+**Hardware:** this does not fit a 12 GB GPU. See the header of
+`backends/fish_s2.py`; you need ~16 GB+ or a quantized load.
 
 ## Running a full comparison
 

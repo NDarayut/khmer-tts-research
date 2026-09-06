@@ -23,6 +23,17 @@ MODEL_LABELS = {
     "mms": "Meta MMS-TTS (`facebook/mms-tts-khm`) -- docs/04",
     "voxcpm2": "VoxCPM2 (`openbmb/VoxCPM2`) -- docs/06",
     "fish-s2": "Fish Audio S2-Pro (`fishaudio/s2-pro`) -- docs/05",
+    "higgs3": "Higgs TTS 3 (`bosonai/higgs-tts-3-4b`)",
+}
+
+# Models that speak Khmer without documenting it. They belong in the ranking
+# -- they do the job -- but there is no vendor figure to check the result
+# against, so a surprising score here has nothing to corroborate it.
+UNDOCUMENTED_KHMER = {
+    "higgs3": (
+        "its model card lists 100 languages and Khmer is not among them, yet "
+        "it produces Khmer speech (verified by hand before the run)"
+    ),
 }
 
 # Vendor-published figures, for sanity-checking a local run. Both come from
@@ -32,6 +43,7 @@ PUBLISHED = {
     "voxcpm2": "2.05% CER (OpenBMB internal, Khmer); RTF 0.13-0.30 on an RTX 4090",
     "fish-s2": "75.15% CER (OpenBMB internal, Khmer)",
     "mms": "no published Khmer benchmark",
+    "higgs3": "no Khmer figure published; <5 WER/CER on 85 of its 100 languages",
 }
 
 
@@ -47,6 +59,75 @@ def load_all():
         path = scores_path(model)
         out[model] = read_json(path) if path.is_file() else None
     return out
+
+
+# A CER at or above this is not a score, it is a failure: the ASR got
+# essentially every character wrong. Whisper-large-v3 does this on Khmer by
+# collapsing into a repetition loop, which also pushes CER above 100% because
+# the hypothesis ends up longer than the reference.
+CER_INVALID_THRESHOLD = 0.9
+
+
+def cer_validity_warning(results, lines):
+    """Say so loudly when CER did not measure anything.
+
+    A metric that cannot separate the models is worse than no metric, because
+    the table above still renders a number for it."""
+    suspect = {
+        model: payload["summary"]["overall"]["cer_median"]
+        for model, payload in results.items()
+        if payload and (payload["summary"]["overall"]["cer_median"] or 0)
+        >= CER_INVALID_THRESHOLD
+    }
+    if not suspect:
+        return
+
+    # Identical transcripts for different audio is the giveaway: it means the
+    # decoder is landing in the same attractor regardless of its input.
+    per_id = {}
+    for model, payload in results.items():
+        if not payload:
+            continue
+        for utterance in payload["utterances"]:
+            transcript = utterance.get("transcript")
+            if transcript:
+                per_id.setdefault(utterance["id"], set()).add(transcript)
+    shared = sum(
+        1 for transcripts in per_id.values() if len(transcripts) == 1
+    ) if len(results) > 1 else 0
+
+    lines.append("## :warning: CER is not valid in this run")
+    lines.append("")
+    lines.append(
+        "**Do not rank the models on the CER column above.** The scoring ASR "
+        "failed, so those numbers describe Whisper, not the TTS models."
+    )
+    lines.append("")
+    for model, value in sorted(suspect.items()):
+        lines.append(
+            f"- `{model}` has a median CER of {fmt(value, 1, 100, '%')} -- i.e. "
+            "essentially every character is wrong, and above 100% the "
+            "hypothesis is longer than the reference it is meant to match."
+        )
+    if shared:
+        lines.append(
+            f"- {shared} sentence(s) produced a **byte-identical transcript "
+            "across different models' audio** -- impossible unless the decoder "
+            "is ignoring the waveform."
+        )
+    lines.append(
+        "- Whisper-large-v3 collapses into a repetition loop on Khmer "
+        "(`ប្រាប់ប្រាប់ប្រាប់...`). Raw transcripts in each `scores.json` show it "
+        "directly."
+    )
+    lines.append("")
+    lines.append(
+        "The other three metrics are unaffected -- UTMOS, DNSMOS and RTF never "
+        "touch the ASR. To restore CER, swap `metrics/cer.py` for a "
+        "Khmer-capable ASR and re-run `score.py --metrics cer`; the synthesized "
+        "audio does not need regenerating."
+    )
+    lines.append("")
 
 
 def headline_table(results, lines):
@@ -146,6 +227,61 @@ def worst_table(results, lines, limit=10):
         lines.append("")
 
 
+# fish-s2 runs its codec on the CPU because S2-Pro's 9.65 GB of weights plus a
+# 4.58 GB codec do not fit one 12 GB card (backends/fish_s2.py, CODEC_DEVICE).
+# Its RTF therefore measures GPU generation + CPU decode and is not the same
+# quantity as a fully-GPU model's.
+HYBRID_RTF = {"fish-s2": "codec runs on CPU -- RTF not comparable"}
+
+# An utterance far longer than the sentence warrants means the model failed to
+# stop, not that it spoke slowly. Those clips inflate RTF and drag the quality
+# metrics toward whatever the model babbles.
+RUNAWAY_SECONDS = 20.0
+
+
+def measurement_caveats(results, lines):
+    """Flag the things that make a column mean different things per row."""
+    from evaluation.common import median as med
+
+    notes = []
+    for model in BACKEND_KEYS:
+        payload = results.get(model)
+        if not payload:
+            continue
+        if model in UNDOCUMENTED_KHMER:
+            notes.append(
+                f"- `{model}`: **Khmer is undocumented** -- "
+                f"{UNDOCUMENTED_KHMER[model]}. Its scores count, but no "
+                "published Khmer figure exists to corroborate them."
+            )
+        if model in HYBRID_RTF:
+            notes.append(f"- `{model}`: {HYBRID_RTF[model]}.")
+        seconds = [
+            u.get("audio_seconds") for u in payload["utterances"]
+            if u.get("audio_seconds")
+        ]
+        runaway = [s for s in seconds if s > RUNAWAY_SECONDS]
+        if runaway:
+            notes.append(
+                f"- `{model}`: {len(runaway)} utterance(s) ran past "
+                f"{RUNAWAY_SECONDS:.0f}s (longest {max(runaway):.1f}s, median "
+                f"across the set {med(seconds):.1f}s) -- the model did not stop "
+                "on its own. Those clips inflate its RTF and its quality scores "
+                "reflect the filler, not the sentence."
+            )
+    if not notes:
+        return
+    lines.append("## Measurement caveats")
+    lines.append("")
+    lines.append(
+        "These affect what a column *means* for a given row -- read them before "
+        "comparing across rows."
+    )
+    lines.append("")
+    lines.extend(notes)
+    lines.append("")
+
+
 def env_section(results, lines):
     lines.append("## Run environment")
     lines.append("")
@@ -183,6 +319,7 @@ def build_report(results):
     lines.append("")
 
     headline_table(results, lines)
+    cer_validity_warning(results, lines)
     breakdown_table(
         results, lines, "group", "CER by group",
         "The set is split 50/50 for exactly this comparison -- code-switching "
@@ -194,6 +331,7 @@ def build_report(results):
         "examples in `evaluation/dataset_overview.md`.",
     )
     worst_table(results, lines)
+    measurement_caveats(results, lines)
     env_section(results, lines)
 
     lines.append("## Published figures, for comparison")

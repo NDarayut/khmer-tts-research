@@ -8,7 +8,7 @@ package therefore costs nothing and requires nothing; the cost lands in
 get_backend().
 """
 
-BACKEND_KEYS = ("mms", "voxcpm2", "fish-s2")
+BACKEND_KEYS = ("mms", "voxcpm2", "fish-s2", "higgs3")
 
 
 def get_backend(name, **kwargs):
@@ -26,6 +26,10 @@ def get_backend(name, **kwargs):
         from .fish_s2 import FishS2Backend
 
         return FishS2Backend(**kwargs)
+    if name == "higgs3":
+        from .higgs import HiggsBackend
+
+        return HiggsBackend(**kwargs)
     raise ValueError(
         f"unknown model {name!r}; expected one of {', '.join(BACKEND_KEYS)}"
     )

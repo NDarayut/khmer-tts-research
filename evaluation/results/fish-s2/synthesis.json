@@ -1,0 +1,1026 @@
+{
+  "model": "fish-s2",
+  "env": {
+    "timestamp": "2026-09-04T08:36:21+00:00",
+    "device": "cuda",
+    "seed": 0,
+    "load_seconds": 38.771,
+    "host": "PC",
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+    "python": "3.11.15",
+    "backend": "fish-s2",
+    "model_id": "fishaudio/s2-pro",
+    "fish_repo": "/run/media/pc/disk1/text-to-speech/fish-speech",
+    "checkpoint": "/run/media/pc/disk1/text-to-speech/fish-speech/checkpoints/s2-pro",
+    "torch_version": "2.8.0+cu128",
+    "gpu": "NVIDIA GeForce RTX 3060"
+  },
+  "summary": {
+    "count": 100,
+    "failed": 0,
+    "rtf_median": 2.6513,
+    "rtf_mean": 2.551
+  },
+  "utterances": [
+    {
+      "id": "A01",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A01.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 11.1104,
+      "audio_seconds": 4.8298,
+      "rtf": 2.3004
+    },
+    {
+      "id": "A02",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A02.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 6.0006,
+      "audio_seconds": 2.6006,
+      "rtf": 2.3073
+    },
+    {
+      "id": "A03",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A03.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 7.3938,
+      "audio_seconds": 3.2508,
+      "rtf": 2.2744
+    },
+    {
+      "id": "A04",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A04.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 19.9181,
+      "audio_seconds": 8.5449,
+      "rtf": 2.331
+    },
+    {
+      "id": "A05",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A05.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 9.3591,
+      "audio_seconds": 4.1332,
+      "rtf": 2.2644
+    },
+    {
+      "id": "A06",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A06.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 11.0913,
+      "audio_seconds": 4.7833,
+      "rtf": 2.3188
+    },
+    {
+      "id": "A07",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A07.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 15.5023,
+      "audio_seconds": 6.7338,
+      "rtf": 2.3022
+    },
+    {
+      "id": "A08",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A08.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.9337,
+      "audio_seconds": 6.4551,
+      "rtf": 2.3135
+    },
+    {
+      "id": "A09",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A09.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 9.2625,
+      "audio_seconds": 4.1332,
+      "rtf": 2.241
+    },
+    {
+      "id": "A10",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/fish-s2/audio/A10.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 12.1207,
+      "audio_seconds": 5.2941,
+      "rtf": 2.2895
+    },
+    {
+      "id": "A11",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A11.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 16.2428,
+      "audio_seconds": 7.0589,
+      "rtf": 2.301
+    },
+    {
+      "id": "A12",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A12.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.614,
+      "audio_seconds": 9.6131,
+      "rtf": 2.3524
+    },
+    {
+      "id": "A13",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A13.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.7221,
+      "audio_seconds": 7.7555,
+      "rtf": 2.2851
+    },
+    {
+      "id": "A14",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A14.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.3359,
+      "audio_seconds": 8.87,
+      "rtf": 2.2927
+    },
+    {
+      "id": "A15",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A15.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 30.1235,
+      "audio_seconds": 12.8639,
+      "rtf": 2.3417
+    },
+    {
+      "id": "A16",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A16.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 13.2701,
+      "audio_seconds": 5.7121,
+      "rtf": 2.3232
+    },
+    {
+      "id": "A17",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A17.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.6744,
+      "audio_seconds": 8.0341,
+      "rtf": 2.3244
+    },
+    {
+      "id": "A18",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A18.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.4943,
+      "audio_seconds": 7.9412,
+      "rtf": 2.3289
+    },
+    {
+      "id": "A19",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A19.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 26.1435,
+      "audio_seconds": 11.2849,
+      "rtf": 2.3167
+    },
+    {
+      "id": "A20",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A20.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 43.8812,
+      "audio_seconds": 19.0868,
+      "rtf": 2.299
+    },
+    {
+      "id": "A21",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A21.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 12.8413,
+      "audio_seconds": 5.5728,
+      "rtf": 2.3043
+    },
+    {
+      "id": "A22",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A22.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 24.7379,
+      "audio_seconds": 10.7276,
+      "rtf": 2.306
+    },
+    {
+      "id": "A23",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A23.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.8683,
+      "audio_seconds": 9.3809,
+      "rtf": 2.3312
+    },
+    {
+      "id": "A24",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A24.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 37.2811,
+      "audio_seconds": 16.0218,
+      "rtf": 2.3269
+    },
+    {
+      "id": "A25",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/fish-s2/audio/A25.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 31.7204,
+      "audio_seconds": 13.7462,
+      "rtf": 2.3076
+    },
+    {
+      "id": "A26",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A26.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 47.4133,
+      "audio_seconds": 20.5729,
+      "rtf": 2.3047
+    },
+    {
+      "id": "A27",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A27.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 23.2045,
+      "audio_seconds": 10.031,
+      "rtf": 2.3133
+    },
+    {
+      "id": "A28",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A28.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 52.8793,
+      "audio_seconds": 22.7556,
+      "rtf": 2.3238
+    },
+    {
+      "id": "A29",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A29.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 43.0988,
+      "audio_seconds": 18.3902,
+      "rtf": 2.3436
+    },
+    {
+      "id": "A30",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A30.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 44.1848,
+      "audio_seconds": 19.1797,
+      "rtf": 2.3037
+    },
+    {
+      "id": "A31",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A31.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 12.2155,
+      "audio_seconds": 5.2941,
+      "rtf": 2.3074
+    },
+    {
+      "id": "A32",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A32.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.1542,
+      "audio_seconds": 9.5202,
+      "rtf": 2.3271
+    },
+    {
+      "id": "A33",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/fish-s2/audio/A33.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 125.8181,
+      "audio_seconds": 47.508,
+      "rtf": 2.6484
+    },
+    {
+      "id": "A34",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A34.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.0006,
+      "audio_seconds": 6.2694,
+      "rtf": 2.7117
+    },
+    {
+      "id": "A35",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A35.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.5853,
+      "audio_seconds": 8.4056,
+      "rtf": 2.6869
+    },
+    {
+      "id": "A36",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A36.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.5712,
+      "audio_seconds": 5.5263,
+      "rtf": 2.6367
+    },
+    {
+      "id": "A37",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A37.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 23.7462,
+      "audio_seconds": 8.9165,
+      "rtf": 2.6632
+    },
+    {
+      "id": "A38",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A38.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.5076,
+      "audio_seconds": 8.0805,
+      "rtf": 2.6617
+    },
+    {
+      "id": "A39",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A39.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 12.8535,
+      "audio_seconds": 4.8762,
+      "rtf": 2.636
+    },
+    {
+      "id": "A40",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/fish-s2/audio/A40.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.9852,
+      "audio_seconds": 5.6657,
+      "rtf": 2.6449
+    },
+    {
+      "id": "A41",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/fish-s2/audio/A41.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 7.4568,
+      "audio_seconds": 2.8328,
+      "rtf": 2.6323
+    },
+    {
+      "id": "A42",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/fish-s2/audio/A42.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.8609,
+      "audio_seconds": 6.6409,
+      "rtf": 2.6895
+    },
+    {
+      "id": "A43",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/fish-s2/audio/A43.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.8793,
+      "audio_seconds": 8.5914,
+      "rtf": 2.663
+    },
+    {
+      "id": "A44",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/fish-s2/audio/A44.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.2086,
+      "audio_seconds": 6.8267,
+      "rtf": 2.6673
+    },
+    {
+      "id": "A45",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/fish-s2/audio/A45.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.1515,
+      "audio_seconds": 7.9412,
+      "rtf": 2.6635
+    },
+    {
+      "id": "A46",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/fish-s2/audio/A46.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 46.6113,
+      "audio_seconds": 17.6007,
+      "rtf": 2.6483
+    },
+    {
+      "id": "A47",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/fish-s2/audio/A47.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 26.9733,
+      "audio_seconds": 10.1703,
+      "rtf": 2.6521
+    },
+    {
+      "id": "A48",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/fish-s2/audio/A48.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 28.9096,
+      "audio_seconds": 10.8205,
+      "rtf": 2.6717
+    },
+    {
+      "id": "A49",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/fish-s2/audio/A49.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 30.0437,
+      "audio_seconds": 11.3778,
+      "rtf": 2.6406
+    },
+    {
+      "id": "A50",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/fish-s2/audio/A50.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 15.1849,
+      "audio_seconds": 5.7585,
+      "rtf": 2.6369
+    },
+    {
+      "id": "B01",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B01.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 19.5492,
+      "audio_seconds": 7.3839,
+      "rtf": 2.6475
+    },
+    {
+      "id": "B02",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B02.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 12.3028,
+      "audio_seconds": 4.6904,
+      "rtf": 2.623
+    },
+    {
+      "id": "B03",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B03.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 23.0638,
+      "audio_seconds": 8.5449,
+      "rtf": 2.6991
+    },
+    {
+      "id": "B04",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B04.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 19.6419,
+      "audio_seconds": 7.2911,
+      "rtf": 2.694
+    },
+    {
+      "id": "B05",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B05.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.9632,
+      "audio_seconds": 5.6657,
+      "rtf": 2.641
+    },
+    {
+      "id": "B06",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B06.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 25.1061,
+      "audio_seconds": 9.3809,
+      "rtf": 2.6763
+    },
+    {
+      "id": "B07",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B07.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.7049,
+      "audio_seconds": 7.8019,
+      "rtf": 2.6538
+    },
+    {
+      "id": "B08",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B08.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 16.2077,
+      "audio_seconds": 6.0836,
+      "rtf": 2.6642
+    },
+    {
+      "id": "B09",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B09.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.2162,
+      "audio_seconds": 6.4551,
+      "rtf": 2.667
+    },
+    {
+      "id": "B10",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B10.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 15.5021,
+      "audio_seconds": 5.805,
+      "rtf": 2.6705
+    },
+    {
+      "id": "B11",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B11.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.6729,
+      "audio_seconds": 7.709,
+      "rtf": 2.6816
+    },
+    {
+      "id": "B12",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B12.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.5451,
+      "audio_seconds": 6.9195,
+      "rtf": 2.6801
+    },
+    {
+      "id": "B13",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B13.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 10.8569,
+      "audio_seconds": 4.0867,
+      "rtf": 2.6566
+    },
+    {
+      "id": "B14",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B14.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.793,
+      "audio_seconds": 6.6409,
+      "rtf": 2.6793
+    },
+    {
+      "id": "B15",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/fish-s2/audio/B15.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.6091,
+      "audio_seconds": 6.6409,
+      "rtf": 2.6516
+    },
+    {
+      "id": "B16",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B16.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 31.1244,
+      "audio_seconds": 11.6564,
+      "rtf": 2.6702
+    },
+    {
+      "id": "B17",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B17.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.6395,
+      "audio_seconds": 5.4335,
+      "rtf": 2.6943
+    },
+    {
+      "id": "B18",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B18.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.1824,
+      "audio_seconds": 7.8948,
+      "rtf": 2.6831
+    },
+    {
+      "id": "B19",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B19.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 19.5629,
+      "audio_seconds": 7.2911,
+      "rtf": 2.6831
+    },
+    {
+      "id": "B20",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B20.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 23.5406,
+      "audio_seconds": 8.87,
+      "rtf": 2.6539
+    },
+    {
+      "id": "B21",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B21.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 31.3998,
+      "audio_seconds": 11.5635,
+      "rtf": 2.7154
+    },
+    {
+      "id": "B22",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B22.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.8249,
+      "audio_seconds": 7.0589,
+      "rtf": 2.6668
+    },
+    {
+      "id": "B23",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B23.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 25.9936,
+      "audio_seconds": 9.7059,
+      "rtf": 2.6781
+    },
+    {
+      "id": "B24",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B24.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.2425,
+      "audio_seconds": 6.4551,
+      "rtf": 2.6711
+    },
+    {
+      "id": "B25",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B25.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 32.0077,
+      "audio_seconds": 11.9815,
+      "rtf": 2.6714
+    },
+    {
+      "id": "B26",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B26.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 28.3553,
+      "audio_seconds": 10.3561,
+      "rtf": 2.738
+    },
+    {
+      "id": "B27",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B27.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 25.7999,
+      "audio_seconds": 9.7059,
+      "rtf": 2.6582
+    },
+    {
+      "id": "B28",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B28.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 16.7707,
+      "audio_seconds": 6.2694,
+      "rtf": 2.675
+    },
+    {
+      "id": "B29",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B29.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 30.7352,
+      "audio_seconds": 11.5171,
+      "rtf": 2.6687
+    },
+    {
+      "id": "B30",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/fish-s2/audio/B30.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.4727,
+      "audio_seconds": 8.0805,
+      "rtf": 2.6573
+    },
+    {
+      "id": "B31",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B31.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 27.855,
+      "audio_seconds": 10.4954,
+      "rtf": 2.654
+    },
+    {
+      "id": "B32",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B32.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 31.4525,
+      "audio_seconds": 11.7957,
+      "rtf": 2.6664
+    },
+    {
+      "id": "B33",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B33.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 27.7566,
+      "audio_seconds": 10.4954,
+      "rtf": 2.6446
+    },
+    {
+      "id": "B34",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B34.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.3016,
+      "audio_seconds": 7.6161,
+      "rtf": 2.6656
+    },
+    {
+      "id": "B35",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B35.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 23.2417,
+      "audio_seconds": 8.7307,
+      "rtf": 2.6621
+    },
+    {
+      "id": "B36",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B36.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.4495,
+      "audio_seconds": 8.4056,
+      "rtf": 2.6708
+    },
+    {
+      "id": "B37",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B37.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 26.1618,
+      "audio_seconds": 9.8453,
+      "rtf": 2.6573
+    },
+    {
+      "id": "B38",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B38.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 18.4956,
+      "audio_seconds": 6.966,
+      "rtf": 2.6551
+    },
+    {
+      "id": "B39",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B39.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 21.5621,
+      "audio_seconds": 8.1734,
+      "rtf": 2.6381
+    },
+    {
+      "id": "B40",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/fish-s2/audio/B40.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 22.9453,
+      "audio_seconds": 8.7307,
+      "rtf": 2.6281
+    },
+    {
+      "id": "B41",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/fish-s2/audio/B41.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.8577,
+      "audio_seconds": 7.7555,
+      "rtf": 2.6894
+    },
+    {
+      "id": "B42",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/fish-s2/audio/B42.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 17.6363,
+      "audio_seconds": 6.548,
+      "rtf": 2.6934
+    },
+    {
+      "id": "B43",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/fish-s2/audio/B43.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 28.7898,
+      "audio_seconds": 10.7741,
+      "rtf": 2.6721
+    },
+    {
+      "id": "B44",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/fish-s2/audio/B44.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 25.9233,
+      "audio_seconds": 9.7988,
+      "rtf": 2.6456
+    },
+    {
+      "id": "B45",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/fish-s2/audio/B45.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 19.321,
+      "audio_seconds": 7.2446,
+      "rtf": 2.6669
+    },
+    {
+      "id": "B46",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/fish-s2/audio/B46.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 14.9184,
+      "audio_seconds": 5.6657,
+      "rtf": 2.6331
+    },
+    {
+      "id": "B47",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/fish-s2/audio/B47.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.4551,
+      "audio_seconds": 7.6626,
+      "rtf": 2.6695
+    },
+    {
+      "id": "B48",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/fish-s2/audio/B48.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 20.8041,
+      "audio_seconds": 7.8948,
+      "rtf": 2.6352
+    },
+    {
+      "id": "B49",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/fish-s2/audio/B49.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 28.7104,
+      "audio_seconds": 10.7741,
+      "rtf": 2.6648
+    },
+    {
+      "id": "B50",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/fish-s2/audio/B50.wav",
+      "sample_rate": 44100,
+      "synth_seconds": 24.622,
+      "audio_seconds": 9.288,
+      "rtf": 2.651
+    }
+  ]
+}

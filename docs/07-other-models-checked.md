@@ -9,13 +9,23 @@ Recorded here as a negative-result reference, so this search doesn't need to be 
 | **Chatterbox Multilingual** | Resemble AI | 20+ (AR, DA, DE, EL, EN, ES, FI, FR, HE, HI, IT, JA, KO, MS, NL, NO, PL, PT, RU, SV, SW, TR, ZH) | ❌ No | MIT license; strong ElevenLabs-competitive benchmarks, but no Khmer |
 | **Qwen3-TTS** | Alibaba | 10 (ZH, EN, JA, KO, DE, FR, RU, PT, ES, IT) | ❌ No | |
 | **Qwen-Audio-3.0-TTS** | Alibaba | 16 (AR, ZH, EN, FR, DE, ID, IT, JA, KO, MS, PT, RU, ES, TL, TH, VI) | ❌ No | Newer/broader than Qwen3-TTS, covers other SE Asian languages (Thai, Vietnamese, Indonesian, Tagalog, Malay) but not Khmer |
-| **Higgs Audio v2** | Boson AI | Reported anywhere from 5 core (EN, ZH, KO, DE, ES) to "50+" depending on source | ❌ Not confirmed | Apache-2.0; 10M-hour "AudioVerse" corpus, but no official source lists Khmer |
+| **Higgs Audio v2** | Boson AI | Reported anywhere from 5 core (EN, ZH, KO, DE, ES) to "50+" depending on source | ❌ Not confirmed | Apache-2.0; 10M-hour "AudioVerse" corpus, but no official source lists Khmer. **Superseded by v3 — see below.** |
 | **CosyVoice2** | Alibaba/FunAudioLLM | ZH, EN, JA, KO (+ Chinese dialects) | ❌ No | Strong for code-switching among its 4 core languages, not broadly multilingual |
 | **Zonos** | Zyphra | EN, JA, ZH, FR, DE | ❌ No | Apache-2.0 |
 | **Kokoro** | community/StyleTTS2-based | Handful of languages (mainly English, plus a few community-added) | ❌ No | Very small (82M params), efficient, but limited language breadth |
 | **Bark** | Suno | ~13 (EN, ZH, FR, DE, HI, IT, JA, KO, PL, PT, RU, ES, TR) | ❌ No | |
 | **eSpeak-NG** | community | 127+ languages/accents | ❌ No | Classical **rule-based formant synthesizer**, not neural — included here because its huge language count made it worth checking directly; Khmer is not in its supported-language table. If it ever gains Khmer support it would still only provide robotic, non-neural speech, useful at most as a G2P/phonemizer fallback, not a quality TTS voice |
 | **SeamlessM4T v2** | Meta | 96 languages for text; only **36 for speech output** | ⚠️ Not confirmed | Primarily a *speech-to-speech translation* model, not a general TTS system; its 36-language speech-output list was not fully enumerable from available sources — worth re-checking directly against [the model card](https://huggingface.co/facebook/seamless-m4t-v2-large) if translation-shaped Khmer output is ever the actual need, but it wasn't confirmed to include Khmer here and is architecturally a translation model rather than a text-in/speech-out TTS system |
+
+## Correction: Higgs Audio v3 / Higgs TTS 3
+
+The Higgs Audio v2 row above is **correct for v2 and superseded for v3**, which was released after this list was compiled.
+
+Higgs TTS 3 (`bosonai/higgs-tts-3-4b`) still does **not** list Khmer — its model card enumerates 102 languages in two quality tiers and `km` appears in neither. On a language-list basis it would belong in the table above. But it was downloaded and run against the full 100-sentence evaluation set anyway, and it **produces intelligible Khmer**, confirmed by a Khmer speaker listening to the output.
+
+This is the one genuine counter-example to the section below: a model whose published language list understates what it can do. It is worth remembering as a caveat in both directions — **a language list is evidence, not proof, in either direction.** Fish Audio S2 lists Khmer and cannot speak it; Higgs TTS 3 does not list Khmer and can. The only reliable test is to run the model and listen.
+
+Higgs TTS 3 is covered in full in [Document 10](10-higgs-tts-3-architecture-and-training.md), including the licensing constraint (research/non-commercial) that limits what can be done with that finding.
 
 ## Why this list matters
 

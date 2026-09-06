@@ -4,11 +4,12 @@ Project memory for this repo. Read this before touching `eval-set/` or `evaluati
 
 ## What this repo is
 
-Research on open-source, multilingual open-source TTS models with Khmer support (see `README.md` and `docs/`). The practical output of the research is a 3-way model comparison:
+Research on open-source, multilingual open-source TTS models with Khmer support (see `README.md` and `docs/`). The practical output of the research is a 4-way model comparison:
 
-- **VoxCPM2** (docs/06)
+- **VoxCPM2** (docs/06, and docs/09 for architecture + training)
 - **Meta MMS-TTS (khm checkpoint)** (docs/04)
 - **Fish Audio S2 / S2-Pro** (docs/05)
+- **Higgs TTS 3** (docs/10) — added later; Khmer is *undocumented* by Boson but works
 
 `eval-set/` and `evaluation/` are the harness for that comparison: a fixed set of Khmer test sentences gets synthesized by all 3 models and scored (see `docs/03-evaluation-benchmarking.md` for the metrics — CER via Whisper-large-v3 is the primary one for Khmer).
 
@@ -58,6 +59,19 @@ Things to keep in mind when touching it:
 - `backends/fish_s2.py` is the one unverified module: fish-speech pins no stable Python entrypoint and the repo's docs give no example, so it probes known names and reports which function to wire in.
 - CER has a nonzero floor — Whisper's own Khmer accuracy is limited (docs/03 §3.4). Raw transcripts are always persisted for exactly this reason.
 - DNSMOS needs two `.onnx` files from `microsoft/DNS-Challenge` placed in `evaluation/dnsmos_models/`; they are never auto-downloaded.
+
+## The metrics do not work for Khmer — read this before trusting any number in `evaluation/`
+
+All four models were run over the full 100-sentence set (400 clips, 0 failures) and scored. **None of the automatic metrics ranks these models correctly**, and this is settled, not open:
+
+- **CER is invalid.** Whisper-large-v3 cannot transcribe Khmer; it collapses into repetition loops. Median CER is ~100% for *every* model, and 34 of 100 sentences drew a byte-identical transcript from two or more different models' audio. Decoder settings (temperature fallback, n-gram repetition block, language auto-detect) were each tried and ruled out as the cause. `Qwen3-ASR-0.6B-Khmer` was attempted as a replacement and failed on a transformers 5.16.1 bug. **The user has explicitly declined further work on Khmer ASR — do not restart it unprompted.**
+- **UTMOS and DNSMOS measure the wrong thing.** They score how clean the waveform sounds, not whether it says the Khmer text. `fish-s2` holds the best UTMOS in the run (3.75) and is unusable; `voxcpm2` holds the worst (2.49) and is a contender. The decisive evidence: `fish-s2` utterance A31 delivers a 158-character sentence in 5.3 s (3.2× its own median rate — most of the sentence is absent) and UTMOS scored it **4.32/5**, higher than the best score either usable model earned anywhere.
+
+**The listening verdict is the finding** (the user is a Khmer speaker and judged the audio directly): **VoxCPM2 and Higgs TTS 3 are the two contenders; `fish-s2` and `mms` are eliminated.** `fish-s2` fails on correctness, `mms` on prosody. No winner is declared between the two contenders — separating them needs a blind multi-listener test.
+
+This verdict lives in exactly one place in code: `CONTENDERS` / `ELIMINATED` in `evaluation/report_document.py`. Everything else in the document derives from it or from `scores.json`.
+
+Practical consequence: **do not report a model ranking derived from these metrics.** `evaluation/report_document.py` builds `results_report.html`, which is structured around this — §4 is why the metrics failed, §5 is the listening result, §6 keeps the numbers explicitly labelled as diagnostics. Published artifact: https://claude.ai/code/artifact/d7dd6045-255f-4f59-9461-bafd27de3169
 
 ## 2026-09-03 QC pass — findings and disposition
 

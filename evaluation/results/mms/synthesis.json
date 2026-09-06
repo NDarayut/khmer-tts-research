@@ -1,0 +1,1025 @@
+{
+  "model": "mms",
+  "env": {
+    "timestamp": "2026-09-04T01:42:45+00:00",
+    "device": "cuda",
+    "seed": 0,
+    "load_seconds": 5.297,
+    "host": "PC",
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+    "python": "3.11.15",
+    "backend": "mms",
+    "model_id": "facebook/mms-tts-khm",
+    "transformers_version": "5.16.1",
+    "torch_version": "2.6.0+cu124",
+    "gpu": "NVIDIA GeForce RTX 3060"
+  },
+  "summary": {
+    "count": 100,
+    "failed": 0,
+    "rtf_median": 0.0096,
+    "rtf_mean": 0.0111
+  },
+  "utterances": [
+    {
+      "id": "A01",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A01.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0717,
+      "audio_seconds": 3.248,
+      "rtf": 0.0221
+    },
+    {
+      "id": "A02",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A02.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1624,
+      "audio_seconds": 2.736,
+      "rtf": 0.0594
+    },
+    {
+      "id": "A03",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A03.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0594,
+      "audio_seconds": 3.152,
+      "rtf": 0.0188
+    },
+    {
+      "id": "A04",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A04.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0702,
+      "audio_seconds": 3.296,
+      "rtf": 0.0213
+    },
+    {
+      "id": "A05",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A05.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1486,
+      "audio_seconds": 2.784,
+      "rtf": 0.0534
+    },
+    {
+      "id": "A06",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A06.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0488,
+      "audio_seconds": 3.84,
+      "rtf": 0.0127
+    },
+    {
+      "id": "A07",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A07.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0487,
+      "audio_seconds": 3.808,
+      "rtf": 0.0128
+    },
+    {
+      "id": "A08",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A08.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.046,
+      "audio_seconds": 2.848,
+      "rtf": 0.0161
+    },
+    {
+      "id": "A09",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A09.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.044,
+      "audio_seconds": 3.68,
+      "rtf": 0.012
+    },
+    {
+      "id": "A10",
+      "group": "pure_khmer",
+      "category": "short",
+      "wav": "evaluation/results/mms/audio/A10.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.042,
+      "audio_seconds": 3.52,
+      "rtf": 0.0119
+    },
+    {
+      "id": "A11",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A11.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0746,
+      "audio_seconds": 7.744,
+      "rtf": 0.0096
+    },
+    {
+      "id": "A12",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A12.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0739,
+      "audio_seconds": 8.032,
+      "rtf": 0.0092
+    },
+    {
+      "id": "A13",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A13.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0708,
+      "audio_seconds": 7.408,
+      "rtf": 0.0096
+    },
+    {
+      "id": "A14",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A14.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0659,
+      "audio_seconds": 6.72,
+      "rtf": 0.0098
+    },
+    {
+      "id": "A15",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A15.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0778,
+      "audio_seconds": 8.544,
+      "rtf": 0.0091
+    },
+    {
+      "id": "A16",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A16.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0785,
+      "audio_seconds": 8.832,
+      "rtf": 0.0089
+    },
+    {
+      "id": "A17",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A17.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0664,
+      "audio_seconds": 6.64,
+      "rtf": 0.01
+    },
+    {
+      "id": "A18",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A18.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0755,
+      "audio_seconds": 8.944,
+      "rtf": 0.0084
+    },
+    {
+      "id": "A19",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A19.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0708,
+      "audio_seconds": 7.904,
+      "rtf": 0.009
+    },
+    {
+      "id": "A20",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A20.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0764,
+      "audio_seconds": 8.256,
+      "rtf": 0.0093
+    },
+    {
+      "id": "A21",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A21.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0703,
+      "audio_seconds": 8.048,
+      "rtf": 0.0087
+    },
+    {
+      "id": "A22",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A22.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.086,
+      "audio_seconds": 10.448,
+      "rtf": 0.0082
+    },
+    {
+      "id": "A23",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A23.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.068,
+      "audio_seconds": 7.488,
+      "rtf": 0.0091
+    },
+    {
+      "id": "A24",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A24.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0895,
+      "audio_seconds": 10.528,
+      "rtf": 0.0085
+    },
+    {
+      "id": "A25",
+      "group": "pure_khmer",
+      "category": "medium",
+      "wav": "evaluation/results/mms/audio/A25.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0809,
+      "audio_seconds": 9.328,
+      "rtf": 0.0087
+    },
+    {
+      "id": "A26",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A26.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1446,
+      "audio_seconds": 18.272,
+      "rtf": 0.0079
+    },
+    {
+      "id": "A27",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A27.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1218,
+      "audio_seconds": 15.104,
+      "rtf": 0.0081
+    },
+    {
+      "id": "A28",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A28.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1368,
+      "audio_seconds": 17.248,
+      "rtf": 0.0079
+    },
+    {
+      "id": "A29",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A29.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1305,
+      "audio_seconds": 16.24,
+      "rtf": 0.008
+    },
+    {
+      "id": "A30",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A30.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1136,
+      "audio_seconds": 13.792,
+      "rtf": 0.0082
+    },
+    {
+      "id": "A31",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A31.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.126,
+      "audio_seconds": 15.728,
+      "rtf": 0.008
+    },
+    {
+      "id": "A32",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A32.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.1198,
+      "audio_seconds": 14.544,
+      "rtf": 0.0082
+    },
+    {
+      "id": "A33",
+      "group": "pure_khmer",
+      "category": "long_complex",
+      "wav": "evaluation/results/mms/audio/A33.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.116,
+      "audio_seconds": 14.272,
+      "rtf": 0.0081
+    },
+    {
+      "id": "A34",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A34.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0452,
+      "audio_seconds": 3.424,
+      "rtf": 0.0132
+    },
+    {
+      "id": "A35",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A35.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.059,
+      "audio_seconds": 5.424,
+      "rtf": 0.0109
+    },
+    {
+      "id": "A36",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A36.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0572,
+      "audio_seconds": 5.408,
+      "rtf": 0.0106
+    },
+    {
+      "id": "A37",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A37.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0601,
+      "audio_seconds": 5.84,
+      "rtf": 0.0103
+    },
+    {
+      "id": "A38",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A38.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0468,
+      "audio_seconds": 4.272,
+      "rtf": 0.011
+    },
+    {
+      "id": "A39",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A39.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0551,
+      "audio_seconds": 5.2,
+      "rtf": 0.0106
+    },
+    {
+      "id": "A40",
+      "group": "pure_khmer",
+      "category": "question",
+      "wav": "evaluation/results/mms/audio/A40.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.047,
+      "audio_seconds": 3.76,
+      "rtf": 0.0125
+    },
+    {
+      "id": "A41",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/mms/audio/A41.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0399,
+      "audio_seconds": 2.464,
+      "rtf": 0.0162
+    },
+    {
+      "id": "A42",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/mms/audio/A42.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.045,
+      "audio_seconds": 3.632,
+      "rtf": 0.0124
+    },
+    {
+      "id": "A43",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/mms/audio/A43.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0479,
+      "audio_seconds": 4.112,
+      "rtf": 0.0116
+    },
+    {
+      "id": "A44",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/mms/audio/A44.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0501,
+      "audio_seconds": 4.48,
+      "rtf": 0.0112
+    },
+    {
+      "id": "A45",
+      "group": "pure_khmer",
+      "category": "exclamatory",
+      "wav": "evaluation/results/mms/audio/A45.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0582,
+      "audio_seconds": 5.568,
+      "rtf": 0.0105
+    },
+    {
+      "id": "A46",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/mms/audio/A46.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0845,
+      "audio_seconds": 9.6,
+      "rtf": 0.0088
+    },
+    {
+      "id": "A47",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/mms/audio/A47.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0639,
+      "audio_seconds": 6.016,
+      "rtf": 0.0106
+    },
+    {
+      "id": "A48",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/mms/audio/A48.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0621,
+      "audio_seconds": 6.064,
+      "rtf": 0.0102
+    },
+    {
+      "id": "A49",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/mms/audio/A49.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0723,
+      "audio_seconds": 7.616,
+      "rtf": 0.0095
+    },
+    {
+      "id": "A50",
+      "group": "pure_khmer",
+      "category": "numbers_dates",
+      "wav": "evaluation/results/mms/audio/A50.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0775,
+      "audio_seconds": 8.656,
+      "rtf": 0.009
+    },
+    {
+      "id": "B01",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B01.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0701,
+      "audio_seconds": 7.232,
+      "rtf": 0.0097
+    },
+    {
+      "id": "B02",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B02.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0644,
+      "audio_seconds": 6.4,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B03",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B03.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0702,
+      "audio_seconds": 8.048,
+      "rtf": 0.0087
+    },
+    {
+      "id": "B04",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B04.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0625,
+      "audio_seconds": 6.592,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B05",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B05.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0491,
+      "audio_seconds": 4.496,
+      "rtf": 0.0109
+    },
+    {
+      "id": "B06",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B06.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0621,
+      "audio_seconds": 6.144,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B07",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B07.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0662,
+      "audio_seconds": 6.88,
+      "rtf": 0.0096
+    },
+    {
+      "id": "B08",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B08.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0629,
+      "audio_seconds": 6.608,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B09",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B09.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0599,
+      "audio_seconds": 5.664,
+      "rtf": 0.0106
+    },
+    {
+      "id": "B10",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B10.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0657,
+      "audio_seconds": 6.56,
+      "rtf": 0.01
+    },
+    {
+      "id": "B11",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B11.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0593,
+      "audio_seconds": 6.192,
+      "rtf": 0.0096
+    },
+    {
+      "id": "B12",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B12.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0556,
+      "audio_seconds": 5.184,
+      "rtf": 0.0107
+    },
+    {
+      "id": "B13",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B13.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0572,
+      "audio_seconds": 6.016,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B14",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B14.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0573,
+      "audio_seconds": 5.872,
+      "rtf": 0.0098
+    },
+    {
+      "id": "B15",
+      "group": "code_switched",
+      "category": "single_word",
+      "wav": "evaluation/results/mms/audio/B15.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.051,
+      "audio_seconds": 4.896,
+      "rtf": 0.0104
+    },
+    {
+      "id": "B16",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B16.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.056,
+      "audio_seconds": 5.808,
+      "rtf": 0.0096
+    },
+    {
+      "id": "B17",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B17.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0594,
+      "audio_seconds": 6.224,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B18",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B18.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0541,
+      "audio_seconds": 5.392,
+      "rtf": 0.01
+    },
+    {
+      "id": "B19",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B19.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0586,
+      "audio_seconds": 6.08,
+      "rtf": 0.0096
+    },
+    {
+      "id": "B20",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B20.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0581,
+      "audio_seconds": 6.032,
+      "rtf": 0.0096
+    },
+    {
+      "id": "B21",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B21.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.064,
+      "audio_seconds": 6.352,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B22",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B22.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0555,
+      "audio_seconds": 5.472,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B23",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B23.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0712,
+      "audio_seconds": 7.968,
+      "rtf": 0.0089
+    },
+    {
+      "id": "B24",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B24.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0613,
+      "audio_seconds": 6.56,
+      "rtf": 0.0093
+    },
+    {
+      "id": "B25",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B25.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0843,
+      "audio_seconds": 9.632,
+      "rtf": 0.0088
+    },
+    {
+      "id": "B26",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B26.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0623,
+      "audio_seconds": 6.56,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B27",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B27.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0731,
+      "audio_seconds": 8.384,
+      "rtf": 0.0087
+    },
+    {
+      "id": "B28",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B28.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0613,
+      "audio_seconds": 6.544,
+      "rtf": 0.0094
+    },
+    {
+      "id": "B29",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B29.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0708,
+      "audio_seconds": 7.44,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B30",
+      "group": "code_switched",
+      "category": "short_phrase",
+      "wav": "evaluation/results/mms/audio/B30.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0635,
+      "audio_seconds": 6.912,
+      "rtf": 0.0092
+    },
+    {
+      "id": "B31",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B31.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0553,
+      "audio_seconds": 5.456,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B32",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B32.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0628,
+      "audio_seconds": 6.896,
+      "rtf": 0.0091
+    },
+    {
+      "id": "B33",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B33.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0651,
+      "audio_seconds": 6.432,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B34",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B34.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0633,
+      "audio_seconds": 6.928,
+      "rtf": 0.0091
+    },
+    {
+      "id": "B35",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B35.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0644,
+      "audio_seconds": 6.8,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B36",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B36.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0516,
+      "audio_seconds": 5.088,
+      "rtf": 0.0101
+    },
+    {
+      "id": "B37",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B37.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0765,
+      "audio_seconds": 8.352,
+      "rtf": 0.0092
+    },
+    {
+      "id": "B38",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B38.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0569,
+      "audio_seconds": 4.96,
+      "rtf": 0.0115
+    },
+    {
+      "id": "B39",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B39.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0559,
+      "audio_seconds": 5.632,
+      "rtf": 0.0099
+    },
+    {
+      "id": "B40",
+      "group": "code_switched",
+      "category": "mixed_clause",
+      "wav": "evaluation/results/mms/audio/B40.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0673,
+      "audio_seconds": 7.296,
+      "rtf": 0.0092
+    },
+    {
+      "id": "B41",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/mms/audio/B41.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0632,
+      "audio_seconds": 6.976,
+      "rtf": 0.0091
+    },
+    {
+      "id": "B42",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/mms/audio/B42.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0525,
+      "audio_seconds": 5.376,
+      "rtf": 0.0098
+    },
+    {
+      "id": "B43",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/mms/audio/B43.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0682,
+      "audio_seconds": 7.344,
+      "rtf": 0.0093
+    },
+    {
+      "id": "B44",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/mms/audio/B44.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0565,
+      "audio_seconds": 5.68,
+      "rtf": 0.01
+    },
+    {
+      "id": "B45",
+      "group": "code_switched",
+      "category": "numbers_units",
+      "wav": "evaluation/results/mms/audio/B45.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0523,
+      "audio_seconds": 5.84,
+      "rtf": 0.009
+    },
+    {
+      "id": "B46",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/mms/audio/B46.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0499,
+      "audio_seconds": 4.688,
+      "rtf": 0.0106
+    },
+    {
+      "id": "B47",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/mms/audio/B47.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0567,
+      "audio_seconds": 6.432,
+      "rtf": 0.0088
+    },
+    {
+      "id": "B48",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/mms/audio/B48.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0594,
+      "audio_seconds": 6.256,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B49",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/mms/audio/B49.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0704,
+      "audio_seconds": 7.392,
+      "rtf": 0.0095
+    },
+    {
+      "id": "B50",
+      "group": "code_switched",
+      "category": "proper_noun",
+      "wav": "evaluation/results/mms/audio/B50.wav",
+      "sample_rate": 16000,
+      "synth_seconds": 0.0536,
+      "audio_seconds": 5.456,
+      "rtf": 0.0098
+    }
+  ]
+}

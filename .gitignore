@@ -1,6 +1,14 @@
 .venv/
+# Second venv for fish-s2 only -- fish-speech pins torch==2.8.0 and would
+# clobber the CUDA torch the other two backends run on, so it is installed
+# separately and synthesize.py --model fish-s2 runs under this interpreter.
+.venv-fish/
 __pycache__/
 *.pyc
+
+# fish-speech inference code + s2-pro weights (cloned, not vendored).
+# See evaluation/README.md; FISH_SPEECH_DIR points here.
+fish-speech/
 
 # Synthesized audio -- regenerable, and large. The scores/reports derived from
 # it (json, csv, md) ARE tracked; they're the deliverable.
@@ -10,3 +18,6 @@ evaluation/results/**/audio/
 # evaluation/README.md
 evaluation/dnsmos_models/
 *.onnx
+
+# LibreOffice lock files
+.~lock.*#

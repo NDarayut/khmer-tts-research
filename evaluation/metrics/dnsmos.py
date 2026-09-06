@@ -39,6 +39,10 @@ INPUT_LENGTH = 9.01  # seconds per analysis window, from the reference script
 P835_FILE = "sig_bak_ovr.onnx"
 P808_FILE = "model_v8.onnx"
 
+# Mel hop for the P.808 features, from the reference script. Also the amount
+# trimmed off a window before those features are computed -- see score().
+MEL_HOP_LENGTH = 160
+
 ENV_DIR = "DNSMOS_MODEL_DIR"
 
 # Polynomial mappings from raw model output to MOS, reference implementation,
@@ -94,7 +98,7 @@ def _polyfit(coeffs, value):
     return a * value * value + b * value + c
 
 
-def _melspec(audio, n_mels=120, frame_size=320, hop_length=160):
+def _melspec(audio, n_mels=120, frame_size=320, hop_length=MEL_HOP_LENGTH):
     """Log-mel features for the P.808 model -- reference parameters."""
     import librosa
     import numpy as np
@@ -139,8 +143,14 @@ def score(sessions, audio, sample_rate=SAMPLE_RATE):
             continue
 
         p835_input = {"input_1": segment[np.newaxis, :].astype(np.float32)}
+        # The P.808 model's mel input is a fixed 900 frames. A full 9.01 s
+        # window yields 901, so the reference implementation drops one hop
+        # before computing the features -- keep that, or onnxruntime rejects
+        # the input outright ("Got: 901 Expected: 900").
         p808_input = {
-            "input_1": _melspec(segment)[np.newaxis, :, :].astype(np.float32)
+            "input_1": _melspec(segment[:-MEL_HOP_LENGTH])[np.newaxis, :, :].astype(
+                np.float32
+            )
         }
 
         raw_sig, raw_bak, raw_ovr = sessions["p835"].run(None, p835_input)[0][0]
