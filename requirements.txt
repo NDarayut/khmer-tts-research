@@ -20,6 +20,12 @@ faster-whisper>=1.0.3   # metrics/cer.py -- Whisper-large-v3, CTranslate2 backen
 librosa>=0.10.1         # metrics/dnsmos.py -- log-mel features for the P.808 model
 onnxruntime>=1.17       # metrics/dnsmos.py  (swap for onnxruntime-gpu to use CUDA;
                         # do not install both -- they conflict)
+pyloudnorm>=0.1.1       # score_naturalness.py -- BS.1770 loudness normalization,
+                        # used to rule level differences out of the UTMOS comparison
+
+# CER is no longer scored by faster-whisper (it cannot read Khmer). The
+# replacement, evaluation/score_cer_khmer.py, runs under the Khmer ASR repo's
+# own interpreter and needs nothing from this file -- see evaluation/README.md.
 # metrics/utmos.py pulls the utmos22_strong checkpoint from torch.hub
 # (tarepan/SpeechMOS) on first use -- no pip package, but needs network once.
 #

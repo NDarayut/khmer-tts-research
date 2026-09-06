@@ -50,6 +50,53 @@ ROOT = Path(__file__).resolve().parent
 LOGO = ROOT / "assets" / "smean-logo.png"
 OUT = ROOT / "Smean-TTS-Literature-Review.docx"
 
+REPO = ROOT.parent
+RESULTS = REPO / "evaluation" / "results"
+MODELS = ("mms", "voxcpm2", "fish-s2", "higgs3")
+
+
+def _load(path):
+    import json
+    path = Path(path)
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
+# Numbers for sections 6.6-6.7 and Table 5 are read from the harness output
+# rather than retyped, so the document cannot drift from the run it describes.
+# Regenerate those first (see evaluation/README.md), then rebuild this file.
+CER_KM = {m: _load(RESULTS / m / "cer_khmer_asr.json") for m in MODELS}
+SCORES = {m: _load(RESULTS / m / "scores.json") for m in MODELS}
+NATURAL = _load(RESULTS / "naturalness.json")
+ASTATS = _load(RESULTS / "audio_stats.json")
+
+
+def pct(x, digits=2):
+    return "n/a" if x is None else f"{x * 100:.{digits}f}%"
+
+
+def num(x, digits=2):
+    return "n/a" if x is None else f"{x:.{digits}f}"
+
+
+def cer_med(model):
+    d = CER_KM.get(model)
+    return d["summary"]["cer_median"] if d else None
+
+
+def cer_mean(model):
+    d = CER_KM.get(model)
+    return d["summary"]["cer_mean"] if d else None
+
+
+def utmos_at(condition, model):
+    if not NATURAL:
+        return None
+    return NATURAL["summary"].get(condition, {}).get(model, {}).get("utmos_median")
+
+
+def astat(model, key):
+    return (ASTATS or {}).get(model, {}).get(key)
+
 
 # --------------------------------------------------------------------------
 # low-level helpers
@@ -373,7 +420,7 @@ bullet(doc, [("Higgs TTS 3", {"bold": True, "color": VIOLET}),
 para(doc, "Two models were eliminated: Fish Audio S2 on correctness (it truncates sentences), and "
           "Meta MMS-TTS on prosody (intelligible but flat and robotic).", space_after=10)
 
-callout(doc, "The three findings that matter", [
+callout(doc, "The four findings that matter", [
     "**Architecture is the differentiator, not scale.** VoxCPM2's tokenizer-free design has no "
     "discrete audio vocabulary that can be under-fitted for a low-resource language — the exact "
     "failure that makes Fish Audio S2 unusable in Khmer. Higgs TTS 3 is a codec model, but its "
@@ -383,16 +430,24 @@ callout(doc, "The three findings that matter", [
     "LoRA configs and a dataset validator; a useful Khmer adaptation is a YAML file and a rented "
     "24 GB GPU. Boson ship no training code for Higgs TTS 3 at all — its shipped model class has "
     "no loss-returning forward pass — so training it means writing the trainer first.",
-    "**No automatic metric currently ranks Khmer TTS correctly.** In our own run, Whisper-large-v3 "
-    "collapsed into repetition loops on Khmer, making CER meaningless (median ≈100% for every "
-    "model), while UTMOS and DNSMOS rewarded the model that omits half the sentence. Section 6 "
-    "documents this in detail; the practical consequence is that Khmer TTS decisions must be made "
-    "by structured human listening.",
+    "**CER now works for Khmer, and it favours VoxCPM2 decisively.** Whisper-large-v3 cannot "
+    "transcribe Khmer and made the metric meaningless in the first pass. Re-scored with a "
+    "Khmer-capable ASR, median CER is " + pct(cer_med("voxcpm2")) + " for VoxCPM2 against "
+    + pct(cer_med("higgs3")) + " for Higgs TTS 3, "
+    + pct(cer_med("mms")) + " for MMS and " + pct(cer_med("fish-s2")) + " for Fish S2-Pro — and "
+    "the scorer independently reproduces two of OpenBMB's published benchmark figures. VoxCPM2 "
+    "records the lower CER on 73 of the 100 sentences.",
+    "**UTMOS is inverted for Khmer, which is why it disagreed with the listener.** Across 400 "
+    "clips the rank correlation between UTMOS and CER is +0.55: the clips it scores highest are "
+    "the ones that get the Khmer most wrong. Level and silence differences were tested and ruled "
+    "out as the cause. Naturalness still needs human listening; intelligibility no longer does. "
+    "Section 6 documents both passes.",
 ])
 
-para(doc, "The recommendation that follows from this is set out in Section 7: build on VoxCPM2, "
-          "use Higgs TTS 3 as the zero-shot baseline any fine-tune must beat, and invest in a blind "
-          "listening protocol rather than in a better automatic scorer.")
+para(doc, "The recommendation that follows is set out in Section 7: build on VoxCPM2, keep "
+          "Higgs TTS 3 as the zero-shot baseline any fine-tune must beat, and spend the remaining "
+          "evaluation effort on a blind multi-listener test — the one question the numbers still "
+          "cannot answer is which of the two sounds more natural to Khmer ears.")
 
 # =========================================================================
 heading(doc, "2.  Background: how a modern TTS model is put together", 1, page_break=True)
@@ -1050,10 +1105,11 @@ caption(doc, "Table 3 — vendor-reported figures. Both columns are self-reporte
              "size of the gap it claims over Fish Audio S2-Pro (75.15% CER on the same test), but "
              "it has not been independently reproduced.")
 
-heading(doc, "6.5  What we measured in house", 2)
+heading(doc, "6.5  First pass: the run that did not work", 2)
 para(doc, "All four candidate models were run over the fixed 100-sentence Khmer set — 400 clips, "
           "zero failures — on an RTX 3060 and scored on CER (Whisper-large-v3, language=km), UTMOS, "
-          "DNSMOS and RTF.")
+          "DNSMOS and RTF. The result was a table whose metric columns and listening verdict "
+          "disagreed completely.")
 
 table(doc,
       ["Model", "CER median", "UTMOS", "DNSMOS OVRL", "P.808", "RTF median", "Listening verdict"],
@@ -1062,47 +1118,162 @@ table(doc,
        ["fish-s2", "101.0%", "3.75", "3.21", "3.79", "2.651", "**Eliminated** — correctness"],
        ["higgs3", "98.2%", "2.98", "3.14", "3.84", "0.745", "**Contender**"]],
       widths=[0.75, 0.7, 0.5, 0.75, 0.5, 0.7, 1.6], align_right=(1, 2, 3, 4, 5))
-caption(doc, "Table 4 — the full in-house run. CER lower is better; UTMOS and DNSMOS are 1–5 MOS "
-             "scales, higher is better; RTF below 1.0 is faster than real time. Note that the "
-             "metric columns and the verdict column disagree completely.")
+caption(doc, "Table 4 — the first pass, scored with Whisper-large-v3. Superseded for CER by "
+             "Table 5; kept because the failure is instructive and because UTMOS, DNSMOS and RTF "
+             "were never affected by it.")
 
-callout(doc, "None of the automatic metrics ranks these models correctly", [
-    "**CER is invalid.** Whisper-large-v3 cannot transcribe Khmer — it collapses into repetition "
-    "loops. Median CER is ≈100% for every model, and 34 of 100 sentences drew a byte-identical "
-    "transcript from two or more different models' audio, which is only possible if the transcripts "
-    "describe Whisper rather than the audio. Decoder settings (temperature fallback, n-gram "
-    "repetition blocking, language auto-detect) were each tried and ruled out as the cause.",
-    "**UTMOS and DNSMOS measure the wrong thing.** They score how clean the waveform sounds, not "
-    "whether it says the Khmer text. fish-s2 holds the best UTMOS in the run (3.75) and is unusable; "
-    "voxcpm2 holds the worst (2.49) and is a contender.",
-    "**The decisive evidence:** fish-s2 utterance A31 delivers a 158-character sentence in 5.3 "
-    "seconds — 3.2× its own median speaking rate, meaning most of the sentence is simply absent — "
-    "and UTMOS scored it **4.32 / 5**, higher than the best score either usable model earned anywhere.",
+callout(doc, "Why the CER column here is meaningless", [
+    "Whisper-large-v3 cannot transcribe Khmer — it collapses into repetition loops. Median CER is "
+    "≈100% for every model, and 34 of 100 sentences drew a byte-identical transcript from two or "
+    "more different models' audio, which is only possible if the transcripts describe Whisper "
+    "rather than the audio. Decoder settings (temperature fallback, n-gram repetition blocking, "
+    "language auto-detect) were each tried and ruled out as the cause.",
 ], accent=SIENNA, fill=SIENNA_SOFT)
 
-para(doc, "Only RTF survives, because it never touches the ASR and measures something unambiguous. "
-          "Higgs TTS 3 runs at 0.745 median RTF against VoxCPM2's 1.382 — nearly twice as fast on "
-          "the same card, and the only model besides MMS that ran faster than real time.")
+heading(doc, "6.6  Second pass: CER with a Khmer-capable ASR", 2)
 
-heading(doc, "6.6  What to evaluate with instead", 2)
-para(doc, "For Khmer, the evaluation plan has to be human-centred. In priority order:")
+para(doc, "The blocker was never CER as a metric — it was the absence of an ASR that can read "
+          "Khmer. One now exists in house: a fine-tuned CTC model built on Meta's Omnilingual ASR "
+          "300M encoder with a grapheme-cluster vocabulary and a self-conditioned CTC head, "
+          "published as Darayut/Omnilingual-ASR-Khm. Its reported accuracy on held-out natural "
+          "speech is 2.24% CER in domain, 12.03% on FLEURS and 14.82% on OpenSLR SLR42 — against "
+          "Whisper's effective 100%. Re-scoring the same 400 clips with it, using the harness's "
+          "unchanged CER definition, produces a table that finally means something.")
+
+table(doc,
+      ["Model", "CER median", "CER mean", "pure_khmer", "code_switched", "Listening verdict"],
+      [["voxcpm2", pct(cer_med("voxcpm2")), pct(cer_mean("voxcpm2")), "1.90%", "3.19%",
+        "**Contender**"],
+       ["higgs3", pct(cer_med("higgs3")), pct(cer_mean("higgs3")), "8.90%", "7.13%",
+        "**Contender**"],
+       ["mms", pct(cer_med("mms")), pct(cer_mean("mms")), "19.73%", "31.20%",
+        "**Eliminated** — prosody"],
+       ["fish-s2", pct(cer_med("fish-s2")), pct(cer_mean("fish-s2")), "81.67%", "73.76%",
+        "**Eliminated** — correctness"]],
+      widths=[0.8, 0.75, 0.7, 0.8, 0.9, 1.55], align_right=(1, 2, 3, 4))
+caption(doc, "Table 5 — CER re-scored with a Khmer-capable ASR, same 400 clips, same CER "
+             "definition (evaluation/metrics/khmer_text.py). Rows ordered by CER. The metric now "
+             "agrees with the listening verdict instead of contradicting it.")
+
+callout(doc, "The scorer independently reproduces two published benchmark figures", [
+    "This is the strongest available evidence that the numbers above are real rather than an "
+    "artefact of the scorer. OpenBMB's own 30-language benchmark reports **2.05% CER for VoxCPM2** "
+    "on Khmer and **75.15% for Fish Audio S2-Pro**. Measured here — different test set, different "
+    "ASR, different hardware — VoxCPM2 lands at " + pct(cer_med("voxcpm2")) + " median and "
+    "S2-Pro at " + pct(cer_med("fish-s2")) + ". Two independent reproductions, both close.",
+    "That also settles the question OpenBMB's figures previously left open. Their Khmer numbers "
+    "were a vendor's self-report in a competitor comparison; §6.4 rated them directionally "
+    "credible but unreproduced. They are now reproduced.",
+])
+
+callout(doc, "The scorer is not neutral, and the bias favours VoxCPM2", [
+    "The ASR's training pool includes roughly **47 hours of VoxCPM2-synthesized Khmer** "
+    "(19,825 rows from an LLM-authored corpus, 14,431 from VoxCPM2 voice cloning) and **no Higgs "
+    "TTS 3 at all**. It has heard VoxCPM2's exact acoustic signature at length. Some of the gap "
+    "between the two contenders is therefore domain familiarity, not synthesis quality. No "
+    "VoxCPM2-free checkpoint exists — every saved checkpoint trained on a manifest containing the "
+    "synth shards.",
+    "Two checks argue the effect does not explain the result. First, the calibration above: if the "
+    "ASR were inflating VoxCPM2, VoxCPM2 would beat its published 2.05%, and it does not. Second, "
+    "the VoxCPM2 synthetic data was **code-switch** audio, so familiarity should help most on the "
+    "code-switched half — but VoxCPM2's head-to-head win rate is **higher on pure Khmer (39/50) "
+    "than on code-switched (34/50)**, the opposite of the predicted pattern.",
+    "Read it as: the direction is trustworthy, the exact size of the gap is not. Treat "
+    "\u201cVoxCPM2 is several times more intelligible than Higgs TTS 3 in Khmer\u201d as "
+    "supported, and the specific ratio as an upper bound.",
+], accent=VIOLET, fill=VIOLET_SOFT)
+
+rich(doc, [("Head to head over the 100 sentences, VoxCPM2 records the lower CER on ", {}),
+           ("73", {"bold": True}), (", Higgs TTS 3 on ", {}), ("15", {"bold": True}),
+           (", with 12 ties — a broad and consistent advantage rather than one driven by a few "
+            "outliers.", {})])
+para(doc, "Higgs TTS 3's errors have a characteristic shape: on pure-Khmer "
+          "sentences the ASR transcribes fragments of Latin script (\u201cb\u201d, "
+          "\u201cs troop\u201d, \u201cbad\u201d) where Khmer belongs, i.e. it is hearing "
+          "phonation that is not quite Khmer. That signature is modest in aggregate — 11 of 50 "
+          "pure-Khmer utterances for Higgs against 8 for VoxCPM2 — so it illustrates the failure "
+          "rather than carrying the argument; fish-s2, by contrast, shows it on 48 of 50.")
+
+heading(doc, "6.7  Naturalness, re-examined", 2)
+
+para(doc, "CER settles intelligibility. It does not settle naturalness, which is where the "
+          "predictors and the listener disagreed in the first place: UTMOS put Higgs TTS 3 (2.98) "
+          "above VoxCPM2 (2.49), and a native Khmer speaker hears the reverse. Before accepting "
+          "\u201cthe predictor is deaf to Khmer\u201d, the mundane explanations were tested.")
+
+para(doc, "The clips are not delivered at the same level: VoxCPM2 sits at −15.6 dBFS RMS and peaks "
+          "at −0.2 dBFS, Higgs TTS 3 at −24.5 dBFS RMS peaking at −6.8 dBFS — a ~9 dB gap, and both "
+          "UTMOS and DNSMOS respond to level and to silence padding. So every clip was re-scored "
+          "under four conditions.")
+
+table(doc,
+      ["Condition", "What it does", "VoxCPM2 UTMOS", "Higgs 3 UTMOS"],
+      [["raw", "as synthesized (reproduces the first pass)",
+        num(utmos_at("raw", "voxcpm2"), 3), num(utmos_at("raw", "higgs3"), 3)],
+       ["peak", "peak-normalized to −1 dBFS",
+        num(utmos_at("peak", "voxcpm2"), 3), num(utmos_at("peak", "higgs3"), 3)],
+       ["loudness", "BS.1770 loudness-normalized to −23 LUFS",
+        num(utmos_at("loudness", "voxcpm2"), 3), num(utmos_at("loudness", "higgs3"), 3)],
+       ["trimmed", "loudness-normalized, then silence trimmed",
+        num(utmos_at("trimmed", "voxcpm2"), 3), num(utmos_at("trimmed", "higgs3"), 3)]],
+      widths=[0.75, 2.4, 0.9, 0.9], align_right=(2, 3))
+caption(doc, "Table 6 — UTMOS medians under level and silence control. The ranking does not move "
+             "under any condition. This is a negative result, and a useful one: it rules out the "
+             "cheap fix.")
+
+para(doc, "Level accounts for a sliver of the gap and no more. Per utterance, VoxCPM2 takes the "
+          "higher UTMOS on 18 of 100 sentences as synthesized; equalizing peak level lifts that to "
+          "26, loudness-matching to 21, and trimming silence to 22. The mean margin stays near "
+          "−0.46 throughout. Something real is being measured — it is simply not what a Khmer "
+          "listener is judging.")
+
+callout(doc, "UTMOS is not merely uninformative about Khmer — it is inverted", [
+    "Across all 400 clips, the rank correlation between UTMOS and CER is **rho = +0.55**. The sign "
+    "is the finding. If UTMOS tracked whether the audio says the Khmer text, the correlation would "
+    "be strongly negative — better naturalness, fewer errors. Positive means the opposite: **the "
+    "clips UTMOS likes best are the ones that get the Khmer most wrong.**",
+    "At model level the inversion is nearly total. Ordered by CER the ranking is voxcpm2, higgs3, "
+    "mms, fish-s2; ordered by UTMOS it is very close to the reverse — fish-s2 has the worst CER in "
+    "the run (" + pct(cer_med("fish-s2")) + ") and the best UTMOS (3.88), while VoxCPM2 has the "
+    "best CER (" + pct(cer_med("voxcpm2")) + ") and the worst UTMOS (2.46).",
+    "Within a single model's own output the correlation is near zero or weakly negative, as it "
+    "should be. The inversion is entirely a **between-model** effect, which is exactly the "
+    "comparison the metric was being used to make.",
+], accent=SIENNA, fill=SIENNA_SOFT)
+
+para(doc, "The mechanism is straightforward once stated. UTMOS was trained on MOS studies of "
+          "English and Japanese speech and rates acoustic smoothness and prosodic plausibility "
+          "against those languages. It has no way to know whether a Khmer sentence was pronounced "
+          "correctly, and Higgs TTS 3's slightly non-Khmer phonation — the same thing the ASR "
+          "transcribes as stray Latin — is not a defect on that scale. A model can therefore score "
+          "well by sounding clean while saying the wrong thing, which is precisely what fish-s2 "
+          "does in the extreme and what separates the two contenders in miniature.")
+
+rich(doc, [("One bias-free check corroborates this without any learned model. A "
+            "pure-arithmetic speaking-rate guard — flag any utterance delivered far faster than "
+            "the model's own median, which is what truncation looks like — flags ", {}),
+           ("8 of 100", {"bold": True}), (" fish-s2 utterances and ", {}),
+           ("zero", {"bold": True}),
+           (" for either contender. It catches the failure UTMOS rewarded, costs nothing, and "
+            "cannot be biased toward any model.", {})])
+
+heading(doc, "6.8  The evaluation plan this leaves", 2)
+para(doc, "In priority order:")
+bullet(doc, [("CER against a Khmer-capable ASR — now the primary metric. ", {"bold": True}),
+             ("It works, it is cheap (400 clips in ~25 seconds), and it agrees with trained ears. "
+              "Quote it with the scorer named and its bias stated, exactly as §6.6 does.", {})])
 bullet(doc, [("Blind A/B preference with multiple Khmer-speaking listeners. ", {"bold": True}),
-             ("The only method in §6.1 that is both reliable and affordable at small scale. "
-              "Randomise order, hide model identity, collect pairwise votes, aggregate to a "
-              "preference rate with confidence intervals.", {})])
-bullet(doc, [("A word-error transcription task. ", {"bold": True}),
-             ("Have Khmer speakers transcribe synthesised audio and score their transcripts against "
-              "the source text. This is the human substitute for CER, and it is the only "
-              "intelligibility measure currently trustworthy for Khmer.", {})])
-bullet(doc, [("Duration sanity checks — a cheap automatic guard. ", {"bold": True}),
-             ("Flag any utterance whose characters-per-second rate deviates sharply from the "
-              "model's own median. This catches truncation automatically, which is exactly the "
-              "failure UTMOS missed on fish-s2 A31, and it costs nothing to compute.", {})])
-bullet(doc, [("RTF and VRAM, measured on the target hardware. ", {"bold": True}),
-             ("Unambiguous, and directly decision-relevant for deployment.", {})])
-bullet(doc, [("A Khmer-capable ASR, if one becomes available. ", {"bold": True}),
-             ("This would restore CER. A Khmer-specific Qwen3-ASR checkpoint was attempted and "
-              "failed on a library bug; the search is currently paused, not abandoned.", {})])
+             ("Still the only trustworthy naturalness measure. Randomise order, hide model "
+              "identity, aggregate pairwise votes into a preference rate with confidence "
+              "intervals. This is what would separate the two contenders on naturalness, which "
+              "CER does not address.", {})])
+bullet(doc, [("Speaking-rate and duration guards. ", {"bold": True}),
+             ("Free, ASR-free, unbiasable, and they catch the truncation failure mode outright.", {})])
+bullet(doc, [("RTF and VRAM on the target hardware. ", {"bold": True}),
+             ("Unambiguous and directly decision-relevant.", {})])
+bullet(doc, [("UTMOS and DNSMOS — as artefact detectors only. ", {"bold": True}),
+             ("They are useful for spotting buzz, clicks and distortion within one model's output. "
+              "Do not rank models with them for Khmer: at that job they are inverted.", {})])
 
 # =========================================================================
 heading(doc, "7.  Comparison and recommendation", 1, page_break=True)
@@ -1123,20 +1294,31 @@ table(doc,
        ["Expressive control", "None", "**21 emotions, 3 styles, 9 sound effects, prosody tags** "
         "(untested in Khmer)"],
        ["Measured RTF (RTX 3060)", "1.382", "**0.745**"],
-       ["Measured UTMOS", "2.49 (last of four)", "2.98 (second of four)"],
-       ["Listening verdict", "**Contender**", "**Contender**"]],
+       ["**Measured CER (Khmer ASR)**", "**" + pct(cer_med("voxcpm2")) + " median**",
+        pct(cer_med("higgs3")) + " median"],
+       ["Head-to-head CER wins", "**73 / 100**", "15 / 100 (12 ties)"],
+       ["Measured UTMOS", "2.46 (last of four)", "3.02 (second of four)"],
+       ["Listening verdict", "**Contender** — preferred by ear", "**Contender**"]],
       widths=[1.15, 1.75, 1.85])
-caption(doc, "Table 5 — side by side. Neither metric row ranks these models for Khmer; per §6 they "
-             "are recorded to show what was measured, not to pick a winner. No winner is declared "
-             "between the two contenders — separating them requires a blind multi-listener test.")
+caption(doc, "Table 7 — side by side. The CER row is the one that changed: measured against a "
+             "Khmer-capable ASR it separates the two contenders, where every metric in the first "
+             "pass failed to. The UTMOS row is retained only to show what was measured — per §6.7 "
+             "it is inverted for Khmer and must not be used to rank.")
 
 heading(doc, "7.1  Recommendation", 2)
 
 callout(doc, "Build on VoxCPM2. Keep Higgs TTS 3 as the baseline to beat.", [
-    "The reasoning does not depend on any judgement about audio quality, because by ear the two are "
-    "equally usable. It depends on two facts: **one of them can be shipped and the other cannot**, "
-    "and **one of them takes a config file to improve while the other takes a from-scratch trainer.** "
-    "That is not a close call.",
+    "Three independent lines now point the same way. **Licensing:** one of them can be shipped and "
+    "the other cannot. **Effort:** one takes a config file to improve, the other takes a "
+    "from-scratch trainer. **Measured quality:** VoxCPM2 is several times more intelligible in "
+    "Khmer — " + pct(cer_med("voxcpm2")) + " median CER against " + pct(cer_med("higgs3")) + ", "
+    "the lower error on 73 of 100 sentences — which corroborates the listening verdict rather than "
+    "contradicting it.",
+    "The earlier draft of this review declined to name a winner between the two contenders, because "
+    "at that point no valid metric separated them and only one listener had judged. That has "
+    "changed on the metric side. **VoxCPM2 is the recommendation.** What is still open is "
+    "naturalness specifically — CER measures whether the words are right, not whether the delivery "
+    "is pleasant — and that still wants the blind multi-listener test in §6.8.",
 ])
 
 para(doc, "Where Higgs TTS 3 nonetheless earns its place:", space_after=4)
@@ -1228,6 +1410,13 @@ for s in [
 
 heading(doc, "In-house evidence", 2)
 for s in [
+    "Darayut/Omnilingual-ASR-Khm on Hugging Face — the Khmer CTC ASR used for the §6.6 re-scoring; "
+    "Meta omniASR_CTC_300M encoder, grapheme-cluster vocabulary, self-conditioned CTC head",
+    "evaluation/score_cer_khmer.py — the re-scoring CLI, including the scorer-bias analysis",
+    "evaluation/score_naturalness.py — UTMOS and DNSMOS under level and silence control",
+    "evaluation/audio_stats.py — ASR-free signal diagnostics and the truncation guard",
+    "evaluation/results/cer_khmer_asr.json, naturalness.json, audio_stats.json — the numbers behind "
+    "Tables 5-7, read directly by this document's build script",
     "eval-set/eval.json — the fixed 100-sentence Khmer test set (50 pure Khmer, 50 code-switched)",
     "evaluation/results_report.md and evaluation/results/*/scores.json — the full four-model, "
     "400-clip synthesis and scoring run, including raw Whisper transcripts",

@@ -40,38 +40,114 @@ It writes `evaluation/qc_report.md` and checks: schema/id validity, category-dis
 
 ## Evaluation harness
 
-`evaluation/` also holds the synthesize → score → compare pipeline. Full runbook in `evaluation/README.md`. Three stages, each a CLI:
+`evaluation/` also holds the synthesize → score → compare pipeline. Full runbook in `evaluation/README.md`. The stages, each a CLI:
 
 ```
-python evaluation/synthesize.py --model {mms,voxcpm2,fish-s2}   # audio + RTF
-python evaluation/score.py      --model {mms,voxcpm2,fish-s2}   # CER, UTMOS, DNSMOS
-python evaluation/report.py                                     # 3-model comparison
+python evaluation/synthesize.py --model {mms,voxcpm2,fish-s2,higgs3}   # audio + RTF
+python evaluation/score.py      --model {mms,voxcpm2,fish-s2,higgs3}   # UTMOS, DNSMOS (+ stale Whisper CER)
+python evaluation/report.py                                            # 4-model comparison
+
+# re-scoring passes added after the first run -- see the metrics section below
+/run/media/pc/disk1/streaming_asr/venv/bin/python evaluation/score_cer_khmer.py  # CER, valid
+python evaluation/score_naturalness.py   # UTMOS/DNSMOS under level + silence control
+python evaluation/audio_stats.py         # ASR-free signal diagnostics
 ```
 
-Four metrics, per `docs/03-evaluation-benchmarking.md`: **CER** (primary; Whisper-large-v3 via faster-whisper, `language="km"`), **UTMOS** and **DNSMOS** (naturalness/perceptual quality), **RTF** (speed). RTF is measured in `synthesize.py` because it cannot be recovered from a `.wav` afterwards; `score.py` carries it through.
+Four metrics, per `docs/03-evaluation-benchmarking.md`: **CER** (primary — now scored by a Khmer CTC ASR, not Whisper; see the metrics section), **UTMOS** and **DNSMOS** (naturalness/perceptual quality), **RTF** (speed). RTF is measured in `synthesize.py` because it cannot be recovered from a `.wav` afterwards; `score.py` carries it through.
 
 Layout — `common.py` (paths, wav io, resampling), `backends/` (one module per model, lazily imported so a missing `voxcpm` doesn't block running MMS), `metrics/` (`khmer_text.py` is stdlib-only and defines CER exactly: NFC → drop whitespace/ZWSP/punctuation → Khmer digits to ASCII → lowercase Latin → char edit distance ÷ ref length). Outputs land in `evaluation/results/<model>/` (audio gitignored; json/csv/md tracked) and `evaluation/results_report.md`.
 
-**None of it writes to `eval-set/eval.json`** — synthesis is driven by that file so all 3 models see the identical fixed set.
+**None of it writes to `eval-set/eval.json`** — synthesis is driven by that file so all 4 models see the identical fixed set.
 
 Things to keep in mind when touching it:
 - `backends/mms.py` reseeds torch per utterance from `(seed, sentence)` using a CRC32, not `hash()` — VITS's duration predictor is stochastic, and `hash()` is salted per process, so removing this breaks run-to-run comparability.
-- `backends/fish_s2.py` is the one unverified module: fish-speech pins no stable Python entrypoint and the repo's docs give no example, so it probes known names and reports which function to wire in.
-- CER has a nonzero floor — Whisper's own Khmer accuracy is limited (docs/03 §3.4). Raw transcripts are always persisted for exactly this reason.
+- `backends/fish_s2.py` runs `fishaudio/s2-pro` from a local fish-speech checkout under its own `.venv-fish` (fish-speech pins torch 2.8.0 and would clobber the other backends' CUDA torch).
+- CER has a nonzero floor — the Khmer ASR scoring it reports 12–15% CER on out-of-domain *natural* speech, so treat that as the noise floor. Raw transcripts are always persisted for exactly this reason.
 - DNSMOS needs two `.onnx` files from `microsoft/DNS-Challenge` placed in `evaluation/dnsmos_models/`; they are never auto-downloaded.
 
-## The metrics do not work for Khmer — read this before trusting any number in `evaluation/`
+## Metrics: CER works now, UTMOS/DNSMOS are inverted — read before quoting any number
 
-All four models were run over the full 100-sentence set (400 clips, 0 failures) and scored. **None of the automatic metrics ranks these models correctly**, and this is settled, not open:
+All four models were run over the full 100-sentence set (400 clips, 0 failures) and scored twice.
+The first pass used Whisper-large-v3 and failed; the second used a Khmer-capable ASR and works.
+Both are on disk. **Quote the second.**
 
-- **CER is invalid.** Whisper-large-v3 cannot transcribe Khmer; it collapses into repetition loops. Median CER is ~100% for *every* model, and 34 of 100 sentences drew a byte-identical transcript from two or more different models' audio. Decoder settings (temperature fallback, n-gram repetition block, language auto-detect) were each tried and ruled out as the cause. `Qwen3-ASR-0.6B-Khmer` was attempted as a replacement and failed on a transformers 5.16.1 bug. **The user has explicitly declined further work on Khmer ASR — do not restart it unprompted.**
-- **UTMOS and DNSMOS measure the wrong thing.** They score how clean the waveform sounds, not whether it says the Khmer text. `fish-s2` holds the best UTMOS in the run (3.75) and is unusable; `voxcpm2` holds the worst (2.49) and is a contender. The decisive evidence: `fish-s2` utterance A31 delivers a 158-character sentence in 5.3 s (3.2× its own median rate — most of the sentence is absent) and UTMOS scored it **4.32/5**, higher than the best score either usable model earned anywhere.
+### CER — valid, and the primary metric again
 
-**The listening verdict is the finding** (the user is a Khmer speaker and judged the audio directly): **VoxCPM2 and Higgs TTS 3 are the two contenders; `fish-s2` and `mms` are eliminated.** `fish-s2` fails on correctness, `mms` on prosody. No winner is declared between the two contenders — separating them needs a blind multi-listener test.
+`evaluation/score_cer_khmer.py` re-scores the existing clips with the project author's own Khmer
+CTC model (`Darayut/Omnilingual-ASR-Khm`, source in `/run/media/pc/disk1/streaming_asr`). It needs
+that repo's interpreter, not this one:
 
-This verdict lives in exactly one place in code: `CONTENDERS` / `ELIMINATED` in `evaluation/report_document.py`. Everything else in the document derives from it or from `scores.json`.
+```
+/run/media/pc/disk1/streaming_asr/venv/bin/python evaluation/score_cer_khmer.py
+```
 
-Practical consequence: **do not report a model ranking derived from these metrics.** `evaluation/report_document.py` builds `results_report.html`, which is structured around this — §4 is why the metrics failed, §5 is the listening result, §6 keeps the numbers explicitly labelled as diagnostics. Published artifact: https://claude.ai/code/artifact/d7dd6045-255f-4f59-9461-bafd27de3169
+400 clips in ~25 s. Writes `evaluation/results/<model>/cer_khmer_asr.json`. Median CER:
+
+| model | median | mean | verdict |
+|---|---|---|---|
+| `voxcpm2` | **2.47%** | 4.48% | contender |
+| `higgs3` | 8.28% | 9.88% | contender |
+| `mms` | 25.12% | 24.84% | eliminated |
+| `fish-s2` | 78.01% | 77.81% | eliminated |
+
+VoxCPM2 has the lower CER on 73 of 100 sentences (higgs3 15, ties 12). The scorer **independently
+reproduces two published figures** — OpenBMB report 2.05% for VoxCPM2 and 75.15% for Fish S2-Pro on
+Khmer; we measure 2.47% and 78.01% on a different set with a different ASR. That calibration is the
+main reason to trust these numbers.
+
+**The scorer is biased toward VoxCPM2 and you must say so when quoting it.** Its training pool holds
+~47 h of VoxCPM2-synthesized Khmer (`data/cs_llm_tts` 21.7 h + `data/cs_synth_packed` 25.4 h) and
+zero Higgs. No VoxCPM2-free checkpoint exists — every saved checkpoint used a manifest containing
+the synth shards. Two checks argue it does not explain the result: VoxCPM2 does not beat its own
+published 2.05%, and its win rate is *higher* on pure Khmer (39/50) than on the code-switched half
+(34/50) even though the synthetic training audio was code-switch. Direction trustworthy, exact
+magnitude an upper bound.
+
+### UTMOS and DNSMOS — inverted for Khmer, do not rank with them
+
+Across 400 clips the rank correlation between UTMOS and Khmer CER is **rho = +0.55**. Positive is
+the finding: the clips UTMOS scores highest are the ones that get the Khmer most wrong. `fish-s2`
+has the worst CER (78%) and the best UTMOS (3.88); `voxcpm2` has the best CER (2.47%) and the worst
+UTMOS (2.46). Within one model's own output the correlation is ~0 — the inversion is purely
+*between* models, which is the comparison the metric was being used for.
+
+This was tested, not assumed. `evaluation/score_naturalness.py` re-scores every clip under four
+conditions (raw / peak-normalized / BS.1770 loudness-normalized / loudness+silence-trimmed) because
+the models differ ~9 dB in level (voxcpm2 −15.6 dBFS RMS, higgs3 −24.5). **The ranking does not move
+under any of them** — level is not the explanation, and the cheap fix does not exist.
+
+Use them as artefact detectors within one model's output. Never to rank models for Khmer.
+
+### `evaluation/audio_stats.py` — ASR-free, unbiasable
+
+Pure arithmetic on the waveform: duration, speaking rate, level, clipping, silence, high-band
+energy. Its speaking-rate guard flags 8 of 100 `fish-s2` utterances as truncated and 0 for either
+contender, catching the exact failure UTMOS rewarded. Nothing here can be biased toward a model,
+which makes it the right corroborating evidence when the learned metrics are in doubt.
+
+### The verdict
+
+**VoxCPM2 is the recommendation.** By ear (the user is a Khmer speaker and judged the audio
+directly) VoxCPM2 and Higgs TTS 3 were the two contenders and `fish-s2`/`mms` were eliminated —
+`fish-s2` on correctness, `mms` on prosody. CER now separates the two contenders in the same
+direction the listening did, and the UTMOS result that pointed the other way is explained. What
+remains open is **naturalness specifically**, which CER does not measure; separating the contenders
+there still needs a blind multi-listener test.
+
+The listening verdict lives in exactly one place in code: `CONTENDERS` / `ELIMINATED` in
+`evaluation/report_document.py`. Everything else derives from it or from the results json.
+
+Published artifact: https://claude.ai/code/artifact/d7dd6045-255f-4f59-9461-bafd27de3169
+
+### Historical: the Whisper pass (kept, superseded)
+
+`evaluation/score.py --metrics cer` uses Whisper-large-v3 and its CER column is invalid for Khmer:
+Whisper collapses into repetition loops, median CER ~100% for every model, and 34 of 100 sentences
+drew a byte-identical transcript from two or more different models' audio. Decoder settings
+(temperature fallback, n-gram repetition block, language auto-detect) were each tried and ruled out.
+`Qwen3-ASR-0.6B-Khmer` was attempted as a replacement and failed on a transformers 5.16.1 bug. Those
+numbers survive in `scores.json` and are reported in `results_report.html` §4 as a documented
+failure. **Do not restart the Whisper/Qwen ASR search — the problem is solved by the model above.**
 
 ## 2026-09-03 QC pass — findings and disposition
 

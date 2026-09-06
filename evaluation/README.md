@@ -87,13 +87,38 @@ Scoring still runs from the main venv -- it only reads wavs.
 python evaluation/synthesize.py --model mms
 python evaluation/synthesize.py --model voxcpm2
 python evaluation/synthesize.py --model fish-s2
+python evaluation/synthesize.py --model higgs3
 
 python evaluation/score.py --model mms
 python evaluation/score.py --model voxcpm2
 python evaluation/score.py --model fish-s2
+python evaluation/score.py --model higgs3
 
 python evaluation/report.py
 ```
+
+### The re-scoring passes (added after the first run)
+
+`score.py`'s CER column is scored by Whisper-large-v3 and is **invalid for
+Khmer** -- see the metrics section of the root `CLAUDE.md`. Three scripts
+replace and cross-check it. They read the clips already on disk, so none of
+them requires re-synthesis:
+
+```bash
+# CER, with a Khmer-capable ASR. Needs THAT repo's interpreter, not this venv:
+# fairseq2 ships compiled extensions and pins a different torch.
+/run/media/pc/disk1/streaming_asr/venv/bin/python evaluation/score_cer_khmer.py
+
+# UTMOS + DNSMOS under four level/silence conditions, plus paired win rates
+python evaluation/score_naturalness.py --device cuda
+
+# ASR-free signal diagnostics: rate, level, clipping, silence, truncation guard
+python evaluation/audio_stats.py
+```
+
+`score_cer_khmer.py` does 400 clips in ~25 s. `score_naturalness.py` is the
+slow one (4 conditions x 2 predictors x 400 clips, ~20 min, DNSMOS on CPU is
+the bottleneck) -- run it in the background.
 
 Smoke-test first: `python evaluation/synthesize.py --model mms --limit 3`
 then `python evaluation/score.py --model mms --metrics cer`.
@@ -108,7 +133,10 @@ evaluation/results/<model>/audio/<id>.wav   native rate; gitignored
 evaluation/results/<model>/synthesis.json   RTF + env block (device, GPU, seed)
 evaluation/results/<model>/scores.json      all metrics + ASR transcripts
 evaluation/results/<model>/scores.csv       one flat row per utterance
-evaluation/results_report.md                the 3-model comparison
+evaluation/results/<model>/cer_khmer_asr.json   CER from the Khmer ASR + transcripts
+evaluation/results/naturalness.json         UTMOS/DNSMOS x 4 conditions + paired
+evaluation/results/audio_stats.json         per-clip signal measurements
+evaluation/results_report.md                the 4-model comparison
 ```
 
 Synthesis is resumable: ids that already have a wav are skipped (and their
@@ -124,11 +152,15 @@ one sentence records the error and continues.
 - **MMS is stochastic.** VITS's duration predictor randomizes prosody and
   therefore audio length and RTF. `backends/mms.py` reseeds per utterance from
   `(seed, sentence)` so a partial run matches a full one; don't remove that.
-- **Whisper has a Khmer error floor.** CER never reaches 0 even on perfect
-  audio (docs/03 section 3.4). Raw transcripts are saved in `scores.json` --
-  read them before concluding a model mispronounced something.
-- **`backends/fish_s2.py` is the one unverified module.** fish-speech's Python
-  entrypoint has changed across releases and the repo's docs pin no API, so it
-  probes several known names and tells you which function to wire in if none
-  match your clone. Everything else in the harness is verified.
+- **Whisper cannot read Khmer at all.** The CER column in `scores.json` is a
+  record of that failure, not a measurement -- it collapses into repetition
+  loops and lands at ~100% for every model. Use `score_cer_khmer.py` instead.
+- **The Khmer ASR scorer is not neutral.** It trained on ~47 h of
+  VoxCPM2-synthesized speech and no Higgs, so its CER favours VoxCPM2. The
+  header of `score_cer_khmer.py` explains how to read a result around that.
+  There is still a floor: 12-15% CER on out-of-domain *natural* speech.
+- **Do not rank models with UTMOS or DNSMOS on Khmer.** Their correlation with
+  Khmer CER across this run is *positive* (rho +0.55) -- the clips they like
+  best are the ones that get the Khmer most wrong. Fine as artefact detectors
+  within one model's output; inverted between models.
 - **DNSMOS BAK saturates** on clean synthetic speech; read SIG and OVRL.
