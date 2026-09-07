@@ -114,7 +114,27 @@ python evaluation/score_naturalness.py --device cuda
 
 # ASR-free signal diagnostics: rate, level, clipping, silence, truncation guard
 python evaluation/audio_stats.py
+
+# prosody description (F0, energy, pausing). NOT a naturalness score -- see below
+python evaluation/prosody_stats.py
 ```
+
+### Measuring naturalness
+
+No automatic metric works for this (UTMOS is inverted; prosody statistics fail
+their own sanity check against `mms`). Naturalness is measured on ears:
+
+```bash
+# build a blind, randomized A/B test -- one self-contained html file
+python evaluation/listening_test.py --pair voxcpm2:higgs3 --sentences 40 --anchors 6
+
+# send listening_test.html to 5+ Khmer speakers, collect their .json, then
+python evaluation/listening_analyse.py responses/*.json
+```
+
+The answer key is written to `results/listening_test_key.json` and deliberately
+does *not* travel with the page. Power: 194 trials resolves a 60/40 preference,
+85 resolves 65/35 -- hence 5 listeners x 40 sentences as the default.
 
 `score_cer_khmer.py` does 400 clips in ~25 s. `score_naturalness.py` is the
 slow one (4 conditions x 2 predictors x 400 clips, ~20 min, DNSMOS on CPU is
@@ -164,3 +184,11 @@ one sentence records the error and continues.
   best are the ones that get the Khmer most wrong. Fine as artefact detectors
   within one model's output; inverted between models.
 - **DNSMOS BAK saturates** on clean synthetic speech; read SIG and OVRL.
+- **`prosody_stats.py` describes, it does not judge.** Its own built-in check
+  fails: `mms` has the *widest* pitch variation in the run despite being the
+  model eliminated for flat prosody. Wide-but-wrong pitch movement reads as
+  robotic and the statistic cannot tell the difference.
+- **The two contenders use different default voices** (median F0 ~206 Hz vs
+  ~114 Hz). Before running a listening test whose result you intend to act on,
+  re-synthesize both from a single reference clip so the comparison is of
+  synthesis rather than of timbre.

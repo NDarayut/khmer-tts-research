@@ -125,14 +125,37 @@ energy. Its speaking-rate guard flags 8 of 100 `fish-s2` utterances as truncated
 contender, catching the exact failure UTMOS rewarded. Nothing here can be biased toward a model,
 which makes it the right corroborating evidence when the learned metrics are in doubt.
 
+### Naturalness: there is no metric, use the listening test
+
+Two shortcuts were tried and both failed on their own terms, so do not retry them:
+
+- **MOS predictors** are inverted (above).
+- **Prosody statistics as a proxy.** `evaluation/prosody_stats.py` measures F0 variation, contour
+  speed, energy dynamics and pausing over all 400 clips. It carries a falsifiable check: `mms` was
+  eliminated by ear for flat, robotic prosody, so it should show the *least* pitch movement. It
+  shows the **most** (F0 std 5.66 st, vs 3.06 voxcpm2 / 3.35 higgs3). Wide but wrongly-placed pitch
+  movement reads as robotic, and the statistic cannot tell the difference. The file is still worth
+  keeping as *description* — never quote it as a naturalness score.
+
+The instrument is `evaluation/listening_test.py` -> a self-contained blind A/B HTML page, scored by
+`evaluation/listening_analyse.py` (Wilson CI, exact binomial p, per-listener rates, catch-trial
+pass rates, side-bias check). Defaults: 40 sentences, 6 anchors, 5+ listeners. Power against a 50%
+null at 80%: 47 trials resolves a 70/30 split, 85 a 65/35, **194 a 60/40**. Fewer listeners than
+three is a pilot, not a finding.
+
+**Known confound, not yet fixed:** the two contenders run different default voices — median F0
+~206 Hz (voxcpm2) vs ~114 Hz (higgs3), close to an octave. A naturalness preference is partly a
+voice preference. The fix is to re-synthesize both from one reference clip via zero-shot cloning,
+which both models support. Do this before treating a narrow listening result as decisive.
+
 ### The verdict
 
 **VoxCPM2 is the recommendation.** By ear (the user is a Khmer speaker and judged the audio
 directly) VoxCPM2 and Higgs TTS 3 were the two contenders and `fish-s2`/`mms` were eliminated —
 `fish-s2` on correctness, `mms` on prosody. CER now separates the two contenders in the same
 direction the listening did, and the UTMOS result that pointed the other way is explained. What
-remains open is **naturalness specifically**, which CER does not measure; separating the contenders
-there still needs a blind multi-listener test.
+remains open is **naturalness specifically**, which CER does not measure; the apparatus for
+settling it is built (see above) but has not been run with real listeners yet.
 
 The listening verdict lives in exactly one place in code: `CONTENDERS` / `ELIMINATED` in
 `evaluation/report_document.py`. Everything else derives from it or from the results json.

@@ -1,0 +1,293 @@
+{
+  "pair": [
+    "voxcpm2",
+    "higgs3"
+  ],
+  "seed": 0,
+  "n_test": 40,
+  "n_anchor": 6,
+  "trials": [
+    {
+      "id": "A28",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B10",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B21",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A44",
+      "kind": "anchor",
+      "left": "mms",
+      "right": "voxcpm2",
+      "expected": "voxcpm2"
+    },
+    {
+      "id": "A20",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B49",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B32",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B41",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B21",
+      "kind": "anchor",
+      "left": "mms",
+      "right": "higgs3",
+      "expected": "higgs3"
+    },
+    {
+      "id": "A43",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B32",
+      "kind": "anchor",
+      "left": "voxcpm2",
+      "right": "fish-s2",
+      "expected": "voxcpm2"
+    },
+    {
+      "id": "A46",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A28",
+      "kind": "anchor",
+      "left": "higgs3",
+      "right": "fish-s2",
+      "expected": "higgs3"
+    },
+    {
+      "id": "A49",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B43",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A50",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A48",
+      "kind": "anchor",
+      "left": "fish-s2",
+      "right": "voxcpm2",
+      "expected": "voxcpm2"
+    },
+    {
+      "id": "B48",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A27",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A07",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A14",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A16",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B50",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A37",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B46",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B42",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B24",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A36",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B37",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A45",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A10",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A40",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B08",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A44",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A46",
+      "kind": "anchor",
+      "left": "mms",
+      "right": "voxcpm2",
+      "expected": "voxcpm2"
+    },
+    {
+      "id": "B45",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A41",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "B23",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A48",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B06",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A32",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A19",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B33",
+      "kind": "test",
+      "left": "higgs3",
+      "right": "voxcpm2"
+    },
+    {
+      "id": "A31",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "A01",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    },
+    {
+      "id": "B38",
+      "kind": "test",
+      "left": "voxcpm2",
+      "right": "higgs3"
+    }
+  ]
+}

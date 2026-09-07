@@ -21,3 +21,8 @@ evaluation/dnsmos_models/
 
 # LibreOffice lock files
 .~lock.*#
+
+# Generated listening-test pages: 6+ MB of base64 audio, rebuilt per study
+# (different --pair/--seed = a new blob every time). Regenerate with
+# evaluation/listening_test.py; the answer key IS tracked.
+evaluation/listening_test.html

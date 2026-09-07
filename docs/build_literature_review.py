@@ -68,6 +68,7 @@ CER_KM = {m: _load(RESULTS / m / "cer_khmer_asr.json") for m in MODELS}
 SCORES = {m: _load(RESULTS / m / "scores.json") for m in MODELS}
 NATURAL = _load(RESULTS / "naturalness.json")
 ASTATS = _load(RESULTS / "audio_stats.json")
+PROSODY = _load(RESULTS / "prosody_stats.json")
 
 
 def pct(x, digits=2):
@@ -1257,7 +1258,102 @@ rich(doc, [("One bias-free check corroborates this without any learned model. A 
            (" for either contender. It catches the failure UTMOS rewarded, costs nothing, and "
             "cannot be biased toward any model.", {})])
 
-heading(doc, "6.8  The evaluation plan this leaves", 2)
+heading(doc, "6.8  So how do you measure naturalness?", 2)
+
+para(doc, "Intelligibility is now settled by CER. Naturalness is not, and the honest answer is "
+          "that no automatic metric can settle it for Khmer today. Two candidate shortcuts were "
+          "tested and both failed, which is worth recording so they are not tried again.")
+
+heading(doc, "The two shortcuts that do not work", 3)
+bullet(doc, [("MOS predictors (UTMOS, DNSMOS). ", {"bold": True}),
+             ("Inverted for this comparison — §6.7. Not usable for ranking at any level of "
+              "post-processing; level and silence were controlled and the ranking held.", {})])
+bullet(doc, [("Prosody statistics as a naturalness proxy. ", {"bold": True}),
+             ("Pitch variation is the classic correlate of expressive versus flat delivery, so "
+              "F0 statistics were measured over all 400 clips. The measure was given a "
+              "falsifiable test: MMS was eliminated by ear for flat, robotic prosody, so it "
+              "should show the least pitch movement. ", {}),
+             ("It shows the most", {"bold": True}),
+             (" — an F0 standard deviation of "
+              + num((PROSODY or {}).get("mms", {}).get("f0_std_st"), 2) + " semitones against "
+              + num((PROSODY or {}).get("voxcpm2", {}).get("f0_std_st"), 2) + " for VoxCPM2 and "
+              + num((PROSODY or {}).get("higgs3", {}).get("f0_std_st"), 2) + " for Higgs TTS 3. "
+              "Wide but wrongly-placed pitch movement reads as robotic, not expressive, and the "
+              "statistic cannot tell the difference. The proxy is rejected on its own test.", {})])
+
+callout(doc, "A confound to fix before running any listening test", [
+    "The two contenders are not speaking in the same voice. Measured median F0 is about **"
+    + num((PROSODY or {}).get("voxcpm2", {}).get("f0_median_hz"), 0) + " Hz for VoxCPM2** "
+    "against **" + num((PROSODY or {}).get("higgs3", {}).get("f0_median_hz"), 0)
+    + " Hz for Higgs TTS 3** — close to an octave apart, so a different apparent speaker and "
+    "plausibly a different apparent gender. Ask a listener which sounds more natural and part of "
+    "the answer is which voice they prefer, which is a property of an arbitrary default rather "
+    "than of the synthesis.",
+    "Both models do zero-shot voice cloning, so the fix is available: re-synthesize both from the "
+    "same reference clip and compare those. It costs one re-run. Without it, a decisive result "
+    "(say 70/30) is still informative — timbre preference is unlikely to be worth that much "
+    "across five listeners — but a narrow one cannot be separated from voice preference.",
+], accent=VIOLET, fill=VIOLET_SOFT)
+
+heading(doc, "The instrument that does work", 3)
+para(doc, "A blind, randomized, forced-choice listening test. For naturalness this is not a "
+          "fallback for want of a metric — it is the definition of the quantity. What makes it "
+          "evidence rather than an impression is the design:")
+
+table(doc,
+      ["Property", "What it means", "Why it is not optional"],
+      [["Blind", "Model identity never shown to the listener",
+        "Knowing which is which is enough to produce the expected answer."],
+       ["Randomized", "Left/right assignment per trial, order per listener",
+        "Listeners favour the first option heard; unrandomized, that bias silently attaches to "
+        "whichever model was placed first."],
+       ["Forced choice", "2AFC — pick one, or declare a tie",
+        "Needs no scale calibration between listeners, and resolves a given difference in far "
+        "fewer trials than rating each system separately."],
+       ["Anchored", "A share of trials pit a contender against a known-bad model",
+        "An unsupervised remote test cannot otherwise distinguish a careful listener from "
+        "someone clicking through. Six anchors minimum: at four, random clicking passes 31% "
+        "of the time."],
+       ["Single question", "Naturalness only, with explicit instruction to ignore word errors",
+        "CER already answers intelligibility. Without the instruction the test re-measures it — "
+        "where VoxCPM2 already wins — and manufactures agreement instead of testing for it."]],
+      widths=[0.85, 1.85, 2.6])
+caption(doc, "Table 7 — the design requirements. Implemented in "
+             "evaluation/listening_test.py, which emits a single self-contained HTML file per "
+             "study and a separate answer key that never travels with it.")
+
+heading(doc, "How many listeners, and how many sentences", 3)
+para(doc, "This is the part most often got wrong, and getting it wrong produces a null result "
+          "that reads like a finding. Against a 50% null at 95% confidence and 80% power:")
+
+table(doc,
+      ["If the true preference is…", "Trials needed", "Practical configuration"],
+      [["70 / 30", "47", "2 listeners × 25 sentences"],
+       ["65 / 35", "85", "3 listeners × 30 sentences"],
+       ["60 / 40", "194", "**5 listeners × 40 sentences** — the default"],
+       ["55 / 45", "776", "10 listeners × 80 — rarely worth it; at this margin the "
+        "two systems are interchangeable for most purposes"]],
+      widths=[1.5, 0.9, 2.9])
+caption(doc, "Table 8 — statistical power for a two-alternative forced choice. Trials from one "
+             "listener are correlated, so the totals here flatter the real power; the honest "
+             "unit of replication is the listener, which is why the analysis reports per-listener "
+             "rates and a sign test across listeners alongside the pooled interval.")
+
+rich(doc, [("The reporting rule that follows: ", {"bold": True}),
+           ("a preference rate is not a result without an interval. “VoxCPM2 preferred 58% of the "
+            "time” says nothing; “58%, 95% CI [50.4%, 65.5%]” says the interval barely excludes "
+            "chance, and a reader can see that one more ambivalent listener would sink it. "
+            "evaluation/listening_analyse.py reports the Wilson interval, an exact binomial "
+            "p-value, per-listener rates, catch-trial pass rates, and a side-bias check — and "
+            "refuses to call a winner when the interval includes 50%.", {})])
+
+para(doc, "One further caution, visible in a dry run of the analysis: five listeners can produce "
+          "a pooled interval that excludes 50% while the listener-level sign test does not, "
+          "because 200 trials from five people are not 200 independent observations. When the "
+          "two disagree, the sign test is the conservative reading and the study is better "
+          "described as suggestive.", space_after=12)
+
+heading(doc, "6.9  The evaluation plan this leaves", 2)
 para(doc, "In priority order:")
 bullet(doc, [("CER against a Khmer-capable ASR — now the primary metric. ", {"bold": True}),
              ("It works, it is cheap (400 clips in ~25 seconds), and it agrees with trained ears. "
@@ -1300,7 +1396,7 @@ table(doc,
        ["Measured UTMOS", "2.46 (last of four)", "3.02 (second of four)"],
        ["Listening verdict", "**Contender** — preferred by ear", "**Contender**"]],
       widths=[1.15, 1.75, 1.85])
-caption(doc, "Table 7 — side by side. The CER row is the one that changed: measured against a "
+caption(doc, "Table 9 — side by side. The CER row is the one that changed: measured against a "
              "Khmer-capable ASR it separates the two contenders, where every metric in the first "
              "pass failed to. The UTMOS row is retained only to show what was measured — per §6.7 "
              "it is inverted for Khmer and must not be used to rank.")
