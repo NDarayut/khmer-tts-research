@@ -235,10 +235,17 @@ def table(doc, headers, rows, widths=None, size=8.8, header_fill=TEAL,
         p.paragraph_format.line_spacing = 1.06
         if right:
             p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        # inline **bold** markers
+        # inline **bold** and `code` markers
         for i, seg in enumerate(str(text).split("**")):
-            if seg:
-                set_font(p.add_run(seg), BODY_FONT, sz, bold or i % 2 == 1, False, color)
+            if not seg:
+                continue
+            is_bold = bold or i % 2 == 1
+            for j, piece in enumerate(seg.split("`")):
+                if not piece:
+                    continue
+                mono = j % 2 == 1
+                set_font(p.add_run(piece), MONO_FONT if mono else BODY_FONT,
+                         sz - 0.6 if mono else sz, is_bold, False, color)
         if fill:
             shade(cell._tc, fill)
         cell_borders(cell, OAT, 4)
@@ -1387,8 +1394,10 @@ table(doc,
         "**None** — you would write the trainer"],
        ["Effort to a first adapted result", "**A YAML file and a 24 GB card**",
         "Weeks of implementation, then a 24 GB card"],
-       ["Expressive control", "None", "**21 emotions, 3 styles, 9 sound effects, prosody tags** "
-        "(untested in Khmer)"],
+       ["Expressive control", "Natural-language instruction, prepended as "
+        "**(instruction)text**",
+        "**21 emotions, 3 styles, 9 sound effects, prosody tags**, inline"],
+       ["Streaming synthesis", "**generate_streaming()** yields chunks", "Not in the shipped API"],
        ["Measured RTF (RTX 3060)", "1.382", "**0.745**"],
        ["**Measured CER (Khmer ASR)**", "**" + pct(cer_med("voxcpm2")) + " median**",
         pct(cer_med("higgs3")) + " median"],
@@ -1396,7 +1405,7 @@ table(doc,
        ["Measured UTMOS", "2.46 (last of four)", "3.02 (second of four)"],
        ["Listening verdict", "**Contender** — preferred by ear", "**Contender**"]],
       widths=[1.15, 1.75, 1.85])
-caption(doc, "Table 9 — side by side. The CER row is the one that changed: measured against a "
+caption(doc, "Table 12 — side by side. The CER row is the one that changed: measured against a "
              "Khmer-capable ASR it separates the two contenders, where every metric in the first "
              "pass failed to. The UTMOS row is retained only to show what was measured — per §6.7 "
              "it is inverted for Khmer and must not be used to rank.")
@@ -1459,7 +1468,179 @@ table(doc,
       widths=[0.25, 1.6, 3.1])
 
 # =========================================================================
-heading(doc, "8.  Sources", 1, page_break=True)
+# =========================================================================
+heading(doc, "8.  Using them: the practical surface", 1, page_break=True)
+
+para(doc, "Sections 3 and 4 cover what these models are. This section covers what you can "
+          "actually ask them to do. Everything below is read from the shipped code — the "
+          "voxcpm 2.0.3 package installed in this repo, and the "
+          "modeling_higgs_multimodal_qwen3.py remote code that ships with the Higgs weights — "
+          "rather than from either vendor's feature list.")
+
+heading(doc, "8.1  Capability matrix", 2)
+
+table(doc,
+      ["Capability", "VoxCPM2", "Higgs TTS 3"],
+      [["Plain synthesis", "`generate(text)`", "`generate_speech(text, tokenizer)`"],
+       ["**Streaming output**", "**Yes** — `generate_streaming()` yields chunks as they are "
+        "produced", "Not in the shipped API; serving stacks (vLLM, SGLang-Omni) handle it "
+        "outside the model class"],
+       ["Zero-shot voice cloning", "`reference_wav_path` — isolated via ref_audio tokens",
+        "`reference_audio` + `reference_sample_rate`, optionally `reference_text`"],
+       ["Continuation / in-context cloning", "`prompt_wav_path` + `prompt_text` — the model "
+        "continues the prompt's voice and manner", "Same idea via `reference_text` + "
+        "`reference_audio`; no separate continuation mode"],
+       ["**Pre-encoded / cached voice**", "Re-encodes the reference on every call",
+        "**`reference_codes`** — encode a voice once, reuse the codes. Meaningful saving if one "
+        "voice serves many requests"],
+       ["Expressive control", "Natural-language instruction (§8.2)", "Fixed inline tag "
+        "vocabulary (§8.2)"],
+       ["Sampling controls", "`cfg_value` 1.0–3.0 (guidance strength)",
+        "`temperature`, `top_p`, `top_k` — the usual LM sampling dials"],
+       ["Quality / speed dial", "**`inference_timesteps` 4–30** — fewer diffusion steps is "
+        "faster and rougher", "`max_new_tokens` only; no quality dial"],
+       ["Reference denoising", "**Built in** — `denoise=True` runs ZipEnhancer over the "
+        "reference first", "None; clean your reference yourself"],
+       ["Runaway / truncation guard", "**Built in** — `retry_badcase` re-rolls when the "
+        "audio-to-text ratio exceeds a threshold (default 6.0)", "None"],
+       ["Text normalization", "`normalize=True`", "None"],
+       ["Batch CLI", "`voxcpm batch --input lines.txt --output-dir out/`",
+        "Example scripts only"],
+       ["Fine-tuning", "**LoRA, hot-swappable at runtime** — `load_lora()`, "
+        "`set_lora_enabled(False)`, `unload_lora()`", "No training code ships at all"],
+       ["Dataset validator", "**`voxcpm validate --manifest …`**", "None"]],
+      widths=[1.15, 1.9, 1.9])
+caption(doc, "Table 10 — the usage surface of each model, from the shipped code. The pattern is "
+             "consistent: VoxCPM2 ships more operational machinery (streaming, denoising, retry, "
+             "validation, adapters), Higgs ships a richer expressive vocabulary and a cached-voice "
+             "path.")
+
+heading(doc, "8.2  Expressive control — two different paradigms", 2)
+
+para(doc, "Both models can be told how to say something, but they take opposite approaches, and "
+          "the difference matters more than the feature counts suggest.")
+
+heading(doc, "VoxCPM2 — open-ended, natural language", 3)
+para(doc, "There is no tag vocabulary. You write an instruction in plain language and it is "
+          "prepended to the text in parentheses; the model was trained to read a leading "
+          "parenthesised descriptor as a voice and style instruction. The CLI exposes it as "
+          "--control, but the mechanism is only string concatenation, so the plain Python API "
+          "gets it for free:")
+code(doc, """
+# what the CLI does internally is exactly this:
+#     final_text = f"({control}){text}"  if control else text
+
+voxcpm design --text "Hello world" --control "warm female voice" --output out.wav
+
+# and therefore, from Python, with no special argument:
+wav = model.generate(text="(warm female voice, speaking slowly)Hello world")
+""", size=8.0)
+
+bullet(doc, [("Unbounded. ", {"bold": True}),
+             ("“an elderly man, tired, speaking gently”, “a news anchor, brisk and formal”, "
+              "“whispering, conspiratorial” — anything you can describe. It is not limited to a "
+              "list somebody chose in advance.", {})])
+bullet(doc, [("Whole-utterance only. ", {"bold": True}),
+             ("The instruction sits at the front and colours the entire utterance. There is no "
+              "way to change emotion halfway through a sentence.", {})])
+bullet(doc, [("Unverifiable. ", {"bold": True}),
+             ("Nothing validates the instruction. A descriptor the model does not understand is "
+              "silently ignored, or worse, partly spoken. You find out by listening.", {})])
+bullet(doc, [("Mutually exclusive with continuation mode. ", {"bold": True}),
+             ("The CLI rejects --control together with --prompt-text: you are either designing a "
+              "voice from a description or continuing one from audio, not both. It does combine "
+              "with --reference-audio.", {})])
+
+heading(doc, "Higgs TTS 3 — a closed, composable tag set", 3)
+para(doc, "A fixed vocabulary using <|category:value|> syntax, insertable anywhere in the text, "
+          "including mid-sentence:")
+code(doc, """
+text = "<|emotion:sadness|> I have to tell you something. "
+       "<|long_pause|> <|emotion:relief|> But it turned out fine. "
+       "<|laughter|> haha"
+""", size=8.0)
+
+table(doc,
+      ["Category", "Count", "Values"],
+      [["Emotion", "21", "elation, amusement, enthusiasm, determination, pride, contentment, "
+        "affection, relief, contemplation, confusion, surprise, awe, longing, arousal, anger, "
+        "fear, disgust, bitterness, sadness, shame, helplessness"],
+       ["Style", "3", "singing, shouting, whispering"],
+       ["Sound effects", "9", "cough, laughter, crying, screaming, burping, humming, sigh, "
+        "sniff, sneeze — each paired with the matching onomatopoeia"],
+       ["Prosody", "—", "speed very_slow / slow / fast / very_fast (≈0.65×–1.4×); pause "
+        "(400–700 ms); long_pause (700–1500 ms); pitch_low (−3 st); pitch_high (+2.5 st); "
+        "expressive_high / expressive_low"]],
+      widths=[0.8, 0.4, 3.5], header_fill=VIOLET)
+caption(doc, "Table 11 — the full Higgs TTS 3 control vocabulary. Composable, positional, and "
+             "checkable — an unknown tag is a visible mistake rather than a silent one.")
+
+callout(doc, "Neither model's expressive control is verified for Khmer", [
+    "Both mechanisms were trained on each vendor's documented languages. Khmer is one of "
+    "VoxCPM2's 30, but its control instructions are written in English, and nothing establishes "
+    "that an English descriptor steers Khmer prosody the way it steers English prosody. For Higgs "
+    "the gap is wider: Khmer is not on its language list at all, so its tags are unverified in a "
+    "language the model was never documented to speak.",
+    "This is a cheap thing to settle and nobody has settled it. Synthesize ten Khmer sentences "
+    "under three or four emotion settings, listen, and you will know. Do that before designing "
+    "any product feature on top of either mechanism.",
+], accent=SIENNA, fill=SIENNA_SOFT)
+
+heading(doc, "8.3  The same job, written both ways", 2)
+
+para(doc, "Basic synthesis, then the same sentence in a cloned voice:")
+code(doc, """
+# ---------- VoxCPM2 ----------
+from voxcpm import VoxCPM
+
+model = VoxCPM.from_pretrained("openbmb/VoxCPM2")           # + lora_weights_path=...
+wav = model.generate(text="<Khmer text>")                    # 48 kHz float32 numpy
+
+wav = model.generate(
+    text="<Khmer text>",
+    reference_wav_path="speaker.wav",   # zero-shot clone
+    denoise=True,                       # clean the reference first
+    cfg_value=2.0,                      # 1.0-3.0, guidance strength
+    inference_timesteps=10,             # 4-30, quality vs speed
+    normalize=True,
+)
+
+for chunk in model.generate_streaming(text="<Khmer text>"):  # play as it arrives
+    play(chunk)
+
+# ---------- Higgs TTS 3 ----------
+wav = model.generate_speech(text, tokenizer)                 # 24 kHz float32 torch
+
+wav = model.generate_speech(
+    text, tokenizer,
+    reference_audio=ref_tensor,         # or reference_codes=cached, encoded once
+    reference_sample_rate=24000,
+    reference_text="<transcript of the reference>",   # improves cloning
+    temperature=1.0, top_p=0.95,
+    max_new_tokens=2048,
+)
+""", size=7.6)
+
+heading(doc, "8.4  What this means for a Khmer product", 2)
+bullet(doc, [("If you need audio to start playing before it is finished, ", {"bold": True}),
+             ("VoxCPM2 is the one with a streaming generator in the box. This partly offsets its "
+              "worse RTF: 1.38 real-time factor matters much less when the first chunk arrives "
+              "quickly than when the whole file must finish first.", {})])
+bullet(doc, [("If you serve one or two fixed voices, ", {"bold": True}),
+             ("Higgs's `reference_codes` lets you encode each voice once and skip re-encoding on "
+              "every request. VoxCPM2 has no equivalent cache and re-reads the reference each "
+              "call.", {})])
+bullet(doc, [("If you need reliable, repeatable delivery, ", {"bold": True}),
+             ("Higgs's closed tag set is the safer instrument — a typo is a visible error, and "
+              "the same tag means the same thing every time. VoxCPM2's free-text control is more "
+              "expressive in principle and less predictable in practice.", {})])
+bullet(doc, [("If robustness matters more than range, ", {"bold": True}),
+             ("VoxCPM2's built-in bad-case retry deserves attention: it re-rolls generation when "
+              "the audio-to-text ratio goes out of bounds, which is precisely the truncation "
+              "failure that made fish-s2 unusable and that §6.7 had to catch with a separate "
+              "guard. Higgs has no such protection.", {})])
+
+heading(doc, "9.  Sources", 1, page_break=True)
 
 heading(doc, "VoxCPM2", 2)
 for s in [
