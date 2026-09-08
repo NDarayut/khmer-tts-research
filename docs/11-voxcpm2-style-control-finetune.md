@@ -1,476 +1,636 @@
-# 11 — Speech Control for VoxCPM2
+# 11 — Speech Control in Neural Text-to-Speech
 
-What can be controlled in synthetic speech, what VoxCPM2 already controls on
-Khmer, what the literature has built for the rest, and where this project goes
-next.
+An assessment of VoxCPM2 for Khmer and a review of the literature on
+controllable speech synthesis.
+
+Markdown companion to [`Speech-Control-VoxCPM2.docx`](Speech-Control-VoxCPM2.docx),
+built by `build_style_control_report.py`. Both carry the same content; the docx
+is the formatted version.
 
 **Contents**
 
-1. [Overview](#111-overview) — VoxCPM2, its architecture, and the control it ships with
-2. [Speech control](#112-speech-control) — prosody, emotion, non-verbal vocalization
-3. [Literature review](#113-literature-review) — what has been built for each, and what we will focus on
-4. [Methodology](#114-methodology) — *to be written*
+1. [Overview](#1-overview)
+   · [1.1 Model Description](#11-model-description)
+   · [1.2 System Architecture](#12-system-architecture)
+   · [1.3 Built-in Control Mechanisms](#13-built-in-control-mechanisms)
+   · [1.4 Measurement of Parenthetical Prosodic Control on Khmer](#14-measurement-of-parenthetical-prosodic-control-on-khmer)
+2. [Speech Control](#2-speech-control)
+   · [2.1 Definition and Scope](#21-definition-and-scope)
+   · [2.2 Prosody](#22-prosody)
+   · [2.3 Emotion](#23-emotion)
+   · [2.4 Non-Verbal Vocalization](#24-non-verbal-vocalization)
+   · [2.5 Related Categories](#25-related-categories)
+3. [Literature Review](#3-literature-review)
+   · [3.1 Natural Language Style Control](#31-natural-language-style-control)
+   · [3.2 Emotional Speech Synthesis](#32-emotional-speech-synthesis)
+   · [3.3 Non-Verbal Vocalization](#33-non-verbal-vocalization)
+   · [3.4 Evaluation of Controlled Speech](#34-evaluation-of-controlled-speech)
+   · [3.5 Research Focus](#35-research-focus)
+4. [Methodology](#4-methodology)
+   · [References](#references)
 
 ---
 
-## 11.1 Overview
+## 1 Overview
 
-### 11.1.1 What VoxCPM2 is
+This report concerns the control of delivery in synthetic speech: the ability to
+specify how an utterance is spoken rather than only what is said. Section 1
+describes VoxCPM2, the model this project has adopted for Khmer, and reports a
+measurement of the control it already provides. Section 2 defines the categories
+of speech control and distinguishes them from one another. Section 3 reviews the
+published work addressing each category and identifies the one this project will
+pursue. Section 4, the methodology, is reserved.
 
-VoxCPM2 is OpenBMB's **tokenizer-free, diffusion-autoregressive** text-to-speech
-model, 2.29 B parameters, Apache-2.0. It is this project's recommended model for
-Khmer: on the frozen 100-sentence evaluation set it scores a **2.47% median
-character error rate** against Higgs TTS 3's 8.28%, MMS's 25.12% and Fish Audio
-S2-Pro's 78.01% (see [`docs/03`](03-evaluation-benchmarking.md) for the metric
-and [`CLAUDE.md`](../CLAUDE.md) for the caveat that the Khmer ASR scoring it has
-VoxCPM2-synthesized audio in its training pool).
+### 1.1 Model Description
 
-"Tokenizer-free" is the property that matters for a low-resource language. The
-model does not quantize speech into a discrete codebook; it predicts *continuous*
-latent vectors. There is therefore no audio vocabulary that can be badly fitted
-for Khmer — the failure that eliminated Fish Audio S2 has no analogue here. On
-the text side it reads raw UTF-8 bytes through a 73,448-entry tokenizer, so
-Khmer needs **no G2P, no phonemizer, no lexicon and no word segmenter**, none of
-which exist in usable form for the language.
+VoxCPM2 is an open-weight text-to-speech model released by OpenBMB under the
+Apache 2.0 licence. It has 2.29 billion parameters and is tokenizer-free: rather
+than mapping speech onto a discrete codebook, it predicts continuous latent
+vectors, one for every four-frame patch of audio.
 
-### 11.1.2 Architecture
+This property has a direct bearing on low-resource languages. Systems built on
+discrete audio codebooks depend on the codebook having been fitted to the target
+language during pre-training, and where it has not, synthesis degrades in a way
+that fine-tuning does not readily repair. In the four-model comparison conducted
+for this project, Fish Audio S2-Pro failed in exactly that manner, returning a
+median character error rate of 78.01 per cent on Khmer. Over the same fixed set
+of one hundred sentences VoxCPM2 returned 2.47 per cent, against 8.28 per cent
+for Higgs TTS 3 and 25.12 per cent for Meta MMS. VoxCPM2 was selected on that
+evidence. (See [`docs/03`](03-evaluation-benchmarking.md) for the metric and
+[`CLAUDE.md`](../CLAUDE.md) for the scorer's known bias.)
 
-```
-Khmer text
-  ↓  byte-level tokenizer (vocab 73,448 — no G2P, no language tag)
-┌──────────────────────────────────────────────────┐
-│ MiniCPM4 backbone LM        2048 dim × 28 layers │  one latent per audio patch
-│ GQA 16 query / 2 KV heads, LongRoPE to 32k       │
-└──────────────────────────────────────────────────┘
-  ↓  hidden state
-┌──────────────────────────────────────────────────┐
-│ Residual LM                 8 layers, no RoPE    │  refines the latent
-└──────────────────────────────────────────────────┘
-  ↓  conditioning vector
-┌──────────────────────────────────────────────────┐
-│ Local DiT       1024 dim × 12 layers, CFM head   │  diffusion: latent → features
-│ euler solver, log-norm schedule, CFG 2.0         │  10 steps at inference
-└──────────────────────────────────────────────────┘
-  ↓  64-dim features, 4 frames per patch
-┌──────────────────────────────────────────────────┐
-│ AudioVAE V2     enc 16 kHz  →  dec 48 kHz        │  waveform
-└──────────────────────────────────────────────────┘
-```
+A second property follows from the input side. The model reads raw UTF-8 bytes
+through a 73,448-entry tokenizer and is given no language identifier, inferring
+the language from the script. Khmer consequently requires no
+grapheme-to-phoneme conversion, no pronunciation lexicon and no word segmenter.
+None of these components exists for Khmer in a form suitable for production use,
+and assembling them ordinarily accounts for the largest share of effort in a
+low-resource text-to-speech project.
 
-A **Local Encoder** (1024 × 12) sits on the input side and encodes a reference
-clip into the same latent space for zero-shot voice cloning.
+### 1.2 System Architecture
 
-| property | value | consequence |
+The generation path comprises the stages set out below. A backbone language
+model emits one latent vector per audio patch; a residual language model refines
+it; a local diffusion transformer converts the refined latent into acoustic
+features under a conditional flow-matching objective; and a variational
+autoencoder decodes those features to a waveform, accepting features derived at
+16 kHz and emitting audio at 48 kHz. A separate local encoder, not listed, maps
+a reference recording into the same latent space and is the mechanism by which
+zero-shot voice cloning is performed.
+
+**Table 1.** The VoxCPM2 generation path. Dimensions and layer counts are taken
+from `config.json` in the `openbmb/VoxCPM2` release.
+
+| Stage | Configuration | Output |
 |---|---|---|
-| `patch_size` | 4 | one LM step covers 4 VAE frames |
-| `feat_dim` | 64 | latent width the DiT predicts |
-| AudioVAE frame rate | 25 fps | 1 s of audio ≈ 6.25 LM positions |
-| encoder / decoder rate | 16 kHz / 48 kHz | training audio must be 16 kHz; super-resolution is free |
-| `inference_cfg_rate` | 2.0 | classifier-free guidance, exposed as `--cfg-value` |
+| Byte-level tokenizer | vocabulary 73,448; no grapheme-to-phoneme stage, no language identifier | token sequence |
+| MiniCPM4 backbone LM | 2048 dimensions, 28 layers; grouped-query attention, 16 query and 2 key-value heads; LongRoPE to 32k | one latent vector per audio patch |
+| Residual LM | 8 layers, no positional encoding | refined latent |
+| Local DiT | 1024 dimensions, 12 layers; conditional flow matching; Euler solver, guidance scale 2.0, 10 steps at inference | 64-dimensional acoustic features, 4 frames per patch |
+| AudioVAE V2 | encoder at 16 kHz, decoder at 48 kHz | waveform |
 
-Two structural facts govern everything that follows. First, the **Local DiT is a
-conditional flow-matching decoder** — the same family as the models the
-non-verbal literature fine-tunes, which is why those recipes are applicable here.
-Second, the training loss mask (`voxcpm/training/packers.py`, `process_tts_data`)
-is **zero across every text position**:
+**Table 2.** Architecture parameters bearing on training and control.
+
+| Parameter | Value | Consequence |
+|---|---|---|
+| `patch_size` | 4 | One language-model step spans four autoencoder frames. |
+| `feat_dim` | 64 | Width of the latent the diffusion transformer predicts. |
+| Frame rate | 25 fps | One second of audio occupies 6.25 language-model positions. |
+| Encoder rate | 16 kHz | Training audio must be supplied at 16 kHz; the validator rejects other rates. |
+| Decoder rate | 48 kHz | Bandwidth extension is internal; 48 kHz training data is not required. |
+| `inference_cfg_rate` | 2.0 | Default classifier-free guidance scale, exposed as `--cfg-value`. |
+
+Two of these properties bear on the remainder of the report.
+
+The first is the identity of the acoustic decoder. The local diffusion
+transformer is a conditional flow-matching model. The methods reviewed in §3.3
+for controlling non-verbal vocalization were developed for, and evaluated on,
+models of this class. They are therefore applicable to VoxCPM2 without
+alteration of the underlying training objective, which is not true of methods
+developed for discrete-codec systems.
+
+The second concerns the treatment of the text field during training. The loss
+mask constructed in the data packer is zero at every text position:
 
 ```python
+# voxcpm/training/packers.py, process_tts_data
 loss_mask = cat([zeros(text_length), ones(audio_length), zeros(1)])
+#                ^^^^^^^^^^^^^^^^^^ zero at every text position
 ```
 
-Nothing in the text field is ever a prediction target. The text field is a pure
-conditioning channel, and anything can be put in it — a tag, a description, a
-marker — without disturbing the objective.
+No token in the text field is ever a prediction target. The field operates
+purely as a conditioning channel, and its contents may therefore be extended
+with tags, markers or descriptive text without perturbing the objective the
+model is trained under. Both control mechanisms described below exploit this,
+and any mechanism added later would do the same.
 
-### 11.1.3 The control VoxCPM2 ships with
+### 1.3 Built-in Control Mechanisms
 
-VoxCPM2 has two built-in control mechanisms, and they operate at different
-scopes.
+VoxCPM2 provides two mechanisms for influencing delivery. They differ in the
+interval over which they apply, and that difference is developed in §2.
 
-**A parenthetical natural-language prompt** at the start of the text describes
-the whole utterance:
+The first is a parenthetical description placed before the text, which
+characterises the utterance as a whole:
 
 ```python
-model.generate(text="(speaking quickly, a high-pitched voice)ថ្ងៃនេះអាកាសធាតុល្អណាស់។")
+model.generate(
+    text="(speaking quickly, a high-pitched voice)"
+         "ថ្ងៃនេះអាកាសធាតុល្អណាស់។")
 ```
 
-**Inline square-bracket tags** mark a single event at one position:
+The second is a bracketed tag placed inline, which marks a single event at one
+position in the text:
 
 ```python
 model.generate(text="ខ្ញុំគិតថាមិនអីទេ [laughing] ប៉ុន្តែ…")
 ```
 
-The documented tag inventory: `[laughing]`, `[laughter]`, `[sigh]`, `[Uhm]`,
-`[Shh]`, `[Question-ah/ei/en/oh]`, `[Surprise-wa/yo]`, `[Dissatisfaction-hnn]`.
+The documented tag inventory is:
 
-**The parenthetical prompt works on Khmer.** This was measured on the stock
-model, no fine-tuning: 8 sentences drawn from the frozen evaluation set, three
-prompt levels per axis, three seeds per cell, median within each cell — 96
-generations (`finetune/verify_parenthetical.py`, results in
-`finetune/results/parenthetical/`).
+```
+[laughing]   [laughter]   [sigh]   [Uhm]   [Shh]
+[Question-ah] [Question-ei] [Question-en] [Question-oh]
+[Surprise-wa] [Surprise-yo] [Dissatisfaction-hnn]
+```
 
-| axis | prompt low → high | low | mid | high | Δ | Spearman ρ | p |
-|---|---|---|---|---|---|---|---|
-| pitch | *(a low-pitched voice)* → *(a high-pitched voice)* | 147.80 | 202.81 | 254.16 Hz | **+106.37 Hz** | **+0.759** | 0.0002 |
-| energy | *(speaking softly)* → *(speaking loudly)* | −20.38 | −16.30 | −15.89 dBFS | +4.50 dB | +0.605 | 0.0022 |
-| rate | *(speaking slowly)* → *(speaking quickly)* | 14.67 | 15.84 | 16.96 char/s | +2.29 | +0.590 | 0.0035 |
-| variation | *(monotone)* → *(lively, expressive)* | 4.55 | 4.06 | 3.92 st | −0.63 | −0.273 | 0.20 |
+The model documentation describes both mechanisms with reference to Chinese and
+English. It makes no statement about their behaviour in other languages, and the
+training corpus composition is not published in sufficient detail to infer one.
+Their efficacy on Khmer is therefore an empirical question, which the next
+section addresses for the first mechanism.
 
-Read it as three results, not one:
+### 1.4 Measurement of Parenthetical Prosodic Control on Khmer
 
-- **Pitch is controlled, strongly.** +106 Hz is nearly **four times** the
-  +28.27 Hz that separates the low and high pitch bands of this project's own
-  hand-labelled Khmer corpus. Whatever a fine-tune could teach about pitch, the
-  base model already exceeds.
-- **Energy and rate move in the right direction but are noise-limited.** The
-  4.50 dB energy effect sits under a 5.69 dB seed-to-seed standard deviation;
-  the rank correlation is real, the per-generation effect is not reliable.
-- **Pitch variation fails**, and fails in the wrong direction: asking for a
-  lively delivery produces *less* pitch movement than asking for a monotone one
-  (ρ −0.273, p 0.20 — indistinguishable from noise).
+The parenthetical mechanism was evaluated on the unmodified model, using eight
+sentences drawn from the project's fixed Khmer evaluation set. For each of four
+prosodic axes, three prompts were written to span the axis (Table 3). Every
+sentence was synthesised under every prompt at three random seeds, giving 96
+generations, and the median taken within each cell of the design. Acoustic
+measurement follows the definitions used elsewhere in the project: median
+fundamental frequency for pitch, its standard deviation in semitones for
+variation, root-mean-square level for energy, and Khmer characters per second
+for rate.
 
-So one prosodic axis is solved by the base model, two are usable in aggregate,
-and one is not addressed at all. Whether the inline non-verbal tags fire on
-Khmer has **not** been measured; the tag inventory is documented for Chinese and
-English, and nothing establishes that a Khmer text context triggers them.
+Script: `finetune/verify_parenthetical.py`. Results:
+`finetune/results/parenthetical/`.
 
----
+**Table 3.** Prompts used to span each prosodic axis.
 
-## 11.2 Speech control
-
-"Expressive control" is not one capability. It is a set of separable ones that
-differ in what they describe, how long they last, and — the part that decides
-engineering cost — whether they are properties of a whole utterance or events at
-a single position.
-
-The three that matter for this project are **prosody**, **emotion** and
-**non-verbal vocalization**.
-
-### 11.2.1 Prosody
-
-**What it is.** The suprasegmental properties of speech — everything carried
-*above* the individual sounds. Prosody is what stays when you strip the words
-out: how fast, how high, how loud, how varied, where the pauses fall.
-
-| dimension | acoustic correlate | measured as |
-|---|---|---|
-| speaking rate | phones or syllables per second | characters per second |
-| pitch register | fundamental frequency, F0 | median F0 in Hz |
-| pitch variation | F0 range and contour movement | F0 standard deviation in semitones |
-| loudness / projection | signal energy | RMS in dBFS |
-| phrasing | pause placement and length | inter-pausal unit statistics |
-
-**Examples.** *"I never said she stole my money"* read at 3 syllables per second
-versus 6 is a rate change. The same sentence read at 120 Hz versus 240 Hz is a
-register change. Read flat, it sounds robotic; read with a 6-semitone F0 range,
-it sounds engaged — that is variation. All three leave the words untouched.
-
-**Scope: global.** A prosodic setting is true of the whole utterance (or a long
-span of it). It has no onset and no offset.
-
-**Status here.** Largely solved by the parenthetical prompt — §11.1.3.
-
-### 11.2.2 Emotion
-
-**What it is.** The affective state the delivery conveys: neutral, happy, angry,
-sad, surprised — the five categories the standard corpora use. Emotion is
-*realised through* prosody plus voice quality, but it is not reducible to a
-prosody setting: anger and excitement share high energy and high pitch and are
-not the same, and the difference lives in voice quality, articulation precision
-and timing detail that a rate/pitch/energy vector does not capture.
-
-**Examples.** *"Oh, that's great."* — flat and slow reads as sarcasm; fast, high
-and bright reads as delight; slow with creaky voice reads as resignation.
-Identical text, three affects.
-
-**Scope: global**, in the usual formulation. One label per utterance is the
-convention in essentially every emotional-speech corpus.
-
-**Status here.** Unmeasured. The parenthetical channel plausibly accepts
-*(sounding angry)* — the mechanism is the same free-text field that already
-carries *(speaking quickly)* — but nothing has been tested on Khmer.
-
-### 11.2.3 Non-verbal vocalization
-
-**What it is.** Sounds a speaker makes that are not words: laughter, sighs,
-breaths, filled pauses (*uhm*, *er*), throat-clearing, coughs, gasps, sobs,
-hesitation particles. They carry stance, turn-taking cues and affect, and they
-are a large part of what separates read speech from conversational speech.
-
-| type | example tag | what it signals |
-|---|---|---|
-| laughter | `[laughing]` | amusement, affiliation, softening |
-| sigh | `[sigh]` | resignation, fatigue, relief |
-| filled pause | `[Uhm]` | planning, hesitation, floor-holding |
-| breath | `[breath]` | phrasing boundary, effort |
-| hesitation / discourse particle | `[Question-ah]`, `[Dissatisfaction-hnn]` | stance, back-channel |
-| gasp, sob, cough, throat-clear | — | surprise, distress, physical state |
-
-**Examples.** *"I thought it was fine* `[laughing]` *but apparently not."* The
-laugh is at one place, lasts a few hundred milliseconds, and everything before
-and after it is ordinary speech. Compare *"So we should* `[Uhm]` *probably wait"*
-— a filled pause inserted mid-clause.
-
-**Scope: local.** This is the structural difference from the other two. A
-non-verbal vocalization is a bounded event with an onset, a duration and an
-offset, and it lives at a specific token position. That makes it a *different
-engineering problem*: a global attribute has to compete with the acoustic
-context for influence over every frame, while a local event owns the frames it
-occupies and nothing else predicts them.
-
-**Status here.** VoxCPM2 ships the tag inventory. Whether the tags fire on Khmer
-text is unmeasured, and that measurement is the first thing the methodology will
-do.
-
-### 11.2.4 Adjacent categories
-
-Three more exist and are worth naming so they are not confused with the above:
-
-| category | what it is | scope | example |
+| Axis | Level 0 | Level 1 | Level 2 |
 |---|---|---|---|
-| **voice quality** | phonation mode | global | whispered, breathy, creaky, tense |
-| **emphasis / focus** | which word carries contrastive stress | local (a span) | *"**I** never said that"* vs *"I never said **that**"* |
-| **timing** | pause insertion and length | local | a deliberate beat before a punchline |
+| Pitch | *(a low-pitched voice)* | *(a normal-pitched voice)* | *(a high-pitched voice)* |
+| Energy | *(speaking softly, quietly)* | *(speaking at a normal volume)* | *(speaking loudly)* |
+| Rate | *(speaking slowly)* | *(speaking at a normal pace)* | *(speaking quickly)* |
+| Variation | *(a flat, monotone delivery)* | *(a normal delivery)* | *(a lively, expressive delivery)* |
 
-Voice quality behaves like emotion (global, prompt-addressable in principle).
-Emphasis and timing behave like non-verbal vocalization (local) but need a *span*
-syntax rather than a point tag, which VoxCPM2 does not have.
+**Table 4.** Response of the unmodified model to a parenthetical prompt on
+Khmer. The corpus bound is the separation between the low and high bands of this
+project's hand-labelled Khmer corpus, and represents an upper limit on what
+fine-tuning against that corpus could teach.
+
+| Axis | Unit | Level 0 | Level 1 | Level 2 | Change | Seed s.d. | Corpus bound | ρ | p |
+|---|---|---|---|---|---|---|---|---|---|
+| Pitch | Hz | 147.80 | 202.81 | 254.16 | +106.37 | 28.78 | 28.27 | +0.759 | 0.0002 |
+| Energy | dBFS | −20.38 | −16.30 | −15.89 | +4.50 | 5.69 | 5.81 | +0.605 | 0.0022 |
+| Rate | char/s | 14.67 | 15.84 | 16.96 | +2.29 | 1.58 | 6.57 | +0.590 | 0.0035 |
+| Variation | st | 4.55 | 4.06 | 3.92 | −0.63 | 0.68 | 1.71 | −0.273 | 0.2039 |
+
+ρ is the Spearman rank correlation between prompt level and measured value; p is
+a permutation test over 10,000 relabellings. Seed s.d. is the mean run-to-run
+standard deviation within a cell.
+
+Three findings follow.
+
+**Pitch is controlled reliably.** The separation between the extreme prompts is
+106.37 Hz with a rank correlation of +0.759 (p = 0.0002). This exceeds the
+corpus bound of 28.27 Hz by a factor of approximately four. The capability a
+fine-tune on the project's own labelled data could add to this axis is therefore
+negative.
+
+**Energy and speaking rate are controlled in aggregate but not per generation.**
+Both show significant rank correlations (+0.605 and +0.590), but the energy
+effect of 4.50 dB is smaller than the 5.69 dB standard deviation observed across
+seeds within a single cell. The ordering of the levels is dependable; the value
+of any individual synthesis is not.
+
+**Pitch variation is not controlled.** The correlation is negative (−0.273) and
+not significant (p = 0.20). Prompts requesting a lively delivery produced
+marginally less pitch movement than prompts requesting a monotone one, which is
+consistent with the axis being unaddressed rather than inverted.
+
+The behaviour of the inline tags on Khmer was not measured, and no claim is made
+about it here. Establishing whether they fire at all on Khmer text is a
+prerequisite for the work §3.5 selects.
 
 ---
 
-## 11.3 Literature review
+## 2 Speech Control
 
-Four bodies of work bear on this: natural-language prompt control of prosody and
-style, emotional speech synthesis, non-verbal vocalization, and the evaluation
-problem that runs under all of them.
+### 2.1 Definition and Scope
 
-### 11.3.1 Prosody and natural-language style control
+The term *expressive control* is used loosely in the literature to denote any
+influence over delivery not exercised through the choice of words. It subsumes
+several capabilities that differ in what they describe, over what interval they
+apply, and in the effort each requires to implement. This section separates the
+three that concern this project, and names three further categories that are
+adjacent to them.
 
-The dominant idea of the last three years is to replace a reference clip with a
-*description*, and to get the descriptions by machine rather than by hand.
+One distinction cuts across all of them and is used throughout what follows. A
+**global attribute** is a property of a whole utterance, or of a long span of
+one: it has no onset and no offset, and it is realised in every frame. A **local
+event** is bounded: it begins, occupies a short interval, and ends, and it is
+associated with a specific position in the text. The two are not merely
+different in duration. A global attribute must influence frames whose acoustic
+content is already largely determined by the surrounding speech, whereas a local
+event is the only thing that determines the frames it occupies. The consequences
+for training are taken up in §3.5.
 
-**PromptTTS** (Guo et al., ICASSP 2023, [arXiv:2211.12171](https://arxiv.org/abs/2211.12171))
-established the format: a style prompt in natural language plus a content
-prompt, encoded separately and fed to an acoustic model. Its dataset had to be
-constructed by hand, which capped it.
+### 2.2 Prosody
 
-**InstructTTS** (Yang et al., 2023, [arXiv:2301.13662](https://arxiv.org/abs/2301.13662))
-took free-form instructions rather than attribute lists, using a discrete
-diffusion decoder and a cross-modal representation trained to align instruction
-text with speech style.
+Prosody comprises the suprasegmental properties of speech, that is, those
+carried above the level of the individual sound. It is what remains when the
+identity of the words is set aside: the rate at which they are spoken, the pitch
+at which they are set, the loudness with which they are projected, the degree of
+pitch movement, and the placement of pauses.
 
-**PromptTTS 2** (Leng et al., ICLR 2024, [arXiv:2309.02285](https://arxiv.org/abs/2309.02285))
-addressed the two problems that limit the whole family. First, the *one-to-many*
-problem — a description underdetermines the voice — handled with a variation
-network that predicts the reference-speech representation from the prompt
-representation. Second, the labelling cost: a pipeline where a speech
-understanding model recognises attributes (gender, speed, …) and an LLM writes
-the prompt sentence. Trained on 44k hours.
+**Table 5.** Prosodic dimensions and their acoustic correlates.
 
-**Natural language guidance of high-fidelity TTS with synthetic annotations**
-(Lyth & King, 2024, [arXiv:2402.01912](https://arxiv.org/abs/2402.01912)) is the
-clearest statement of the annotation argument, and the one released openly as
-**Parler-TTS**. Gender, accent, pitch, speaking rate and recording conditions
-are labelled *computationally* — classifiers and signal measurements, no human
-annotation — across a 45k-hour found-data corpus, then turned into descriptive
-sentences the model is conditioned on. The result outperforms prior work on
-fidelity while relying entirely on found data. The transferable lesson: **the
-labels for prosodic control can be measured, not annotated**, which is exactly
-the property this project used when it built its own Khmer corpus by measuring
-F0, character rate and RMS per clip.
+| Dimension | Acoustic correlate | Measurement used here |
+|---|---|---|
+| Speaking rate | phones or syllables per unit time | Khmer characters per second |
+| Pitch register | fundamental frequency | median F0, hertz |
+| Pitch variation | F0 range and contour movement | F0 standard deviation, semitones |
+| Loudness | signal energy | root-mean-square level, dBFS |
+| Phrasing | pause placement and duration | inter-pausal unit statistics |
 
-**TextrolSpeech** (Ji et al., ICASSP 2024, [arXiv:2308.14430](https://arxiv.org/abs/2308.14430))
-supplies the corpus side: 236 hours, 33k utterances, with style descriptions
-generated by an LLM pipeline over five attribute dimensions.
+The sentence *I never said she stole my money* spoken at three syllables per
+second and at six differs in rate alone. Spoken with a median fundamental
+frequency of 120 hertz and of 240 hertz, it differs in register. Spoken with an
+F0 standard deviation near zero it is heard as mechanical, and with a range of
+six semitones as engaged; that is variation. In each case the words, and the
+meaning they carry, are unchanged.
 
-*Relevance.* This line explains why VoxCPM2's parenthetical prompt exists and
-why it works: it is the same conditioning format, trained the same way. It also
-sets the bar — these systems control pitch, rate and energy from description,
-which is precisely the set our §11.1.3 measurement finds already working on
+Prosody is a global attribute. It is the category most extensively treated in
+the literature, and, as §1.4 established, the one VoxCPM2 already addresses on
 Khmer.
 
-### 11.3.2 Emotion
+### 2.3 Emotion
 
-**Emotional Voice Conversion: Theory, Databases and ESD** (Zhou, Sisman, Liu &
-Li, *Speech Communication* 2022, [arXiv:2105.14762](https://arxiv.org/abs/2105.14762))
-is the reference point for data. ESD is 29+ hours, 350 parallel utterances from
-10 English and 10 Mandarin speakers across five emotions (neutral, happy, angry,
-sad, surprise), designed for multi-speaker and cross-lingual work. The paper also
-surveys the emotional voice conversion field around it.
+Emotion denotes the affective state conveyed by the delivery. The standard
+corpora encode it as a small closed set of categories, most commonly neutral,
+happy, angry, sad and surprised.
 
-**Laugh Now Cry Later** (Hsu et al., SLT 2024,
-[arXiv:2407.12229](https://arxiv.org/abs/2407.12229)) is the useful bridge
-between this section and the next: it controls speaker emotion *and* laughter in
-one zero-shot system, treating a laugh as a controllable event rather than as an
-emotional label. Emotion and non-verbal vocalization are not separate problems in
-practice.
+Emotion is realised through prosody together with voice quality, but it does not
+reduce to a prosodic setting. Anger and excitement share elevated pitch and
+elevated energy and are not perceptually similar; the distinction resides in
+phonation, articulatory precision and fine timing, none of which a
+rate-pitch-energy specification captures. The sentence *Oh, that's great* spoken
+flatly and slowly is heard as sarcastic, spoken quickly and brightly as pleased,
+and spoken slowly with creaky phonation as resigned. The three readings differ
+in affect, not in prosodic setting alone.
 
-*Relevance.* The corpus shape is the obstacle. Every result here rests on
-parallel, acted, per-utterance-labelled emotional speech, and no such corpus
-exists for Khmer. Whatever emotion work happens here will either ride on the
-parenthetical channel for free or need a recording effort, and the second is out
-of proportion to the value.
+Emotion is treated as a global attribute in essentially all of the literature:
+one label per utterance is the near-universal convention. Its status in VoxCPM2
+on Khmer is unmeasured. The parenthetical channel would plausibly accept a
+description such as *(sounding angry)*, since it is the same free-text field
+that already carries *(speaking quickly)*, but this has not been tested.
 
-### 11.3.3 Non-verbal vocalization
+### 2.4 Non-Verbal Vocalization
 
-This is the active area, and the one with recipes that transfer directly.
+A non-verbal vocalization is a sound produced by a speaker that is not a word:
+laughter, a sigh, an audible breath, a filled pause, a cough, a gasp, a sob, a
+hesitation particle. Such sounds carry stance, regulate turn-taking and convey
+affect, and their presence is a substantial part of what distinguishes
+conversational speech from read speech.
 
-**NVSpeech** (2025, [arXiv:2508.04195](https://arxiv.org/abs/2508.04195)) is the
-closest match to what this project wants. It builds an integrated pipeline across
-*recognition and synthesis* of paralinguistic vocalizations: a manually annotated
-set of 48,430 utterances covering **18 word-level paralinguistic categories**;
-then a paralinguistic-aware ASR that emits the cues as **inline decodable
-tokens** — *"You're so funny [Laughter]"* — which is used to auto-label a
-573-hour, 174,179-utterance Chinese corpus with word-level alignment; then a
-zero-shot TTS fine-tuned on the human- plus auto-labelled data to give explicit
-control over the vocalizations at arbitrary token positions. The three ideas that
-transfer: **the tag is inline, at the position where the event happens**; **an
-ASR-shaped detector can bootstrap the corpus from found audio**; and **a small
-human-validated seed set is enough to bootstrap the automatic labeller**.
+**Table 6.** Non-verbal vocalization types. Tags in the first five rows are
+documented in VoxCPM2; the sixth row is not.
 
-**ELaTE** (Kanda et al., 2024, [arXiv:2402.07383](https://arxiv.org/abs/2402.07383))
-is the closest *method* reference, because it fine-tunes the same class of model
-VoxCPM2 uses. It takes a conditional flow-matching zero-shot TTS and adds
-frame-level conditioning from a **laughter detector**, giving control over both
-when the laugh happens and how it sounds. Two of its results govern our plan: a
-comparatively small conditioned dataset suffices, and **mixing the conditioned
-data with general data preserves base-model quality** — the fine-tune does not
-have to cost intelligibility.
+| Type | Tag | Communicative function |
+|---|---|---|
+| Laughter | `[laughing]` | amusement, affiliation, mitigation |
+| Sigh | `[sigh]` | resignation, fatigue, relief |
+| Filled pause | `[Uhm]` | planning, hesitation, floor-holding |
+| Attention marker | `[Shh]` | silencing, conspiratorial framing |
+| Discourse particle | `[Question-ah]`, `[Surprise-wa]`, `[Dissatisfaction-hnn]` | stance, back-channelling, question marking |
+| Breath, gasp, cough, sob | — | phrasing, surprise, distress, physical state |
 
-**NonverbalTTS** (2025, SSW, [arXiv:2507.13155](https://arxiv.org/abs/2507.13155))
-is the labelling-pipeline reference: 17 hours covering 10 non-verbal types,
-built from open sources by automatic detection followed by human validation, and
-reported at parity with proprietary systems. It is the template for
-corpus-building at a scale one person can actually reach.
+In the utterance *I thought it was fine* `[laughing]` *but apparently not*, the
+laugh occurs at one place, occupies a few hundred milliseconds, and leaves the
+speech before and after it unaffected. In *So we should* `[Uhm]` *probably
+wait*, a filled pause is inserted mid-clause and has the same bounded character.
 
-**Laughter detection** (Gillick et al., Interspeech 2021,
-[ISCA archive](https://www.isca-archive.org/interspeech_2021/gillick21_interspeech.html))
-provides the detector those pipelines depend on — robust frame-level laughter
-detection and segmentation, trained on found audio. **VocalSound** (Gong et al.,
-ICASSP 2022, [arXiv:2205.03433](https://arxiv.org/abs/2205.03433)) covers the
-rest of the inventory: 21k crowdsourced recordings of laughter, sighs, coughs,
-throat-clearing, sneezes and sniffs from 3,365 speakers, with a classifier
-baseline. Between them they supply the automatic detection stage without any
-model training on our side.
+Non-verbal vocalization is therefore a local event, and this is its significant
+property for present purposes. A global attribute competes for influence over
+frames that the surrounding acoustic context already predicts. A tagged event
+has no such competitor: the frames it occupies are predicted by nothing else,
+and the conditioning signal is the only available explanation for them. The
+engineering problem is correspondingly different, and, as §3.5 argues, easier.
 
-**MNV-17** (2025, [arXiv:2509.18196](https://arxiv.org/abs/2509.18196)) is a
-high-quality performative Mandarin non-verbal vocalization corpus for
-recognition, useful as evidence that the "record it deliberately" route is viable
-when found audio is thin.
+VoxCPM2 supplies the tag inventory. Whether the tags are realised on Khmer text
+is unmeasured.
 
-*Relevance.* This is a complete, published recipe: detector → alignment → human
-validation → inline-tagged manifest → flow-matching fine-tune with mixed general
-data. Every stage has a reference implementation or a released model, and the
-target model class matches VoxCPM2's Local DiT.
+### 2.5 Related Categories
 
-### 11.3.4 Evaluating naturalness and non-verbal quality
+Three further categories are named here so that they are not conflated with the
+preceding three.
 
-Any control claim needs a measurement, and this project has already found that
-the standard naturalness predictors are unusable for Khmer: across 400 clips the
-rank correlation between UTMOS and Khmer CER is **ρ = +0.55** — the clips UTMOS
-likes best are the ones that get the Khmer most wrong ([`CLAUDE.md`](../CLAUDE.md)).
-So the evaluation question has to be answered by instruments specific to the
-thing being controlled.
+**Table 7.** Categories adjacent to prosody, emotion and non-verbal vocalization.
 
-**NVV-SuperBench / NVBench** (2026, [arXiv:2604.16211](https://arxiv.org/abs/2604.16211))
-is the benchmark for exactly this. It pairs a unified **45-type taxonomy** of
-non-verbal vocalizations with a bilingual English/Chinese dataset, and — the
-important part — a multi-axis protocol that **separates general speech
-naturalness from NVV-specific controllability, placement and salience**. Fifteen
-TTS systems are evaluated under it. Those four axes are the right ones to report
-against: *did the event appear*, *was it the right type*, *was it in the right
-place*, *did it sound like the thing*.
+| Category | Definition | Scope | Example |
+|---|---|---|---|
+| Voice quality | mode of phonation | global | whispered, breathy, creaky, tense |
+| Emphasis | placement of contrastive stress | local span | *I* never said that; I never said *that* |
+| Timing | insertion and duration of pauses | local | a deliberate pause before a resolution |
 
-**NVMOS** (2026, [arXiv:2606.15888](https://arxiv.org/abs/2606.15888)) supplies
-the last of those as a model. It predicts a MOS-like 0–5 perceptual quality score
-for a *specific marked non-verbal event*, taking as input the audio plus text
-containing an explicit tag such as `[laugh]`. The paper also reports that
-general-purpose audio LLMs (Gemini among them) disagree measurably with expert
-raters on this task, so a multimodal model is not a substitute. Its input format
-— tagged text plus audio — is the format our training manifest will already be
-in.
-
-*Relevance.* Together these give an evaluation plan that does not depend on
-UTMOS: controllability and placement measured automatically with a detector,
-event quality with NVMOS, and intelligibility regression with the project's
-existing Khmer CTC CER scorer against the frozen `eval-set/eval.json`.
-
-### 11.3.5 What we will focus on, and why
-
-**Non-verbal vocalization.**
-
-The prosodic layer is the one most of the literature targets, and on this model
-it is already available: the parenthetical prompt moves Khmer pitch across
-+106 Hz at ρ +0.76, four times the separation our own labelled corpus can
-express (§11.1.3). Building a prosodic controller would be reproducing a
-capability the base model has, in a channel — the same free-text field — that is
-already occupied. The residue (pitch variation, reproducibility across seeds) is
-real but small.
-
-The emotional layer is blocked on data, not method. Every result in §11.3.2
-depends on acted, parallel, per-utterance-labelled emotional speech, and no Khmer
-corpus of that description exists.
-
-Non-verbal vocalization is the layer where the cost-to-value ratio is best, for
-four reasons:
-
-1. **It is local.** A tagged event owns the frames it occupies. Global attributes
-   have to compete for influence over frames that the acoustic context already
-   predicts; a laugh at position *k* has no competitor. This is a structural
-   advantage, and it is the reason the conditioning problem that dominated the
-   prosodic work is not expected to recur.
-2. **The model already has the interface.** `[laughing]`, `[sigh]`, `[Uhm]` are
-   documented tags in stock VoxCPM2. The work is making them fire on Khmer, not
-   inventing a syntax.
-3. **The acoustics are substantially language-independent.** A laugh is a laugh;
-   a sigh is a sigh. What is language-specific is *where* they go and what they
-   mean in context — which is what the tag position supplies. This is why a small
-   Khmer corpus can plausibly be enough, and it is the assumption the plan must
-   test first.
-4. **Every stage has a published reference.** NVSpeech for the pipeline and the
-   inline-token format, ELaTE for the flow-matching fine-tune and the data-mixing
-   ratio, NonverbalTTS for the human-validation loop, Gillick and VocalSound for
-   detection, NVV-SuperBench and NVMOS for evaluation.
+Voice quality behaves as emotion does: it is global, and in principle
+addressable through the same descriptive channel. Emphasis and timing are local,
+as non-verbal vocalization is, but they require a syntax that delimits a span
+rather than marking a point. VoxCPM2 provides no such syntax, and adding one is
+a larger undertaking than adding a tag.
 
 ---
 
-## 11.4 Methodology
+## 3 Literature Review
 
-*To be written.*
+Four bodies of work bear on the categories set out above: natural language
+control of prosody and style, emotional speech synthesis, non-verbal
+vocalization, and the evaluation of controlled speech. Each is reviewed in turn,
+and §3.5 states which category this project will pursue and on what grounds.
+
+### 3.1 Natural Language Style Control
+
+The organising idea of this literature is to replace the reference recording
+with a description, and to obtain the descriptions by automatic means rather
+than by annotation.
+
+Guo et al. (2023) established the format with **PromptTTS**, which takes a style
+prompt and a content prompt, encodes them separately, and conditions an acoustic
+model on both. The approach was constrained by its data: the style-annotated
+corpus had to be constructed manually, which limited its scale. Yang et al.
+(2023) relaxed the input format in **InstructTTS**, accepting free-form
+instructions rather than attribute lists and learning a cross-modal
+representation that aligns instruction text with speech style, decoded in a
+discrete latent space.
+
+Leng et al. (2024) addressed the two limitations that constrain the family as a
+whole. The first is that a description underdetermines a voice: many distinct
+voices satisfy *a young woman speaking quickly*, and a model trained to map
+descriptions to speech must resolve that ambiguity somehow. **PromptTTS 2**
+introduces a variation network that predicts, from the prompt representation,
+the reference-speech representation that would otherwise have been supplied. The
+second is annotation cost, addressed by a pipeline in which a speech
+understanding model recognises attributes and a large language model writes the
+corresponding prompt sentence. The system was trained on 44,000 hours.
+
+Lyth and King (2024) give the clearest statement of the annotation argument and
+the one released without restriction, as **Parler-TTS**. Gender, accent, pitch,
+speaking rate and recording conditions are labelled computationally across a
+45,000-hour corpus of found data using classifiers and signal measurements, and
+the resulting attributes are rendered as descriptive sentences on which the
+model is conditioned. The system outperforms prior work on fidelity while using
+no manually annotated data. The transferable result is that the labels required
+for prosodic control can be measured rather than annotated, which is the
+property this project relied upon when it labelled a Khmer corpus by measuring
+fundamental frequency, character rate and root-mean-square level per clip. Ji et
+al. (2024) supply the corpus counterpart in **TextrolSpeech**: 236 hours and
+33,000 utterances with style descriptions generated by a language-model pipeline
+over five attribute dimensions.
+
+This literature accounts for the parenthetical mechanism in VoxCPM2, which uses
+the same conditioning format and was presumably trained in the same manner. It
+also sets the expectation against which §1.4 should be read: these systems
+control pitch, rate and energy from description, and those are precisely the
+axes the measurement finds already functioning on Khmer.
+
+### 3.2 Emotional Speech Synthesis
+
+Work on emotion is organised around acted, parallel corpora. Zhou et al. (2022)
+survey the field and introduce the **Emotional Speech Dataset**, which remains
+the standard reference: 350 parallel utterances from ten English and ten
+Mandarin speakers across five emotion categories, exceeding 29 hours recorded
+under controlled acoustic conditions, and designed to support multi-speaker and
+cross-lingual conversion.
+
+Hsu et al. (2024) are the bridge between this section and the next. Their system
+controls speaker emotion and laughter within a single flow-matching zero-shot
+model, and in doing so treats a laugh as a controllable event rather than as an
+emotional label. The separation between emotion and non-verbal vocalization,
+clear enough as a definition, is not clean in practice.
+
+The obstacle in this category is the shape of the data rather than the adequacy
+of the method. Every result rests on parallel, acted, utterance-labelled
+emotional speech. No Khmer corpus of that description exists, and commissioning
+one is not proportionate to the value it would return.
+
+### 3.3 Non-Verbal Vocalization
+
+This is the most active of the four areas and the one whose methods transfer
+most directly to VoxCPM2.
+
+**NVSpeech** (2025) is the closest match to the problem stated in §2.4. It
+treats recognition and synthesis as one pipeline. A manually annotated set of
+48,430 utterances covering eighteen word-level paralinguistic categories is used
+to train a paralinguistic-aware speech recogniser that emits the cues as inline
+decodable tokens, so that a transcript reads *You're so funny [Laughter]*. That
+recogniser then labels a corpus of 174,179 Chinese utterances, 573 hours, with
+word-level alignment. A zero-shot synthesiser is finally fine-tuned on the
+combined human- and machine-labelled data, yielding explicit control over
+vocalizations inserted at arbitrary token positions. Three elements transfer:
+the tag is placed inline at the position of the event rather than in a header; a
+recogniser-shaped detector can bootstrap a corpus from found audio; and a modest
+human-validated seed set suffices to bootstrap the automatic labeller.
+
+Kanda et al. (2024) provide the closest methodological reference. **ELaTE**
+fine-tunes a conditional flow-matching zero-shot synthesiser using frame-level
+conditioning derived from a laughter detector, obtaining control over both the
+timing of a laugh and its acoustic character. Two of its results constrain any
+plan built on it. A comparatively small conditioned dataset is sufficient; and
+mixing the conditioned data with general training data preserves the quality of
+the base model, so the fine-tune need not be paid for in intelligibility. The
+relevance is direct: the decoder ELaTE modifies belongs to the same class as the
+VoxCPM2 local diffusion transformer.
+
+**NonverbalTTS** (2025) is the reference for corpus construction at a tractable
+scale. Seventeen hours covering ten non-verbal types were assembled from open
+sources by automatic detection followed by human validation, and the resulting
+system is reported at parity with proprietary alternatives. The detectors on
+which such pipelines depend are themselves available: Gillick et al. (2021)
+release robust frame-level laughter detection and segmentation trained on found
+audio, and Gong et al. (2022) release **VocalSound**, 21,000 crowdsourced
+recordings of laughter, sighs, coughs, throat-clearing, sneezes and sniffs from
+3,365 speakers, together with a classifier baseline. Between them the automatic
+detection stage requires no model training. Where found audio is too thin to
+support detection, deliberate recording remains viable; **MNV-17** (2025)
+demonstrates this for Mandarin.
+
+**Table 8.** Principal references for non-verbal vocalization, by pipeline stage.
+
+| Stage | Reference | Contribution |
+|---|---|---|
+| Detection | Gillick et al. (2021); Gong et al. (2022) | Released frame-level laughter detector; released classifier over six vocalization types. |
+| Corpus construction | NVSpeech (2025); NonverbalTTS (2025) | Recogniser-driven auto-labelling at 573 hours; detection plus human validation at 17 hours. |
+| Synthesis | Kanda et al. (2024); Hsu et al. (2024) | Flow-matching fine-tuning with detector conditioning; joint emotion and laughter control. |
+| Deliberate recording | MNV-17 (2025) | Performative corpus where found audio is insufficient. |
+
+Taken together these constitute a complete and published procedure: detection,
+alignment, human validation, an inline-tagged manifest, and a flow-matching
+fine-tune with general data mixed in. Every stage has either a reference
+implementation or a released model.
+
+### 3.4 Evaluation of Controlled Speech
+
+A control claim requires an instrument, and this project has already established
+that the usual instruments are unsuitable for Khmer. Across 400 clips the rank
+correlation between UTMOS, a learned mean-opinion-score predictor, and Khmer
+character error rate is +0.55: the recordings the predictor scores highest are
+those that render the Khmer least correctly. The inversion is between models
+rather than within any one model's output, which is precisely the comparison the
+predictor was being used to make. Naturalness predictors trained without Khmer
+in view cannot be relied upon here.
+
+Two recent contributions address the evaluation of non-verbal vocalization
+specifically. **NVV-SuperBench** (2026) pairs a unified taxonomy of 45
+vocalization types with a bilingual English and Chinese dataset and, more
+usefully, defines a protocol that separates general speech naturalness from
+vocalization-specific controllability, placement and salience; fifteen systems
+are evaluated under it. Those four axes are the appropriate ones to report
+against, since they decompose the question into whether the event occurred,
+whether it was of the requested type, whether it occurred in the requested
+place, and whether it was acoustically convincing.
+
+**NVMOS** (2026) supplies the last of these as a model rather than as a
+listening panel. It predicts a mean-opinion-score-like value between zero and
+five for a specific marked non-verbal event, taking as input the audio together
+with text containing an explicit tag such as `[laugh]`. The authors additionally
+report that general-purpose audio-capable multimodal models disagree measurably
+with expert raters on this task, so a multimodal model is not an acceptable
+substitute. Its input format, tagged text paired with audio, is the format in
+which a training manifest for this work would already exist.
+
+An evaluation plan that avoids the inverted predictors therefore exists:
+controllability and placement measured automatically with a detector, acoustic
+quality of the event measured with NVMOS, and intelligibility regression
+measured with the project's existing Khmer connectionist temporal classification
+scorer against the frozen evaluation set.
+
+### 3.5 Research Focus
+
+**This project will pursue non-verbal vocalization.** The reasoning proceeds by
+elimination and is then stated positively.
+
+*Prosody is already provided.* The parenthetical mechanism moves Khmer pitch
+across 106.37 hertz at a rank correlation of +0.759, roughly four times the
+28.27 hertz separation the project's own labelled corpus is able to express
+(§1.4). A prosodic controller trained on that corpus would reproduce a
+capability the base model possesses, in a conditioning channel that is already
+occupied. The residue, principally pitch variation and reproducibility across
+random seeds, is genuine but small.
+
+*Emotion is blocked on data rather than on method.* The results reviewed in §3.2
+depend without exception on acted, parallel, utterance-labelled emotional
+speech, and no Khmer corpus of that description exists.
+
+Non-verbal vocalization is the remaining category, and four considerations
+recommend it.
+
+1. **It is a local event.** A tagged vocalization is the only predictor of the
+   frames it occupies, whereas a global attribute must compete for influence
+   over frames the surrounding context already determines. The conditioning
+   difficulty that attends global-attribute training is therefore not expected
+   to arise.
+2. **The interface exists.** The tags `[laughing]`, `[sigh]` and `[Uhm]` are
+   documented in the unmodified model. The work is to make them operate on
+   Khmer, not to design a syntax and persuade the model to read it.
+3. **The acoustics are substantially language-independent.** Laughter and
+   sighing are not language-specific gestures; what is language-specific is
+   where they are placed and what they signal in context, and placement is
+   supplied by the tag position. This is why a small Khmer corpus may be
+   sufficient, and it is the assumption that any methodology must test before
+   committing resources.
+4. **Every stage has a published reference:** NVSpeech for the pipeline and the
+   inline-token format, ELaTE for the flow-matching fine-tune and the
+   data-mixing ratio, NonverbalTTS for the human-validation loop, Gillick et al.
+   and VocalSound for detection, and NVV-SuperBench and NVMOS for evaluation.
+
+---
+
+## 4 Methodology
+
+Reserved.
 
 ---
 
 ## References
 
-### Prosody and natural-language style control
+Gillick, J., Deng, W., Ryokai, K. and Bamman, D. (2021). Robust laughter
+detection in noisy environments. *Interspeech 2021*, 2481–2485.
+[ISCA archive](https://www.isca-archive.org/interspeech_2021/gillick21_interspeech.html)
 
-- Guo, Z. et al. (2023). *PromptTTS: Controllable text-to-speech with text descriptions.* ICASSP. [arXiv:2211.12171](https://arxiv.org/abs/2211.12171)
-- Yang, D. et al. (2023). *InstructTTS: Modelling expressive TTS in discrete latent space with natural language style prompt.* [arXiv:2301.13662](https://arxiv.org/abs/2301.13662)
-- Leng, Y. et al. (2024). *PromptTTS 2: Describing and generating voices with text prompt.* ICLR. [arXiv:2309.02285](https://arxiv.org/abs/2309.02285)
-- Lyth, D. & King, S. (2024). *Natural language guidance of high-fidelity text-to-speech with synthetic annotations.* [arXiv:2402.01912](https://arxiv.org/abs/2402.01912) — released as Parler-TTS.
-- Ji, S. et al. (2024). *TextrolSpeech: A text style control speech corpus with codec language text-to-speech models.* ICASSP. [arXiv:2308.14430](https://arxiv.org/abs/2308.14430)
+Gong, Y., Yu, J. and Glass, J. (2022). VocalSound: a dataset for improving human
+vocal sounds recognition. *ICASSP 2022*.
+[arXiv:2205.03433](https://arxiv.org/abs/2205.03433)
 
-### Emotion
+Guo, Z., Leng, Y., Wu, Y., Zhao, S. and Tan, X. (2023). PromptTTS: controllable
+text-to-speech with text descriptions. *ICASSP 2023*.
+[arXiv:2211.12171](https://arxiv.org/abs/2211.12171)
 
-- Zhou, K., Sisman, B., Liu, R. & Li, H. (2022). *Emotional voice conversion: Theory, databases and ESD.* Speech Communication. [arXiv:2105.14762](https://arxiv.org/abs/2105.14762)
-- Hsu, C.-C. et al. (2024). *Laugh Now Cry Later: Controlling time-varying emotional states of flow-matching-based zero-shot text-to-speech.* SLT. [arXiv:2407.12229](https://arxiv.org/abs/2407.12229)
+Hsu, C.-C., Kanda, N., Zhu, Y. et al. (2024). Laugh Now Cry Later: controlling
+time-varying emotional states of flow-matching-based zero-shot text-to-speech.
+*IEEE SLT 2024*. [arXiv:2407.12229](https://arxiv.org/abs/2407.12229)
 
-### Non-verbal vocalization
+Ji, S., Zuo, J., Fang, M. et al. (2024). TextrolSpeech: a text style control
+speech corpus with codec language text-to-speech models. *ICASSP 2024*.
+[arXiv:2308.14430](https://arxiv.org/abs/2308.14430)
 
-- *NVSpeech: An integrated and scalable pipeline for human-like speech modeling with paralinguistic vocalizations.* (2025). [arXiv:2508.04195](https://arxiv.org/abs/2508.04195)
-- Kanda, N. et al. (2024). *ELaTE: Making flow-matching-based zero-shot text-to-speech laugh as you like.* [arXiv:2402.07383](https://arxiv.org/abs/2402.07383)
-- *NonverbalTTS: A public English corpus of text-aligned nonverbal vocalizations with emotion annotations for text-to-speech.* (2025). SSW. [arXiv:2507.13155](https://arxiv.org/abs/2507.13155)
-- Gillick, J. et al. (2021). *Robust laughter detection in noisy environments.* Interspeech. [ISCA archive](https://www.isca-archive.org/interspeech_2021/gillick21_interspeech.html)
-- Gong, Y., Yu, J. & Glass, J. (2022). *VocalSound: A dataset for improving human vocal sounds recognition.* ICASSP. [arXiv:2205.03433](https://arxiv.org/abs/2205.03433)
-- *MNV-17: A high-quality performative Mandarin dataset for nonverbal vocalization recognition in speech.* (2025). [arXiv:2509.18196](https://arxiv.org/abs/2509.18196)
+Kanda, N., Wang, X., Eskimez, S. E. et al. (2024). Making flow-matching-based
+zero-shot text-to-speech laugh as you like.
+[arXiv:2402.07383](https://arxiv.org/abs/2402.07383)
 
-### Evaluation
+Leng, Y., Guo, Z., Shen, K. et al. (2024). PromptTTS 2: describing and
+generating voices with text prompt. *ICLR 2024*.
+[arXiv:2309.02285](https://arxiv.org/abs/2309.02285)
 
-- *NVV-SuperBench: Beyond words, beyond quality — benchmarking nonverbal vocalizations in speech generation.* (2026). [arXiv:2604.16211](https://arxiv.org/abs/2604.16211)
-- *NVMOS: Non-verbal vocalization quality assessment in speech.* (2026). [arXiv:2606.15888](https://arxiv.org/abs/2606.15888)
+Lyth, D. and King, S. (2024). Natural language guidance of high-fidelity
+text-to-speech with synthetic annotations.
+[arXiv:2402.01912](https://arxiv.org/abs/2402.01912). Released as Parler-TTS.
 
-### VoxCPM2 and companion documents
+MNV-17: a high-quality performative Mandarin dataset for nonverbal vocalization
+recognition in speech (2025).
+[arXiv:2509.18196](https://arxiv.org/abs/2509.18196)
 
-- OpenBMB. *VoxCPM2 model card*, [huggingface.co/openbmb/VoxCPM2](https://huggingface.co/openbmb/VoxCPM2) — parenthetical voice design, style-guided cloning, and the non-verbal tag inventory.
-- Source: `voxcpm/training/packers.py` (the zero text loss mask) and `voxcpm/model/voxcpm2.py`.
-- This project: [`docs/09`](09-voxcpm2-architecture-and-training.md) — VoxCPM2 architecture and training; [`docs/03`](03-evaluation-benchmarking.md) — the evaluation metrics; [`finetune/README.md`](../finetune/README.md) — the runbook; [`finetune/results/parenthetical/parenthetical.md`](../finetune/results/parenthetical/parenthetical.md) — the measurement in §11.1.3.
+NonverbalTTS: a public English corpus of text-aligned nonverbal vocalizations
+with emotion annotations for text-to-speech (2025). *Speech Synthesis Workshop
+2025*. [arXiv:2507.13155](https://arxiv.org/abs/2507.13155)
+
+NVMOS: non-verbal vocalization quality assessment in speech (2026).
+[arXiv:2606.15888](https://arxiv.org/abs/2606.15888)
+
+NVSpeech: an integrated and scalable pipeline for human-like speech modeling
+with paralinguistic vocalizations (2025).
+[arXiv:2508.04195](https://arxiv.org/abs/2508.04195)
+
+NVV-SuperBench: beyond words, beyond quality — benchmarking nonverbal
+vocalizations in speech generation (2026).
+[arXiv:2604.16211](https://arxiv.org/abs/2604.16211)
+
+OpenBMB (2025). VoxCPM2 model card.
+[huggingface.co/openbmb/VoxCPM2](https://huggingface.co/openbmb/VoxCPM2).
+Source referenced in §1.2: `voxcpm/training/packers.py` and
+`voxcpm/model/voxcpm2.py`.
+
+Yang, D., Liu, S., Huang, R. et al. (2023). InstructTTS: modelling expressive
+TTS in discrete latent space with natural language style prompt.
+[arXiv:2301.13662](https://arxiv.org/abs/2301.13662)
+
+Zhou, K., Sisman, B., Liu, R. and Li, H. (2022). Emotional voice conversion:
+theory, databases and ESD. *Speech Communication*, 137, 1–18.
+[arXiv:2105.14762](https://arxiv.org/abs/2105.14762)
+
+---
+
+**Project companions.** [`docs/03`](03-evaluation-benchmarking.md) — evaluation
+metrics · [`docs/09`](09-voxcpm2-architecture-and-training.md) — VoxCPM2
+architecture and training · [`finetune/README.md`](../finetune/README.md) — the
+runbook · [`finetune/results/diagnosis.md`](../finetune/results/diagnosis.md) —
+the measurement record of the prosodic fine-tune and its conditioning failure.

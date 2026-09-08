@@ -10,7 +10,7 @@ Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.
 
 "Expressive control" is several capabilities, not one, and they differ in how hard
 they are to add. The split that matters is **global attributes** (true of the whole
-utterance) versus **local events** (bounded, at one position) — docs/11 §11.2 sets out
+utterance) versus **local events** (bounded, at one position) — docs/11 §2.1 sets out
 that distinction, and `results/diagnosis.md` measures what it costs: a global attribute in
 the text field earns a gradient ~290x smaller than the transcript does under teacher
 forcing.
@@ -19,7 +19,7 @@ forcing.
 description in parentheses at the start of the text — `(speaking quickly)ថ្ងៃនេះ…` —
 and on Khmer that already controls pitch across +106 Hz at rho +0.76, nearly four
 times the +28 Hz separation this directory's hand-labelled corpus can express.
-Measured by `verify_parenthetical.py`; results in `results/parenthetical/`. That was
+Measured by `verify_parenthetical.py`; results in `results/parenthetical/`, written up in docs/11 §1.4. That was
 measured *after* the corpus was built and one full run had failed, which is the
 main lesson in `results/diagnosis.md`.
 
@@ -27,7 +27,7 @@ main lesson in `results/diagnosis.md`.
 |---|---|---|---|
 | **1. Prosodic** | rate, pitch, level | global | **already in the base model** — use `(…)`, no training |
 | **1b. Prosodic residue** | pitch variation, named speaker, reproducibility | global | what a fine-tune would still be for — this directory |
-| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; **measure on Khmer before building** (docs/11 §11.2.3); this is the layer docs/11 §11.3.5 selects |
+| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; **measure on Khmer before building** (docs/11 §2.4); this is the layer docs/11 §3.5 selects |
 | 3. Affective | emotion | global | measure the prompt first; then blocked on corpus |
 | 4. Voice quality | whisper, breathy, creaky | global | same |
 | 5. Discourse | emphasis, contrastive focus | local | needs a span syntax, not a header tag |
