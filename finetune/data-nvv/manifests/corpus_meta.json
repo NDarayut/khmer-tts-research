@@ -1,0 +1,70 @@
+{
+  "source": "deepvk/NonverbalTTS",
+  "symbol_to_tag": {
+    "🌬": "[breath]",
+    "🤣": "[laughing]",
+    "😷": "[cough]",
+    "😤": "[sigh]",
+    "🤧": "[sneeze]",
+    "😴": "[snore]",
+    "👃": "[sniff]",
+    "😖": "[groan]",
+    "🗣": "[throat-clear]",
+    "🐖": "[grunt]"
+  },
+  "dropped_symbols": [
+    "🌬"
+  ],
+  "documented_by_voxcpm2": [
+    "[laughing]",
+    "[sigh]"
+  ],
+  "novel_tags": [
+    "[breath]",
+    "[cough]",
+    "[groan]",
+    "[grunt]",
+    "[sneeze]",
+    "[sniff]",
+    "[snore]",
+    "[throat-clear]"
+  ],
+  "filters": {
+    "min_dur": 1.5,
+    "max_dur": 14.0,
+    "min_dnsmos": 3.0,
+    "untagged_ratio": 1.0
+  },
+  "counts": {
+    "seen": 2941,
+    "drop_dnsmos": 179,
+    "tagged": 871,
+    "tag[laughing]": 644,
+    "drop_duration": 702,
+    "untagged": 1188,
+    "tag[sniff]": 116,
+    "tag[cough]": 98,
+    "tag[groan]": 57,
+    "tag[sigh]": 68,
+    "tag[throat-clear]": 74,
+    "tag[sneeze]": 8,
+    "drop_empty_text": 1,
+    "tag[snore]": 4,
+    "tag[grunt]": 1
+  },
+  "tag_counts": {
+    "[laughing]": 644,
+    "[sniff]": 116,
+    "[cough]": 98,
+    "[groan]": 57,
+    "[sigh]": 68,
+    "[throat-clear]": 74,
+    "[sneeze]": 8,
+    "[snore]": 4,
+    "[grunt]": 1
+  },
+  "n_train": 1655,
+  "n_val": 87,
+  "hours": 3.51,
+  "unknown_symbols": {}
+}

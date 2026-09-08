@@ -34,11 +34,26 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-# Tags split by what the model is supposed to already know. `documented` is the
-# published inventory -- the reference for what a working tag looks like.
-# `novel` is the actual experiment: strings OpenBMB never documented.
+# Three groups, and the third is what makes this an experiment rather than a
+# demo.
+#
+#   DOCUMENTED  -- in VoxCPM2's published inventory, and also in the training
+#                  corpus. The reference for what a working tag sounds like.
+#   NOVEL       -- never documented by OpenBMB, but present in NonverbalTTS, so
+#                  the fine-tune sees them. These carry the claim.
+#   HELD_OUT    -- never documented AND absent from the training corpus, which
+#                  was verified by scanning its symbol inventory. The model
+#                  cannot have learned these, so whatever they do after training
+#                  is what a *trained* tag must beat to count. Without this arm,
+#                  an adapter that simply got more expressive everywhere would
+#                  look like it had learned the tags.
 DOCUMENTED_TAGS = ["[laughing]", "[sigh]"]
-NOVEL_TAGS = ["[cough]", "[gasp]", "[breath]", "[sniff]", "[yawn]"]
+# [breath] is deliberately absent: its symbol is stripped from the training
+# text (see build_corpus_nvv.DROP_SYMBOLS) so breath-only clips can serve as
+# the untagged half of the mix. That makes it neither trained nor held out,
+# and a muddy third category is worse than no category.
+NOVEL_TAGS = ["[cough]", "[sniff]", "[throat-clear]", "[groan]"]
+HELD_OUT_TAGS = ["[gasp]", "[yawn]"]
 
 # Carrier sentences. Each has a marked slot where the tag goes, so placement is
 # controlled rather than left to the end of the utterance. Kept short and plain
@@ -95,7 +110,8 @@ def main():
     from finetune.synthesize_styled import load_model
 
     seeds = [int(s) for s in args.seeds.split(",")]
-    tags = args.tags.split(",") if args.tags else DOCUMENTED_TAGS + NOVEL_TAGS
+    tags = (args.tags.split(",") if args.tags
+            else DOCUMENTED_TAGS + NOVEL_TAGS + HELD_OUT_TAGS)
     cases = build_cases(tags, CARRIERS, seeds)
 
     out_dir = Path(args.out_dir)
@@ -158,6 +174,7 @@ def main():
         "seeds": seeds,
         "documented_tags": [t for t in tags if t in DOCUMENTED_TAGS],
         "novel_tags": [t for t in tags if t in NOVEL_TAGS],
+        "held_out_tags": [t for t in tags if t in HELD_OUT_TAGS],
         "carriers": CARRIERS,
         "clips": records,
     }

@@ -51,16 +51,35 @@ SYMBOL_TO_TAG = {
     "\U0001F637": "[cough]",          # face with medical mask
     "\U0001F624": "[sigh]",           # face with look of triumph (huffing)
     "\U0001F927": "[sneeze]",         # sneezing face
-    "\U0001F62B": "[groan]",          # tired face
     "\U0001F634": "[snore]",          # sleeping face
-    "\U0001F44A": "[grunt]",          # oncoming fist
-    "\U0001F444": "[throat-clear]",   # mouth
     "\U0001F443": "[sniff]",          # nose
+    # The last three were identified by elimination: the dataset card lists ten
+    # types, seven of which map to an obvious pictograph. These three symbols are
+    # what remain, against groaning, throat clearing and grunting.
+    "\U0001F616": "[groan]",          # confounded face
+    "\U0001F5E3": "[throat-clear]",   # speaking head in silhouette
+    "\U0001F416": "[grunt]",          # pig
 }
 
 # Which of the above VoxCPM2 already documents. Everything else is novel and
 # carries the experimental claim.
 DOCUMENTED = {"[laughing]", "[sigh]"}
+
+# Symbols stripped from the text WITHOUT emitting a tag.
+#
+# This exists to solve a problem the corpus creates. NonverbalTTS was filtered to
+# contain non-verbal events, so essentially every clip has one -- a first build
+# produced 998 tagged clips and *one* untagged. ELaTE's 50:50 mix has no
+# untagged half to draw on, and an adapter trained only on tagged data learns to
+# emit events unconditionally.
+#
+# Breath is two thirds of all events here, and it is the least interesting one:
+# quiet, hard to hear, and present in ordinary speech anyway. Dropping it turns
+# every breath-only clip into an untagged clip, which is exactly the pool that
+# was missing -- and it leaves the audible events as the experiment. The audio
+# still contains the breath, so the model learns that breaths happen
+# unconditioned, which is true of real speech.
+DROP_SYMBOLS = {"\U0001F32C"}
 
 VARIATION_SELECTOR = "️"
 ZWJ = "‍"
@@ -88,6 +107,8 @@ def convert_text(text):
     for ch in text:
         syms = find_symbols(ch)
         if syms:
+            if ch in DROP_SYMBOLS:
+                continue
             tag = SYMBOL_TO_TAG.get(ch)
             if tag:
                 tags.append(tag)
@@ -258,6 +279,7 @@ def main():
     meta = {
         "source": "deepvk/NonverbalTTS",
         "symbol_to_tag": SYMBOL_TO_TAG,
+        "dropped_symbols": sorted(DROP_SYMBOLS),
         "documented_by_voxcpm2": sorted(DOCUMENTED),
         "novel_tags": sorted(set(SYMBOL_TO_TAG.values()) - DOCUMENTED),
         "filters": {"min_dur": args.min_dur, "max_dur": args.max_dur,
