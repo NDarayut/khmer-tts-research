@@ -1,0 +1,70 @@
+# VoxCPM2 style-control LoRA for Khmer -- the real run.
+#
+# Sized for a 12 GB RTX 3060 with finetune/train.py's low-VRAM patches applied
+# (frozen weights -> bf16, gradient checkpointing on all 36 transformer layers).
+# Measured peak on this machine: ~10.3 GiB of 12.3 GiB, desktop included.
+# Without the patches this configuration OOMs -- upstream leaves the 2.29 B
+# frozen parameters in float32, which alone is 8.6 GiB.
+#
+# batch_size 1 x grad_accum 8 = effective batch 8. Upstream's default is 16 at
+# batch_size 2, which does not fit; accumulation buys the same effective batch
+# at 1/2 the activation memory and ~2x the wall clock.
+#
+# r=64 not 32: docs/09 §9.5 -- r=32 is for cloning one speaker, r=64 for style
+# and language work. Five control axes across 19 voices is style work.
+#
+# TWO SETTINGS HERE EXIST BECAUSE THE FIRST 4000-STEP RUN FAILED. It trained
+# fine and ignored the control tag completely. See
+# finetune/results/diagnosis.md. Both fixes were isolated by probe, one
+# variable at a time, before being brought back here:
+#
+#   enable_proj: true   -- the LM->DiT projections are the only route text-side
+#                          information has into the acoustic generator. Leaving
+#                          them frozen is right for speaker *cloning*, where the
+#                          voice arrives through the reference encoder, and wrong
+#                          for conditioning that arrives only as text.
+#                          Probe: 5.8 Hz -> 19.5 Hz of speaker separation.
+#
+#   --onset-weight 8.0  -- passed on the command line, not here (upstream's
+#                          config schema rejects unknown keys). Teacher forcing
+#                          makes the tag redundant with the ground-truth acoustic
+#                          prefix everywhere but the start of the clip; this moves
+#                          the gradient to where the tag is the only cue.
+#                          Probe: 19.5 Hz -> 39.9 Hz, over the 30 Hz pass bar.
+
+pretrained_path: /home/pc/.cache/huggingface/hub/models--openbmb--VoxCPM2/snapshots/32279effe8c19989596f05d353d1447f51d9e915
+train_manifest: /run/media/pc/disk1/text-to-speech/finetune/data/train.jsonl
+val_manifest: /run/media/pc/disk1/text-to-speech/finetune/data/val.jsonl
+
+sample_rate: 16000          # AudioVAE encoder rate; hard-checked against config
+out_sample_rate: 48000      # decoder rate, for TensorBoard audio only
+
+batch_size: 1
+grad_accum_steps: 8
+num_workers: 4
+num_iters: 4000
+log_interval: 25
+valid_interval: 500
+save_interval: 500          # frequent: the run is long and the card is tight
+
+learning_rate: 0.0001       # 1e-4, the documented LoRA rate
+weight_decay: 0.01
+warmup_steps: 200
+max_steps: 4000
+max_batch_tokens: 896       # trimmed from 1024 for the headroom enable_proj costs
+max_grad_norm: 1.0
+
+save_path: /run/media/pc/disk1/text-to-speech/finetune/checkpoints/khmer_style
+tensorboard: /run/media/pc/disk1/text-to-speech/finetune/logs/khmer_style
+
+lambdas:
+  loss/diff: 1.0            # diffusion loss on the predicted latent
+  loss/stop: 1.0            # end-of-utterance prediction
+
+lora:
+  enable_lm: true           # MiniCPM4 backbone: carries the text->prosody mapping
+  enable_dit: true          # diffusion transformer: carries acoustic detail
+  enable_proj: true         # see the note above -- false is why the first run failed
+  r: 64
+  alpha: 64
+  dropout: 0.0
