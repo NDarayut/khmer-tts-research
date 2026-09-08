@@ -68,7 +68,12 @@ python finetune/verify_control.py --lora finetune/checkpoints/khmer_style/latest
     --dir base=finetune/results/audio/base \
     --dir lora=finetune/results/audio/lora
 
-# 6. use it
+# 6. listen to it -- verification says "did it move?", this says "does it
+#    sound like what was asked for?" They are not the same question.
+python finetune/make_demo.py --lora finetune/checkpoints/khmer_style/latest
+python finetune/build_demo_artifact.py      # -> finetune/results/demo/index.html
+
+# 7. use it
 python finetune/synthesize_styled.py \
     --lora finetune/checkpoints/khmer_style/latest \
     --text "សូមស្វាគមន៍មកកាន់ប្រទេសកម្ពុជា។" \
@@ -113,6 +118,8 @@ are kept every 500 steps for exactly that reason.
 | `verify_control.py` | the falsifiable check: sweep each axis, measure, compare against the base model as control |
 | `select_checkpoint.sh` | ranks checkpoints by control response rather than by loss, then runs the full verification on the winner |
 | `score_cer.py` | CER regression vs the base model, using the project's Khmer CTC scorer |
+| `make_demo.py` | generates matched listening sets — every axis swept on one sentence at one seed, plus the base model as control |
+| `build_demo_artifact.py` | embeds those clips as MP3 data URIs in one self-contained page you can publish and play |
 | `experiments/probe_conditioning.py` | 400-step falsifiable probe: can the model learn to read a tag at all? One arm per hypothesis, pass bar fixed in advance |
 | `experiments/tag_sensitivity.py` | asks the *training objective* whether the tag matters, with a scrambled-transcript positive control. Minutes, not hours — run this before any long conditioning run |
 | `results/diagnosis.md` | the full measurement record of the first run's failure and the two fixes, and where it sits in the literature |

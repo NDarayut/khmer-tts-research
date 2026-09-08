@@ -39,6 +39,8 @@ finetune/results/audio/
 # per-checkpoint sweep audio and logs from select_checkpoint.sh
 finetune/results/select*/
 finetune/results/audio*/
+# demo clips and the page built from them; both regenerate from a checkpoint
+finetune/results/demo/
 
 # Probe experiments: checkpoints, TB logs, generated manifests. The scripts and
 # the result json are tracked; everything they regenerate is not.
