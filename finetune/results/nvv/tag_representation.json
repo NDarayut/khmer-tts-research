@@ -1,0 +1,305 @@
+{
+  "voxcpm_version": "unknown",
+  "model_id": "openbmb/VoxCPM2",
+  "vocab_size": 73440,
+  "checks": {
+    "no_special_handling": {
+      "claim": "no tag string appears in package source",
+      "hits": [],
+      "passed": true
+    },
+    "tokenization": {
+      "claim": "tags are ordinary multi-token subword text, never atomic special tokens, and never produce <unk>",
+      "tags": [
+        {
+          "tag": "[laughing]",
+          "n_tokens": 5,
+          "pieces": [
+            "[",
+            "l",
+            "augh",
+            "ing",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[laughter]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "l",
+            "aughter",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[sigh]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "s",
+            "igh",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[Uhm]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "U",
+            "hm",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[Shh]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "Sh",
+            "h",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[Question-ah]",
+          "n_tokens": 5,
+          "pieces": [
+            "[",
+            "Question",
+            "-",
+            "ah",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[Surprise-wa]",
+          "n_tokens": 6,
+          "pieces": [
+            "[",
+            "Sur",
+            "prise",
+            "-",
+            "wa",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[Dissatisfaction-hnn]",
+          "n_tokens": 9,
+          "pieces": [
+            "[",
+            "D",
+            "iss",
+            "atisf",
+            "action",
+            "-",
+            "h",
+            "nn",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[breath]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "bre",
+            "ath",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[gasp]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "g",
+            "asp",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[cough]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "c",
+            "ough",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[throat-clear]",
+          "n_tokens": 6,
+          "pieces": [
+            "[",
+            "thro",
+            "at",
+            "-",
+            "clear",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[sniff]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "sn",
+            "iff",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[sob]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "so",
+            "b",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        },
+        {
+          "tag": "[yawn]",
+          "n_tokens": 4,
+          "pieces": [
+            "[",
+            "y",
+            "awn",
+            "]"
+          ],
+          "has_unk": false,
+          "is_atomic_special": false
+        }
+      ],
+      "passed": true
+    },
+    "normalization": {
+      "claim": "remove_bracket leaves ASCII-bracketed tags intact",
+      "tags": [
+        {
+          "tag": "[laughing]",
+          "after_remove_bracket": "[laughing]",
+          "survived": true
+        },
+        {
+          "tag": "[laughter]",
+          "after_remove_bracket": "[laughter]",
+          "survived": true
+        },
+        {
+          "tag": "[sigh]",
+          "after_remove_bracket": "[sigh]",
+          "survived": true
+        },
+        {
+          "tag": "[Uhm]",
+          "after_remove_bracket": "[Uhm]",
+          "survived": true
+        },
+        {
+          "tag": "[Shh]",
+          "after_remove_bracket": "[Shh]",
+          "survived": true
+        },
+        {
+          "tag": "[Question-ah]",
+          "after_remove_bracket": "[Question-ah]",
+          "survived": true
+        },
+        {
+          "tag": "[Surprise-wa]",
+          "after_remove_bracket": "[Surprise-wa]",
+          "survived": true
+        },
+        {
+          "tag": "[Dissatisfaction-hnn]",
+          "after_remove_bracket": "[Dissatisfaction-hnn]",
+          "survived": true
+        },
+        {
+          "tag": "[breath]",
+          "after_remove_bracket": "[breath]",
+          "survived": true
+        },
+        {
+          "tag": "[gasp]",
+          "after_remove_bracket": "[gasp]",
+          "survived": true
+        },
+        {
+          "tag": "[cough]",
+          "after_remove_bracket": "[cough]",
+          "survived": true
+        },
+        {
+          "tag": "[throat-clear]",
+          "after_remove_bracket": "[throat-clear]",
+          "survived": true
+        },
+        {
+          "tag": "[sniff]",
+          "after_remove_bracket": "[sniff]",
+          "survived": true
+        },
+        {
+          "tag": "[sob]",
+          "after_remove_bracket": "[sob]",
+          "survived": true
+        },
+        {
+          "tag": "[yawn]",
+          "after_remove_bracket": "[yawn]",
+          "survived": true
+        }
+      ],
+      "passed": true
+    },
+    "cfg_channel": {
+      "claim": "CFG dropout zeroes the entire conditioning vector, so no tag-specific guidance axis exists today",
+      "mu_masked_wholesale": true,
+      "training_cfg_rate": 0.1,
+      "inference_cfg_rate": 1.0,
+      "passed": true
+    }
+  },
+  "script_asymmetry": {
+    "khmer_text": "ខ្ញុំសប្បាយចិត្តណាស់ថ្ងៃនេះ",
+    "khmer_chars": 27,
+    "khmer_tokens": 82,
+    "tokens_per_khmer_char": 3.04,
+    "tag_tokens": 5,
+    "note": "Khmer is byte-fallback; the Latin tag is a low-entropy island in the sequence. Salient, but carrying English-context priors."
+  }
+}
