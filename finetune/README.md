@@ -6,6 +6,24 @@ This file is the operational sequence.
 
 Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.
 
+## Scope: this is layer 1 of several
+
+"Expressive control" is several capabilities, not one, and they differ in how hard
+they are to add. The split that matters is **global attributes** (true of the whole
+utterance) versus **local events** (bounded, at one position) — docs/11 §11.5 shows
+that distinction decides whether a control signal earns any gradient at all.
+
+| layer | controls | scope | status |
+|---|---|---|---|
+| **1. Prosodic** | voice, rate, pitch, variation, level | global | **this directory** |
+| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; untested on Khmer (docs/11 §11.7) |
+| 3. Affective | emotion | global | blocked: no expressive Khmer corpus |
+| 4. Voice quality | whisper, breathy, creaky | global | blocked: same |
+| 5. Discourse | emphasis, contrastive focus | local | needs a span syntax, not a header tag |
+
+Layer 2 needs no training and is the cheapest next step; layers 3 and 4 are this
+same machinery waiting on data that does not exist for Khmer.
+
 ## What you get
 
 A LoRA adapter that makes VoxCPM2 respond to a control tag prefixed to the text:

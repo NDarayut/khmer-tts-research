@@ -6,13 +6,37 @@ The gap is easy to state. [Higgs TTS 3](10-higgs-tts-3-architecture-and-training
 
 But VoxCPM2 is the model this project recommends, on the strength of a 2.47% Khmer CER against Higgs's 8.28% and an Apache-2.0 licence you can ship (see CLAUDE.md, "The verdict"). Losing that to gain expressive control would be a bad trade. The question this document answers is whether the control can be added instead.
 
-**It can, but not the way it first appears.** The result is a LoRA adapter, trained on a single 12 GB consumer GPU, that gives VoxCPM2 five control axes — voice, speaking rate, pitch register, pitch variation, and level — driven by a tag prefixed to the text.
+**It can, but not the way it first appears** — and "expressive control" turns out to be several capabilities rather than one, so §11.0 sets out the layers before this document builds the first of them.
+
+**The short version.** The result is a LoRA adapter, trained on a single 12 GB consumer GPU, that gives VoxCPM2 five control axes — voice, speaking rate, pitch register, pitch variation, and level — driven by a tag prefixed to the text.
 
 The reason for the qualifier is the most useful thing in this document. The obvious construction — put a tag in the text field, train a LoRA on labelled speech — produces an adapter that trains cleanly, converges, audibly changes the model, and **ignores the tag completely**. It took a 6.5-hour run and four falsifying experiments to establish that, and the cause turned out to be neither the tag format nor the architecture but the training objective itself. §11.5 is that story, because a reader who copies the design in §11.1 without it will reproduce the failure exactly.
 
 ---
 
-## 11.1 The mechanism, and why it is nearly free — and not sufficient
+## 11.0 The control layers, and which one this is
+
+"Expressive control" is not one capability. It is several, and they behave differently enough that treating them as one is how a roadmap goes wrong. This document builds **layer 1** and names the rest so the sequencing is a decision rather than an accident.
+
+The distinction that matters is between **attributes that hold over a whole utterance** and **events that happen at a point in it**. A speaker's pitch register is true of every frame; a laugh occupies 400 ms and nothing else. §11.5 shows that this is not cosmetic — it decides whether a control signal earns any gradient at all.
+
+| layer | controls | scope | mechanism | status |
+|---|---|---|---|---|
+| **1. Prosodic** | voice, rate, pitch register, pitch variation, level | **global** | this document's tag, LoRA-trained on measured labels | **built; run 2 verifying** |
+| **2. Non-verbal vocalization** | laughter, sighs, hesitation, breath | **local** | ships with VoxCPM2, no training needed | untested on Khmer |
+| **3. Affective** | emotion — sadness, joy, anger | global | same tag mechanism as layer 1 | blocked on corpus |
+| **4. Voice quality** | whisper, breathy, creaky, projected | global | same tag mechanism as layer 1 | blocked on corpus |
+| **5. Discourse** | emphasis, contrastive focus, question contour | local | needs a span-marking syntax, not a header tag | not designed |
+
+**Why the scope column is the important one.** §11.5 measures that a global attribute supplied through the text field earns almost no gradient, because teacher forcing lets the model read that attribute off the ground-truth acoustic prefix instead. Pitch is already in the previous 40 ms of audio; the tag adds nothing.
+
+A local event does not have this problem. Nothing in the acoustic prefix predicts that a laugh is about to occur — the tag is the only thing that does, at exactly the position where it appears. On the measurement in §11.5 that is the difference between a signal worth +0.003 of loss and one worth +0.00022.
+
+This predicts, with no further experiment, that **layer 2 should be far easier than layer 1** — and it is consistent with what OpenBMB actually shipped: working non-verbal tags, and no global prosodic control surface at all. Layers 3 and 4 are global, so they inherit layer 1's difficulty along with its fix.
+
+---
+
+## 11.1 Layer 1, the mechanism: nearly free, and not sufficient
 
 Prefix a control tag to the text field:
 
@@ -43,7 +67,7 @@ Identical, and both 2.08 s. The base model silently ignores the tag. That settle
 
 ---
 
-## 11.2 Where the labels come from
+## 11.2 Where the prosodic labels come from
 
 There is no expressive Khmer speech corpus. There is no Khmer emotion corpus. Trying to copy Higgs's 21-emotion catalogue would mean inventing labels for data that does not carry them, and the result would be unfalsifiable.
 
@@ -239,7 +263,7 @@ Run 1's checkpoints and sweep are kept under `finetune/checkpoints/khmer_style_r
 
 ---
 
-## 11.6 Using it
+## 11.6 Using prosodic control
 
 ```python
 from voxcpm import VoxCPM
@@ -266,7 +290,51 @@ The adapter hot-swaps: `model.set_lora_enabled(False)` restores the base model b
 
 ---
 
-## 11.7 What this does and does not settle
+## 11.7 Layer 2 — non-verbal vocalization
+
+This layer needs no fine-tuning. VoxCPM2 ships with it: inline square-bracket tags placed in the text at the point where the vocalization should occur, part of the base model's training and available today on the stock checkpoint.
+
+| category | tags | effect |
+|---|---|---|
+| laughter and breath | `[laughing]`, `[sigh]` | audible laugh or exhalation |
+| hesitation | `[Uhm]`, `[Shh]` | filled pause; a shushing sound |
+| question particles | `[Question-ah]`, `[Question-ei]`, `[Question-en]`, `[Question-oh]` | interrogative interjections |
+| emotional interjections | `[Surprise-wa]`, `[Surprise-yo]`, `[Dissatisfaction-hnn]` | surprise; dissatisfaction |
+
+```python
+# stock VoxCPM2 -- no adapter, no fine-tuning
+wav = model.generate(text="ខ្ញុំគិតថា... [laughing] ...")
+
+# the mechanisms compose: parenthetical voice design, our prosodic header
+# tag, and an inline non-verbal tag in one call
+text = ("(a young woman, warm voice)"
+        "<|spk:any|rate:slow|pitch:any|var:lively|energy:any|>"
+        "ខ្ញុំ... [sigh] ...")
+```
+
+OpenBMB's guidance is unusually specific and worth repeating: use them sparingly, prefer the lowercase `[laughing]` over variants like `[Laughter]`, and do not stack several into one sentence. The model card lists instability on "very long or highly expressive inputs" among its limitations, which is the same caution from the other side.
+
+### A separate mechanism, easily confused with it
+
+VoxCPM2 also accepts a natural-language description in parentheses at the start of the text — `(A young woman, gentle and sweet voice)` for voice design from nothing, or `(slightly faster, cheerful tone)` over a reference clip for style-guided cloning.
+
+This overlaps layer 1 and does not replace it. It is free text: not enumerable, not reproducible across runs — the model card recommends generating one to three times to get what you want — and it offers no way to sweep an axis or check that a request was honoured. The tag in §11.1 trades expressiveness for exactly those properties: 32 slot values, deterministic given a seed, measurable. The two compose, one being a parenthetical prefix and the other a bracketed header.
+
+### What is not known
+
+All of the above is documented for VoxCPM2 in general and **none of it for Khmer**. This project has been bitten by that assumption once already — docs/10 records the same caveat for Higgs TTS 3's control tokens, untested on Khmer because Khmer is not among its documented languages.
+
+| open question | why it is genuinely open |
+|---|---|
+| Do the tags fire in Khmer text at all? | They are English strings inside a Khmer sentence. Khmer tokenises to UTF-8 byte tokens; the tag does not. Whether the model recognises the pattern in that context is empirical. |
+| Are they read aloud instead? | The failure to check for is the model pronouncing "laughing" rather than laughing — the same check §11.1 ran on the prosodic tag, which passed. |
+| Does the prosodic adapter damage them? | The adapter was trained on read speech containing no laughter, and LoRA can erode capabilities absent from the fine-tuning distribution. Testable against the same clip with the adapter disabled. |
+
+**The cheapest useful experiment.** Synthesize a fixed set of Khmer sentences with and without each tag, three ways: base model, adapter enabled, adapter disabled. Then measure rather than listen — duration delta, since a real laugh lengthens the clip, and the project's Khmer CTC ASR on the transcript, which shows immediately whether "laughing" is being spoken as a word. This reuses `verify_control.py`'s measurement layer and `score_cer.py` unchanged, and needs no corpus, no labels and no training. That is what makes layer 2 the right next step rather than layers 3 or 4, where the blocker is data that does not exist.
+
+---
+
+## 11.8 What this does and does not settle
 
 **Settled.** VoxCPM2 can be given a control surface without touching its architecture; the packer's zero text loss-mask makes the text field a free conditioning channel. It trains on 12 GB, not the documented 20. And the failure mode that makes the obvious construction quietly not work is identified, measured and fixed: a text-side control tag is redundant with the teacher-forced acoustic prefix, so it earns no gradient unless the loss is weighted toward the onset and the LM→DiT projections are adapted.
 
@@ -274,11 +342,11 @@ The adapter hot-swaps: `model.set_lora_enabled(False)` restores the base model b
 
 **Not settled.** Naturalness, still — for the same reason CLAUDE.md gives at length. Nothing here changes the fact that no automatic metric ranks Khmer TTS, and whether the styled output *sounds* better is a listening-test question. The apparatus exists (`evaluation/listening_test.py`) and has not been run with real listeners.
 
-**Out of reach with this data.** Emotion and non-prosodic style — Higgs's `sadness`, `whispering`, `laughter`. Those need expressive Khmer recordings. The mechanism in §11.1 would carry them, but §11.5 is the correction to the obvious next thought: the mechanism alone is not enough, and an emotion tag would face exactly the same competition against the acoustic prefix that the speaker tag lost. The corpus is what is missing; the onset weighting would still be required.
+**Out of reach with this data.** Layers 3 and 4 — emotion, and voice qualities such as `whispering`. Those need expressive Khmer recordings, and no such corpus exists. The mechanism in §11.1 would carry them, but §11.5 is the correction to the obvious next thought: the mechanism alone is not enough. Both are *global* attributes, so an emotion tag faces exactly the same competition against the acoustic prefix that the speaker tag lost, and needs the same onset weighting. `laughter` is **not** in this category — as a local event it belongs to layer 2 (§11.7), which ships with the model and needs no corpus at all.
 
 ---
 
-## 11.8 What here is standard, and what is not
+## 11.9 What here is standard, and what is not
 
 Worth stating plainly, because a method document that does not separate borrowed
 ideas from local inventions is hard to trust and harder to build on.
@@ -306,6 +374,8 @@ ideas from local inventions is hard to trust and harder to build on.
 - `voxcpm/training/packers.py` — the zero text loss-mask that makes the whole approach work
 - `voxcpm/model/voxcpm2.py` — `from_local`, and the fp32-in-training line behind the VRAM gap
 - [VoxCPM Fine-Tuning Guide](https://voxcpm.readthedocs.io/en/latest/finetuning/finetune.html) and [FAQ](https://voxcpm.readthedocs.io/en/latest/finetuning/faq.html)
+- [VoxCPM2 cookbook](https://voxcpm.readthedocs.io/en/latest/cookbook.html) — the non-verbal tag inventory in §11.7, and the guidance to use them sparingly and prefer lowercase forms
+- [VoxCPM2 model card](https://huggingface.co/openbmb/VoxCPM2) — parenthetical voice design and style-guided cloning, and the stated variability between runs
 - Companion documents: [09 — VoxCPM2 architecture and training](09-voxcpm2-architecture-and-training.md), [10 — Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md)
 
 **External:**
