@@ -26,3 +26,28 @@ evaluation/dnsmos_models/
 # (different --pair/--seed = a new blob every time). Regenerate with
 # evaluation/listening_test.py; the answer key IS tracked.
 evaluation/listening_test.html
+
+# Fine-tuning (finetune/): extracted training audio, LoRA checkpoints, TB logs
+# and swept output are all regenerable and large. The manifests are excluded
+# too -- they carry absolute paths into a corpus outside this repo. The corpus
+# metadata, the verification results and the docs ARE tracked.
+finetune/data*/wavs/
+finetune/data*/*.jsonl
+finetune/checkpoints/
+finetune/logs/
+finetune/results/audio/
+# per-checkpoint sweep audio and logs from select_checkpoint.sh
+finetune/results/select*/
+finetune/results/audio*/
+
+# Probe experiments: checkpoints, TB logs, generated manifests. The scripts and
+# the result json are tracked; everything they regenerate is not.
+finetune/experiments/ckpt_*/
+finetune/experiments/logs_*/
+finetune/experiments/data/
+finetune/experiments/sens_*.jsonl
+finetune/experiments/*.log
+finetune/experiments/probe_*.yaml
+
+# Upstream VoxCPM trainer -- cloned, not vendored. See finetune/README.md.
+VoxCPM-src/
