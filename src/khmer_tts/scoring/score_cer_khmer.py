@@ -64,11 +64,11 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "evaluation"))
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from metrics.khmer_text import cer as char_error_rate  # noqa: E402
-from metrics.khmer_text import normalize  # noqa: E402
+from khmer_tts.scoring.metrics.khmer_text import cer as char_error_rate  # noqa: E402
+from khmer_tts.scoring.metrics.khmer_text import normalize  # noqa: E402
 
 DEFAULT_ASR_REPO = Path("/run/media/pc/disk1/streaming_asr")
 ASR_REPO_ENV = "KHMER_ASR_REPO"

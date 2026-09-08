@@ -24,7 +24,7 @@ pyloudnorm>=0.1.1       # score_naturalness.py -- BS.1770 loudness normalization
                         # used to rule level differences out of the UTMOS comparison
 
 # CER is no longer scored by faster-whisper (it cannot read Khmer). The
-# replacement, evaluation/score_cer_khmer.py, runs under the Khmer ASR repo's
+# replacement, src/khmer_tts/scoring/score_cer_khmer.py, runs under the Khmer ASR repo's
 # own interpreter and needs nothing from this file -- see evaluation/README.md.
 # metrics/utmos.py pulls the utmos22_strong checkpoint from torch.hub
 # (tarepan/SpeechMOS) on first use -- no pip package, but needs network once.

@@ -21,12 +21,12 @@ import html
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.audio_samples import encode_mp3, pick_entries
-from evaluation.backends import BACKEND_KEYS
-from evaluation.common import ROOT, load_entries, read_json, scores_path, wav_path
-from evaluation.report import (
+from khmer_tts.reporting.audio_samples import encode_mp3, pick_entries
+from khmer_tts.synthesis.backends import BACKEND_KEYS
+from khmer_tts.common import ROOT, load_entries, read_json, scores_path, wav_path
+from khmer_tts.reporting.report import (
     CER_INVALID_THRESHOLD,
     HYBRID_RTF,
     MODEL_LABELS,

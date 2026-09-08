@@ -27,10 +27,10 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.backends import BACKEND_KEYS
-from evaluation.common import ROOT, load_entries, read_json, scores_path, wav_path
+from khmer_tts.synthesis.backends import BACKEND_KEYS
+from khmer_tts.common import ROOT, load_entries, read_json, scores_path, wav_path
 
 OUT_PATH = ROOT / "evaluation" / "audio_samples.html"
 

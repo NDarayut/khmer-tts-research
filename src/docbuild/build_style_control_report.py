@@ -4,7 +4,7 @@ Build the technical report on speech control in VoxCPM2.
 
 An unbranded academic report: title page, contents with resolved page numbers,
 four numbered sections and a bibliography. Layout primitives are in
-docs/build/academic_docx.py.
+src/docbuild/academic_docx.py.
 
 Measurement figures are read from finetune/results/parenthetical/*.json rather
 than retyped, so the document cannot drift from the experiment it reports.
@@ -13,7 +13,7 @@ Page numbers in the contents are resolved by building the document, converting
 it with LibreOffice, reading back which page each heading landed on, and
 rebuilding. The pass repeats until the mapping is stable.
 
-    python docs/build/build_style_control_report.py
+    python src/docbuild/build_style_control_report.py
 
 Writes reports/Speech-Control-VoxCPM2.docx
 """
@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from academic_docx import *  # noqa: F401,F403
 import academic_docx as A
 
-HERE = Path(__file__).resolve().parent      # docs/build
+HERE = Path(__file__).resolve().parent      # src/docbuild
 ROOT = HERE.parents[1]                      # repository root
 OUT = ROOT / "reports" / "Speech-Control-VoxCPM2.docx"
 OUT.parent.mkdir(parents=True, exist_ok=True)

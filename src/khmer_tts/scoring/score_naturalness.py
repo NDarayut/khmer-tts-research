@@ -50,14 +50,14 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[3]
 # imported as `evaluation.*`, not `metrics.*` -- metrics/dnsmos.py reaches back
 # up with `from ..common import`, which needs the package root on the path.
-sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.common import median, read_wav, resample  # noqa: E402
-from evaluation.metrics import dnsmos as dnsmos_metric  # noqa: E402
-from evaluation.metrics import utmos as utmos_metric  # noqa: E402
+from khmer_tts.common import median, read_wav, resample  # noqa: E402
+from khmer_tts.scoring.metrics import dnsmos as dnsmos_metric  # noqa: E402
+from khmer_tts.scoring.metrics import utmos as utmos_metric  # noqa: E402
 
 DEFAULT_MODELS = ("mms", "voxcpm2", "fish-s2", "higgs3")
 CONDITIONS = ("raw", "peak", "loudness", "trimmed")

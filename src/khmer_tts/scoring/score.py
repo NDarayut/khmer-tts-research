@@ -23,10 +23,10 @@ import csv
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.backends import BACKEND_KEYS
-from evaluation.common import (
+from khmer_tts.synthesis.backends import BACKEND_KEYS
+from khmer_tts.common import (
     METRIC_SAMPLE_RATE,
     ROOT,
     load_entries,
@@ -40,7 +40,7 @@ from evaluation.common import (
     synthesis_path,
     write_json,
 )
-from evaluation.metrics import METRIC_KEYS
+from khmer_tts.scoring.metrics import METRIC_KEYS
 
 CSV_COLUMNS = [
     "id", "group", "category",
@@ -57,17 +57,17 @@ def load_metric_models(metrics, device, dnsmos_dir):
     the first second rather than 40 minutes into a run."""
     models = {}
     if "cer" in metrics:
-        from evaluation.metrics import cer as cer_metric
+        from khmer_tts.scoring.metrics import cer as cer_metric
 
         print(f"Loading Whisper-{cer_metric.MODEL_SIZE} ({device}) ...")
         models["cer"] = cer_metric.load_asr(device=device)
     if "utmos" in metrics:
-        from evaluation.metrics import utmos as utmos_metric
+        from khmer_tts.scoring.metrics import utmos as utmos_metric
 
         print("Loading UTMOS ...")
         models["utmos"] = utmos_metric.load_utmos(device=device)
     if "dnsmos" in metrics:
-        from evaluation.metrics import dnsmos as dnsmos_metric
+        from khmer_tts.scoring.metrics import dnsmos as dnsmos_metric
 
         print("Loading DNSMOS ...")
         models["dnsmos"] = dnsmos_metric.load_dnsmos(
@@ -90,17 +90,17 @@ def score_utterance(record, sentence, models, device):
     audio16 = resample(audio, sample_rate, METRIC_SAMPLE_RATE)
 
     if "cer" in models:
-        from evaluation.metrics import cer as cer_metric
+        from khmer_tts.scoring.metrics import cer as cer_metric
 
         out.update(cer_metric.score(models["cer"], audio16, sentence))
     if "utmos" in models:
-        from evaluation.metrics import utmos as utmos_metric
+        from khmer_tts.scoring.metrics import utmos as utmos_metric
 
         out["utmos"] = utmos_metric.score(
             models["utmos"], audio16, METRIC_SAMPLE_RATE, device=device
         )
     if "dnsmos" in models:
-        from evaluation.metrics import dnsmos as dnsmos_metric
+        from khmer_tts.scoring.metrics import dnsmos as dnsmos_metric
 
         result = dnsmos_metric.score(models["dnsmos"], audio16, METRIC_SAMPLE_RATE)
         out["dnsmos"] = result

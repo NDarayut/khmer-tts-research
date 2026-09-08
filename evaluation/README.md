@@ -1,14 +1,21 @@
 # Evaluation harness -- runbook
 
 Synthesize the fixed 100-sentence Khmer set with each candidate model, score it,
-compare. Four metrics:
+compare.
+
+**The code lives in [`../src/khmer_tts/`](../src/khmer_tts/)**, split by what it
+does (`dataset/`, `synthesis/`, `scoring/`, `listening/`, `reporting/`). This
+directory holds what the code *produces*: `results/` (audio, gitignored; scores,
+tracked), plus the generated QC report, dataset overview and comparison report.
+
+Four metrics:
 
 | Metric | Measures | Scale | Where |
 |---|---|---|---|
-| **CER** | correctness / intelligibility (primary) | 0 = perfect, lower better | `metrics/cer.py` |
-| **UTMOS** | predicted naturalness MOS | 1-5, higher better | `metrics/utmos.py` |
-| **DNSMOS** | perceptual quality, P.835 SIG/BAK/OVRL + P.808 | 1-5, higher better | `metrics/dnsmos.py` |
-| **RTF** | speed = synth time / audio duration | <1 = faster than real time | measured in `synthesize.py` |
+| **CER** | correctness / intelligibility (primary) | 0 = perfect, lower better | `src/khmer_tts/scoring/metrics/cer.py` |
+| **UTMOS** | predicted naturalness MOS | 1-5, higher better | `src/khmer_tts/scoring/metrics/utmos.py` |
+| **DNSMOS** | perceptual quality, P.835 SIG/BAK/OVRL + P.808 | 1-5, higher better | `src/khmer_tts/scoring/metrics/dnsmos.py` |
+| **RTF** | speed = synth time / audio duration | <1 = faster than real time | measured in `synthesis/synthesize.py` |
 
 `eval-set/eval.json` is never modified by anything here -- it is a fixed
 benchmark set (see CLAUDE.md).
@@ -73,7 +80,7 @@ Then run *only this backend* under that interpreter:
 
 ```bash
 FISH_SPEECH_DIR=$PWD/fish-speech \
-    .venv-fish/bin/python evaluation/synthesize.py --model fish-s2
+    .venv-fish/bin/python src/khmer_tts/synthesis/synthesize.py --model fish-s2
 ```
 
 Scoring still runs from the main venv -- it only reads wavs.
@@ -84,17 +91,17 @@ Scoring still runs from the main venv -- it only reads wavs.
 ## Running a full comparison
 
 ```powershell
-python evaluation/synthesize.py --model mms
-python evaluation/synthesize.py --model voxcpm2
-python evaluation/synthesize.py --model fish-s2
-python evaluation/synthesize.py --model higgs3
+python src/khmer_tts/synthesis/synthesize.py --model mms
+python src/khmer_tts/synthesis/synthesize.py --model voxcpm2
+python src/khmer_tts/synthesis/synthesize.py --model fish-s2
+python src/khmer_tts/synthesis/synthesize.py --model higgs3
 
-python evaluation/score.py --model mms
-python evaluation/score.py --model voxcpm2
-python evaluation/score.py --model fish-s2
-python evaluation/score.py --model higgs3
+python src/khmer_tts/scoring/score.py --model mms
+python src/khmer_tts/scoring/score.py --model voxcpm2
+python src/khmer_tts/scoring/score.py --model fish-s2
+python src/khmer_tts/scoring/score.py --model higgs3
 
-python evaluation/report.py
+python src/khmer_tts/reporting/report.py
 ```
 
 ### The re-scoring passes (added after the first run)
@@ -107,16 +114,16 @@ them requires re-synthesis:
 ```bash
 # CER, with a Khmer-capable ASR. Needs THAT repo's interpreter, not this venv:
 # fairseq2 ships compiled extensions and pins a different torch.
-/run/media/pc/disk1/streaming_asr/venv/bin/python evaluation/score_cer_khmer.py
+/run/media/pc/disk1/streaming_asr/venv/bin/python src/khmer_tts/scoring/score_cer_khmer.py
 
 # UTMOS + DNSMOS under four level/silence conditions, plus paired win rates
-python evaluation/score_naturalness.py --device cuda
+python src/khmer_tts/scoring/score_naturalness.py --device cuda
 
 # ASR-free signal diagnostics: rate, level, clipping, silence, truncation guard
-python evaluation/audio_stats.py
+python src/khmer_tts/scoring/audio_stats.py
 
 # prosody description (F0, energy, pausing). NOT a naturalness score -- see below
-python evaluation/prosody_stats.py
+python src/khmer_tts/scoring/prosody_stats.py
 ```
 
 ### Measuring naturalness
@@ -126,10 +133,10 @@ their own sanity check against `mms`). Naturalness is measured on ears:
 
 ```bash
 # build a blind, randomized A/B test -- one self-contained html file
-python evaluation/listening_test.py --pair voxcpm2:higgs3 --sentences 40 --anchors 6
+python src/khmer_tts/listening/listening_test.py --pair voxcpm2:higgs3 --sentences 40 --anchors 6
 
 # send listening_test.html to 5+ Khmer speakers, collect their .json, then
-python evaluation/listening_analyse.py responses/*.json
+python src/khmer_tts/listening/listening_analyse.py responses/*.json
 ```
 
 The answer key is written to `results/listening_test_key.json` and deliberately
@@ -140,8 +147,8 @@ does *not* travel with the page. Power: 194 trials resolves a 60/40 preference,
 slow one (4 conditions x 2 predictors x 400 clips, ~20 min, DNSMOS on CPU is
 the bottleneck) -- run it in the background.
 
-Smoke-test first: `python evaluation/synthesize.py --model mms --limit 3`
-then `python evaluation/score.py --model mms --metrics cer`.
+Smoke-test first: `python src/khmer_tts/synthesis/synthesize.py --model mms --limit 3`
+then `python src/khmer_tts/scoring/score.py --model mms --metrics cer`.
 
 Useful flags: `--ids A01,B07`, `--group code_switched`, `--limit N`,
 `--device cpu`, `--overwrite`, `--metrics cer,utmos`.

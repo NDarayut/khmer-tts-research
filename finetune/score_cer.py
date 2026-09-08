@@ -7,7 +7,7 @@ definition, the same caveats -- but points it at arbitrary directories of wavs
 instead of `evaluation/results/<model>/audio`, so the adapter's sweep output
 can be scored against the base model's on identical sentences.
 
-The bias notice in evaluation/score_cer_khmer.py applies here in FULL and in a
+The bias notice in src/khmer_tts/scoring/score_cer_khmer.py applies here in FULL and in a
 sharper form: that ASR was trained on ~47 h of VoxCPM2-synthesized Khmer, and
 both sides of this comparison are VoxCPM2. That is actually the one situation
 where the bias is least harmful -- it lands equally on base and adapter, so a

@@ -59,3 +59,6 @@ VoxCPM-src/
 # result that stopped the fine-tune.
 finetune/results/parenthetical/audio/
 finetune/results/*.log
+
+# Microsoft Office lock files -- created while a .docx is open, never content.
+~$*

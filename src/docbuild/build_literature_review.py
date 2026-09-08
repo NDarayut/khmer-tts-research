@@ -8,7 +8,7 @@ repo, plus the in-house evaluation run in evaluation/results_report.md.
 Brand tokens (colors, logo, typography) are taken from https://www.smean.ai/ --
 the palette below is the site's own :root custom-property block.
 
-    python docs/build/build_literature_review.py
+    python src/docbuild/build_literature_review.py
 
 Writes reports/Smean-TTS-Literature-Review.docx
 """
@@ -46,11 +46,10 @@ BODY_FONT = "Calibri"        # stand-in for Inter Tight (brand --font-sans)
 MONO_FONT = "Courier New"   # metric-compatible everywhere; Consolas is Windows-only
 KHMER_FONT = "Khmer OS System"
 
-HERE = Path(__file__).resolve().parent      # docs/build
-DOCS = HERE.parent                          # docs
-REPO = DOCS.parent                          # repository root
+HERE = Path(__file__).resolve().parent      # src/docbuild
+REPO = HERE.parents[1]                      # repository root
 
-LOGO = DOCS / "assets" / "smean-logo.png"
+LOGO = REPO / "docs" / "assets" / "smean-logo.png"
 OUT = REPO / "reports" / "Smean-TTS-Literature-Review.docx"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 

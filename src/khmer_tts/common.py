@@ -13,7 +13,7 @@ Nothing here ever writes to eval-set/eval.json -- that set is fixed (CLAUDE.md).
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 EVAL_PATH = ROOT / "eval-set" / "eval.json"
 RESULTS_DIR = ROOT / "evaluation" / "results"
 DNSMOS_DIR = ROOT / "evaluation" / "dnsmos_models"

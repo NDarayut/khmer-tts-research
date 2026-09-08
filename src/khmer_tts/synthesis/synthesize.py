@@ -24,10 +24,10 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.backends import BACKEND_KEYS, get_backend
-from evaluation.common import (
+from khmer_tts.synthesis.backends import BACKEND_KEYS, get_backend
+from khmer_tts.common import (
     audio_seconds,
     load_entries,
     median,

@@ -9,7 +9,7 @@ place). Anything that would change sentence content or distribution counts is
 left for a human decision -- see evaluation/qc_report.md's WARN section.
 
 Usage:
-    python evaluation/filter.py
+    python src/khmer_tts/dataset/filter.py
 Writes: evaluation/qc_report.md
 """
 
@@ -19,7 +19,7 @@ import difflib
 from collections import Counter
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[3]
 EVAL_PATH = ROOT / "eval-set" / "eval.json"
 REPORT_PATH = ROOT / "evaluation" / "qc_report.md"
 

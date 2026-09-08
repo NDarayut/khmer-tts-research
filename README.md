@@ -46,11 +46,11 @@ Company-facing deliverables in `.docx` / `.pdf`. See [`reports/README.md`](repor
 | **Smean TTS Literature Review** | [`.docx`](reports/Smean-TTS-Literature-Review.docx) · [`.pdf`](reports/Smean-TTS-Literature-Review.pdf) |
 | **Speech Control — VoxCPM2** | [`.docx`](reports/Speech-Control-VoxCPM2.docx) |
 
-Both are generated, not hand-edited — the sources live in `docs/build/`:
+Both are generated, not hand-edited — the sources live in `src/docbuild/`:
 
 ```
-python docs/build/build_literature_review.py     # -> reports/Smean-TTS-Literature-Review.docx
-python docs/build/build_style_control_report.py  # -> reports/Speech-Control-VoxCPM2.docx
+python src/docbuild/build_literature_review.py     # -> reports/Smean-TTS-Literature-Review.docx
+python src/docbuild/build_style_control_report.py  # -> reports/Speech-Control-VoxCPM2.docx
 ```
 
 ## The benchmark
@@ -58,9 +58,9 @@ python docs/build/build_style_control_report.py  # -> reports/Speech-Control-Vox
 `eval-set/` and `evaluation/` hold a reproducible 4-model comparison over a fixed 100-sentence Khmer set (50 pure Khmer, 50 code-switched with English). Runbook in [`evaluation/README.md`](evaluation/README.md):
 
 ```
-python evaluation/synthesize.py --model {mms,voxcpm2,fish-s2,higgs3}   # audio + RTF
-python evaluation/score.py      --model {mms,voxcpm2,fish-s2,higgs3}   # CER, UTMOS, DNSMOS
-python evaluation/report_document.py                                   # the written report
+python src/khmer_tts/synthesis/synthesize.py --model {mms,voxcpm2,fish-s2,higgs3}   # audio + RTF
+python src/khmer_tts/scoring/score.py      --model {mms,voxcpm2,fish-s2,higgs3}   # CER, UTMOS, DNSMOS
+python src/khmer_tts/reporting/report_document.py                                   # the written report
 ```
 
 All 400 clips are on disk under `evaluation/results/<model>/audio/`. The written report — including embedded audio samples from every model — is `evaluation/results_report.html`.

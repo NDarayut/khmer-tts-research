@@ -110,9 +110,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from evaluation.common import ROOT, load_entries, wav_path  # noqa: E402
+from khmer_tts.common import ROOT, load_entries, wav_path  # noqa: E402
 
 OUT_PATH = ROOT / "evaluation" / "listening_test.html"
 

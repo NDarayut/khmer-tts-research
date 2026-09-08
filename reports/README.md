@@ -5,8 +5,8 @@ else in the repository is the working material behind them.
 
 | Document | Formats | Source |
 |---|---|---|
-| **Smean TTS Literature Review** — the model survey and the 4-way Khmer benchmark, written up for a general reader | [`.docx`](Smean-TTS-Literature-Review.docx) · [`.pdf`](Smean-TTS-Literature-Review.pdf) | `docs/build/build_literature_review.py` |
-| **Speech Control — VoxCPM2** — the style-control investigation: what the model already does via parenthetical prompting, and what a fine-tune would add | [`.docx`](Speech-Control-VoxCPM2.docx) | `docs/build/build_style_control_report.py` |
+| **Smean TTS Literature Review** — the model survey and the 4-way Khmer benchmark, written up for a general reader | [`.docx`](Smean-TTS-Literature-Review.docx) · [`.pdf`](Smean-TTS-Literature-Review.pdf) | `src/docbuild/build_literature_review.py` |
+| **Speech Control — VoxCPM2** — the style-control investigation: what the model already does via parenthetical prompting, and what a fine-tune would add | [`.docx`](Speech-Control-VoxCPM2.docx) | `src/docbuild/build_style_control_report.py` |
 
 ## These files are generated
 
@@ -14,8 +14,8 @@ Do not hand-edit them — the next build overwrites the change. Edit the
 generator, then rebuild:
 
 ```
-python docs/build/build_literature_review.py
-python docs/build/build_style_control_report.py
+python src/docbuild/build_literature_review.py
+python src/docbuild/build_style_control_report.py
 ```
 
 The `.pdf` is produced from the `.docx` with LibreOffice:

@@ -263,7 +263,7 @@ That last row is a genuine advantage of LoRA for this project: because the adapt
 2. **Hold out ~10%** as `val.jsonl` and run `voxcpm validate` on both splits.
 3. **LoRA, `r=64`, `alpha=64`, lr `1e-4`, 1000 steps**, on a rented 24 GB card. Save every 500.
 4. **Listen to every checkpoint.** Do not select on loss.
-5. **Re-run the harness** — `python evaluation/synthesize.py --model voxcpm2` against the fixed 100-sentence set — and A/B the LoRA output against the base model's clips already in `evaluation/results/voxcpm2/audio/`.
+5. **Re-run the harness** — `python src/khmer_tts/synthesis/synthesize.py --model voxcpm2` against the fixed 100-sentence set — and A/B the LoRA output against the base model's clips already in `evaluation/results/voxcpm2/audio/`.
 6. **Judge by ear.** As the evaluation report establishes at length, no automatic metric in this project can rank Khmer TTS. A blind listening test against the base model is the only thing that will tell you whether the fine-tune helped.
 
 ---

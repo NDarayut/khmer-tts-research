@@ -7,7 +7,7 @@ deliverables built from it live in [`../reports/`](../reports/).
 |---|---|
 | [`research/`](research/) | The numbered research survey, 01–09. Written first; 01–08 are the original pass, 09 is an addendum added when Higgs Audio v3 shipped. |
 | [`deep-dives/`](deep-dives/) | Per-model architecture and training write-ups (09–11), written after the listening evaluation narrowed the field to two contenders. |
-| [`build/`](build/) | Generators that produce the `.docx` reports in `../reports/`. Nothing here is a document; they *make* the documents. |
+| [`../src/docbuild/`](../src/docbuild/) | Generators that produce the `.docx` reports in `../reports/`. They live under `src/` with the rest of the code. |
 | [`assets/`](assets/) | Images used by the generators (the Smean logo). |
 
 The two series both start at 09 because each keeps its own internal section
@@ -40,11 +40,11 @@ them apart instead.
 ## Building the reports
 
 ```
-python docs/build/build_literature_review.py     # -> reports/Smean-TTS-Literature-Review.docx
-python docs/build/build_style_control_report.py  # -> reports/Speech-Control-VoxCPM2.docx
+python src/docbuild/build_literature_review.py     # -> reports/Smean-TTS-Literature-Review.docx
+python src/docbuild/build_style_control_report.py  # -> reports/Speech-Control-VoxCPM2.docx
 ```
 
-`build/academic_docx.py` is a shared library of layout primitives, not a script.
+`src/docbuild/academic_docx.py` is a shared library of layout primitives, not a script.
 PDF conversion is done separately with LibreOffice:
 
 ```
