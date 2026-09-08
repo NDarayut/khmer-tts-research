@@ -116,13 +116,13 @@ def build(pages):
     """Render the document. `pages` maps '1.2' -> page number, or is empty on
     the first pass, in which case the contents shows a placeholder."""
     A._TABLE_N[0] = 0
+    A._FIGURE_N[0] = 0
     doc = new_document()
 
     title_page(
         doc,
-        title="Speech Control in Neural Text-to-Speech",
-        subtitle="An assessment of VoxCPM2 for Khmer and a review of the\n"
-                 "literature on controllable speech synthesis",
+        title="Finetuning VoxCPM\n"
+              "for Speech Control: Integrating Non-Verbal Vocalization",
         prepared_by="R&D Department",
         date="8 September 2026")
 
@@ -167,6 +167,9 @@ def build(pages):
               "of effort in a low-resource text-to-speech project.")
 
     heading(doc, "1.2   System Architecture", 2)
+
+    figure(doc, ROOT / "reports" / "assets" / "voxcpm-architecture.png",
+           "Overview of VoxCPM's Architecture")
 
     para(doc, f"The generation path comprises the stages set out in {T('arch')}. A backbone language "
               "model emits one latent vector per audio patch; a residual language model "
@@ -285,14 +288,14 @@ def build(pages):
 
     para(doc, "Three findings follow.")
 
-    para(doc, f"Pitch is controlled reliably. The separation between the extreme prompts is "
+    para(doc, f"**Pitch** is controlled reliably. The separation between the extreme prompts is "
               f"{PAR['pitch']['low_to_high']:.2f} Hz with a rank correlation of "
               f"{PAR['pitch']['spearman_rho']:+.3f} (p = {PAR['pitch']['p']:.4f}). This "
               f"exceeds the corpus bound of {CEIL['pitch']['spread']:.2f} Hz by a factor of "
               f"approximately four. The capability a fine-tune on the project's own labelled "
               f"data could add to this axis is therefore negative.")
 
-    para(doc, f"Energy and speaking rate are controlled in aggregate but not per generation. "
+    para(doc, f"**Energy** and **Speaking Rate** are controlled in aggregate but not per generation. "
               f"Both show significant rank correlations "
               f"({PAR['energy']['spearman_rho']:+.3f} and "
               f"{PAR['rate']['spearman_rho']:+.3f}), but the energy effect of "
@@ -301,7 +304,7 @@ def build(pages):
               f"across seeds within a single cell. The ordering of the levels is dependable; "
               f"the value of any individual synthesis is not.")
 
-    para(doc, f"Pitch variation is not controlled. The correlation is negative "
+    para(doc, f"**Pitch Variation** is not controlled. The correlation is negative "
               f"({PAR['var']['spearman_rho']:+.3f}) and not significant "
               f"(p = {PAR['var']['p']:.2f}). Prompts requesting a lively delivery produced "
               f"marginally less pitch movement than prompts requesting a monotone one, which "

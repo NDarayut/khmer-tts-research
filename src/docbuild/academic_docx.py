@@ -1,9 +1,15 @@
 """
-Layout primitives for a plain academic report in .docx.
+Layout primitives for the house report style in .docx.
 
-Deliberately unbranded: no logo, no house colours, no marketing furniture. A
-serif face, black text, rules instead of filled table headers, numbered tables
-with captions above them, and a running page number in the footer.
+The full specification is docs/report-style.md; this module is its
+implementation, and the two are meant to be changed together. In short: an
+academic body (Cambria, justified, booktabs tables with captions above them,
+a running page number in the footer) carrying one accent, the project teal,
+which appears on the cover and as the bar behind every level-1 heading.
+
+Headings and the cover are set in Georgia, everything else in Cambria. The
+reports are generated, never hand-edited -- a change made in Word is lost on
+the next build, so it belongs here instead.
 
 Self-contained; build_literature_review.py carries its own, separate copies of
 equivalent helpers and is unaffected by changes here.
@@ -14,16 +20,19 @@ from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml.ns import qn
-from docx.oxml import OxmlElement
+from docx.oxml import OxmlElement, parse_xml
 from docx.shared import Inches, Pt, RGBColor
 
 BLACK = "111111"
-GREY = "555555"
+GREY = "555555"           # notes and the page-number footer
+CAPTION_GREY = "7F7F7F"   # figure captions and the cover attribution
 RULE = "999999"
 FAINT = "D9D9D9"
+WHITE = "FFFFFF"
+ACCENT = "0B776F"         # the project teal; same value as TEAL in build_literature_review.py
 
 BODY_FONT = "Cambria"
-HEAD_FONT = "Cambria"
+HEAD_FONT = "Georgia"
 MONO_FONT = "Courier New"   # metric-available everywhere; Consolas is Windows-only
 KHMER_FONT = "Khmer OS System"
 
@@ -123,10 +132,14 @@ def numbered(doc, items, size=BODY_SIZE, indent=0.3):
         inline(p, item, size)
 
 
-SIZES = {1: 13.5, 2: 11.5, 3: 10.8}
+SIZES = {1: 14, 2: 12, 3: 10.8}
 
 
-def heading(doc, text, level=1, page_break=False):
+def heading(doc, text, level=1, page_break=False, shaded=None):
+    """A section heading. Level 1 is reversed out of a teal bar by default;
+    pass shaded=False for the one that is not (Contents, set by contents())."""
+    if shaded is None:
+        shaded = level == 1
     if page_break:
         doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
     p = doc.add_paragraph()
@@ -134,7 +147,10 @@ def heading(doc, text, level=1, page_break=False):
     pf.space_before = Pt({1: 2, 2: 15, 3: 11}[level])
     pf.space_after = Pt({1: 9, 2: 5, 3: 4}[level])
     pf.keep_with_next = True
-    set_font(p.add_run(text), HEAD_FONT, SIZES[level], True, level == 3, BLACK)
+    if shaded:
+        shade(p, ACCENT)
+    set_font(p.add_run(text), HEAD_FONT, SIZES[level], True, level == 3,
+             WHITE if shaded else BLACK)
     return p
 
 
@@ -146,6 +162,12 @@ def rule(paragraph, edge="bottom", size=6, color=RULE, space=6):
         pPr.append(bdr)
     bdr.append(_el(f"w:{edge}", **{"w:val": "single", "w:sz": str(size),
                                    "w:space": str(space), "w:color": color}))
+
+
+def shade(paragraph, color=ACCENT):
+    """Fill the paragraph's full column width -- the bar behind a level-1 heading."""
+    pPr = paragraph._p.get_or_add_pPr()
+    pPr.append(_el("w:shd", **{"w:val": "clear", "w:color": "auto", "w:fill": color}))
 
 
 def cell_rule(cell, edge, size=6, color=RULE):
@@ -256,46 +278,102 @@ def reference(doc, text, size=9.4):
     return p
 
 
-def title_page(doc, *, title, subtitle, prepared_by, date):
-    """Title block set high on the page, attribution set at the foot of it."""
-    for _ in range(4):
-        doc.add_paragraph().paragraph_format.space_after = Pt(0)
+# A 6 pt teal line, 8 inches tall, anchored just left of the text column and
+# starting an inch down: the one piece of furniture on the cover. Written as
+# raw DrawingML because python-docx models pictures but not shapes.
+_COVER_RULE = """
+<w:drawing xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+           xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+           xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+           xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">
+  <wp:anchor distT="0" distB="0" distL="114300" distR="114300" simplePos="0"
+             relativeHeight="251659264" behindDoc="0" locked="0" layoutInCell="1"
+             allowOverlap="1">
+    <wp:simplePos x="0" y="0"/>
+    <wp:positionH relativeFrom="column"><wp:posOffset>-342265</wp:posOffset></wp:positionH>
+    <wp:positionV relativeFrom="paragraph"><wp:posOffset>890270</wp:posOffset></wp:positionV>
+    <wp:extent cx="0" cy="7315200"/>
+    <wp:effectExtent l="38100" t="0" r="38100" b="38100"/>
+    <wp:wrapNone/>
+    <wp:docPr id="1" name="Cover rule"/>
+    <wp:cNvGraphicFramePr/>
+    <a:graphic>
+      <a:graphicData uri="http://schemas.microsoft.com/office/word/2010/wordprocessingShape">
+        <wps:wsp>
+          <wps:cNvCnPr/>
+          <wps:spPr>
+            <a:xfrm flipH="1"><a:off x="0" y="0"/><a:ext cx="0" cy="7315200"/></a:xfrm>
+            <a:prstGeom prst="line"><a:avLst/></a:prstGeom>
+            <a:ln w="76200"><a:solidFill><a:srgbClr val="%s"/></a:solidFill></a:ln>
+          </wps:spPr>
+          <wps:bodyPr/>
+        </wps:wsp>
+      </a:graphicData>
+    </a:graphic>
+  </wp:anchor>
+</w:drawing>
+""" % ACCENT
 
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_after = Pt(14)
-    p.paragraph_format.line_spacing = 1.22
-    set_font(p.add_run(title), HEAD_FONT, 21, True, False, BLACK)
+TITLE_SIZE = 36
+COVER_SPACING = 1.5
 
+
+def _cover_para(doc):
     p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.line_spacing = COVER_SPACING
     p.paragraph_format.space_after = Pt(0)
-    p.paragraph_format.line_spacing = 1.3
-    set_font(p.add_run(subtitle), BODY_FONT, 12, False, True, GREY)
+    return p
 
-    # one measured gap rather than a run of empty paragraphs, so the block sits
-    # low on the page without the count of them deciding whether it spills over
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_before = Pt(378)
-    p.paragraph_format.space_after = Pt(3)
-    rule(p, "top", 6, RULE, 10)
-    set_font(p.add_run("Prepared by"), BODY_FONT, 9.5, False, False, GREY)
 
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_after = Pt(9)
-    set_font(p.add_run(prepared_by), BODY_FONT, 11.5, True, False, BLACK)
+def title_page(doc, *, title, prepared_by, date, top=58, gap=287):
+    """Left-ranged cover: the title in teal beside a vertical teal rule, the
+    attribution set at the foot. `title` may carry newlines; each line is its
+    own paragraph, so a deliberate break is kept and the rest wraps.
 
-    p = doc.add_paragraph()
-    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.paragraph_format.space_after = Pt(0)
-    set_font(p.add_run(date), BODY_FONT, 10, False, False, GREY)
+    `top` and `gap` are measured spaces in points -- above the title, and
+    between the title block and the attribution -- rather than runs of empty
+    paragraphs, so that the count of them does not decide whether the cover
+    spills onto a second page. A title that wraps to more or fewer lines than
+    this one wants `gap` retuned so the attribution still sits at the foot.
+    """
+    p = _cover_para(doc)
+    p.add_run()._r.append(parse_xml(_COVER_RULE))
+    set_font(p.add_run(), HEAD_FONT, TITLE_SIZE)
+
+    for i, line in enumerate(str(title).splitlines()):
+        p = _cover_para(doc)
+        if i == 0:
+            p.paragraph_format.space_before = Pt(top)
+        set_font(p.add_run(line), HEAD_FONT, TITLE_SIZE, False, False, ACCENT)
+
+    p = _cover_para(doc)
+    p.paragraph_format.space_before = Pt(gap)
+    set_font(p.add_run("Prepared by "), HEAD_FONT, 9.5, False, False, CAPTION_GREY)
+    set_font(p.add_run(prepared_by), HEAD_FONT, 9.5, True, False, CAPTION_GREY)
+    set_font(_cover_para(doc).add_run(date), HEAD_FONT, 9.5,
+             False, False, CAPTION_GREY)
+
+
+_FIGURE_N = [0]
+
+
+def figure(doc, image_path, caption_text, width=6.37):
+    """A full-width figure. Unlike a table, its caption sits below it."""
+    _FIGURE_N[0] += 1
+    doc.add_picture(str(image_path), width=Inches(width))
+    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+    cap = doc.add_paragraph()
+    cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    cap.paragraph_format.space_before = Pt(4)
+    cap.paragraph_format.space_after = Pt(10)
+    set_font(cap.add_run(f"Figure {_FIGURE_N[0]}: {caption_text}"), BODY_FONT,
+             None, False, True, CAPTION_GREY)
+    return cap
 
 
 def contents(doc, entries):
     """entries: (level, number, title, page). Dot leaders to a right tab stop."""
-    heading(doc, "Contents", 1, page_break=True)
+    heading(doc, "Contents", 1, page_break=True, shaded=False)
     for level, num, text, page in entries:
         p = doc.add_paragraph()
         pf = p.paragraph_format
