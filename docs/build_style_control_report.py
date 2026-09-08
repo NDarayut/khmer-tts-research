@@ -72,11 +72,26 @@ def tcap(doc, text):
 ARMS = {a: probe(a) for a in ("end", "proj", "onset")}
 S_PROJ, S_ONSET = sens("proj"), sens("onset")
 META = json.loads((ROOT / "finetune" / "data" / "corpus_meta.json").read_text())
-PAR = json.loads((ROOT / "finetune" / "results" / "parenthetical" /
-                  "parenthetical.json").read_text())["summary"]
+_PARJ = json.loads((ROOT / "finetune" / "results" / "parenthetical" /
+                    "parenthetical.json").read_text())
+PAR, CEIL = _PARJ["summary"], _PARJ["corpus_ceilings"]
+
+
+def parrow(axis, unit, fmt=".2f", bold_delta=False, bold_rho=False, ratio="—"):
+    """One row of the parenthetical table, read straight from the results json."""
+    a = PAR[axis]
+    lv = [a["median_by_level"][k] for k in ("0", "1", "2")]
+    d = f"{a['low_to_high']:+.2f} {unit}"
+    r = f"{a['spearman_rho']:+.3f}"
+    return [f"`{axis}`", f"{lv[0]:{fmt}}", f"{lv[1]:{fmt}}", f"{lv[2]:{fmt}}",
+            f"**{d}**" if bold_delta else d,
+            f"+{CEIL[axis]['spread']:.2f} {unit}",
+            f"**{r}**" if bold_rho else r,
+            f"{a['p']:.4f}", f"{a['mean_run_to_run_sd']:.2f}", ratio]
 CTRL = json.loads((EXP / "sensitivity_positive_control.json").read_text())
 CTRL["true_mean"] = sum(CTRL["true"]) / len(CTRL["true"])
 CTRL["scramble_mean"] = sum(CTRL["scramble"]) / len(CTRL["scramble"])
+CTRL["n_ctrl"] = len(CTRL["scramble"])
 
 TRAIN_ROWS = (
     '{"audio": ".../wavs/f-adt2-0002_everyday_bureaucracy_06_0001_0010.wav",\n'
@@ -138,801 +153,772 @@ NONVERBAL_USAGE = (
     '        "\u1781\u17d2\u1789\u17bb\u17c6... [sigh] ...")'
 )
 
+MANIFEST_NV = (
+    '{"audio": ".../nv/clip_00412.wav",\n'
+    ' "text":  "ខ្ញុំគិតថាមិនអីទេ [laughing] បុន្តែ...",\n'
+    ' "duration": 4.21}'
+)
+
 doc = new_document()
 
 cover(doc,
-      title="Giving VoxCPM2 Style Control",
-      subtitle="What the base model already does on Khmer,\nand what a fine-tune would have to add",
-      blurb="A technical report on adding expressive control to the model this project "
-            "recommends for Khmer — and on discovering, after building a fine-tune, that the "
-            "base model already provided most of it. Contains the measurement that should "
-            "have come first, the residue a fine-tune would still be for, and a conditioning "
+      title="Speech Control for VoxCPM2",
+      subtitle="The control layers, what is measured on Khmer,\nand a training plan for non-verbal vocalization",
+      blurb="Expressive control is not one capability but six, and they differ in how "
+            "expensive each is to add. This report sets out that taxonomy, reports what "
+            "VoxCPM2 already does on Khmer against measurement, records a conditioning "
             "failure that is well known in the generative-modelling literature but "
-            "undocumented for this class of TTS system.",
-      meta=[["Document", "Technical report — fine-tuning and diagnosis"],
-            ["Subject", "VoxCPM2 (OpenBMB) · LoRA style-control adapter for Khmer"],
-            ["Scope", "Control-layer roadmap · prosodic layer end to end: method, corpus, "
-                       "training, failure analysis, fix · non-verbal layer surveyed"],
-            ["Evidence base", "Two 4000-step training runs, four 400-step probes, and a "
-                              "loss-level diagnostic with a positive control"],
+            "undocumented for this class of TTS system, and gives a phased plan for the "
+            "layer with the best cost-to-value ratio left: non-verbal vocalization.",
+      meta=[["Document", "Technical report — control taxonomy, measurement and plan"],
+            ["Subject", "VoxCPM2 (OpenBMB) · expressive control for Khmer"],
+            ["Scope", "Six control layers · prosodic layer measured and fine-tuned · "
+                      "non-verbal layer surveyed, with a training plan"],
+            ["Evidence base", "Two 4000-step training runs, four 400-step probes, a "
+                              "loss-level diagnostic with a positive control, and a "
+                              "72-generation sweep of the base model"],
             ["Hardware", "One 12 GB RTX 3060"],
             ["Date", "8 September 2026"],
-            ["Status", "Internal research document — fine-tune stopped at step 1,980/4,000"]])
+            ["Status", "Internal research document"]])
 
-page_footer(doc, "Smean AI  ·  VoxCPM2 style control")
+page_footer(doc, "Smean AI  ·  VoxCPM2 speech control")
 
 # =========================================================================
-heading(doc, "1.  Summary", 1, page_break=True)
+heading(doc, "1.  Findings", 1, page_break=True)
 
 para(doc, "VoxCPM2 is this project's recommended model for Khmer, on the strength of a 2.47% "
-          "character error rate against Higgs TTS 3's 8.28% and an Apache-2.0 licence. It "
-          "appeared to have no expressive control: text goes in, one voice and one delivery come "
-          "out. Higgs, by contrast, accepts inline control tokens. The question this work set out "
-          "to answer was whether that control could be added to VoxCPM2 rather than traded for.")
+          "character error rate against Higgs TTS 3's 8.28% and an Apache-2.0 licence. Higgs "
+          "accepts inline control tokens; VoxCPM2 appeared to accept none. Six findings follow "
+          "from measuring that assumption.")
 
-rich(doc, [("The premise was wrong, and that is the most useful thing here. ", {"bold": True}),
-           ("VoxCPM2 already has a prosodic control channel — a natural-language description in "
-            "parentheses at the start of the text — and on Khmer it mostly works. Pitch moves "
-            "106 Hz across the prompt range at rho +0.76, nearly four times what this project's "
-            "hand-labelled corpus can even express. That was measured in about twenty minutes, "
-            "using an instrument that already existed, after a LoRA adapter had been built and "
-            "one 6.5-hour training run had failed. Nobody checked first.", {})])
+heading(doc, "1.1  VoxCPM2 already has a prosodic control channel, and on Khmer it mostly works", 3)
 
-para(doc, "The fine-tune was therefore stopped at step 1,980 of 4,000. Sections 2 and 2.1 are the "
-          "measurement and the honest accounting of what a fine-tune would still be for; the rest "
-          "of the report is the work up to that point, which stands on its own for reasons given "
-          "below.", space_after=10)
-
-callout(doc, "The four findings that matter", [
-    "**Measure the base model before training anything.** The built-in parenthetical prompt "
-    "already controls Khmer pitch, rate and level (section 2). Twenty minutes of measurement "
-    "would have saved two training runs. This is the cheapest lesson in the report and it cost "
-    "the most to learn.",
-    "**“It responds” and “it is controllable” are different claims.** Energy correlates with the "
-    "prompt at p = 0.002, and re-rolling the seed moves the output further than changing the "
-    "command does. Averaging across sentences hides that completely, which is why every cell was "
-    "generated three times.",
-    "**The conditioning failure is the transferable result, and it survives the correction.** A "
-    "global attribute placed in the text field earns a gradient roughly 290× smaller than the "
-    "transcript does, because teacher forcing lets the model read that attribute off the "
-    "ground-truth acoustic prefix instead. This is the information-preference problem of Chen et "
-    "al.'s Variational Lossy Autoencoder (2017), arriving somewhere the VoxCPM2 documentation "
-    "gives no warning about. It applies to emotion and voice quality exactly as it applied here.",
-    "**That failure makes global conditioning expensive, not impossible.** The parenthetical "
-    "prompt is also a global attribute in the text field, and it works — because OpenBMB paid the "
-    "cost at pre-training scale. 11.7 hours of Khmer through a LoRA cannot. Re-deriving a global "
-    "attribute the base model already has is close to the worst available use of a small corpus.",
-])
-
-para(doc, "A secondary result, useful to anyone reproducing this: the officially documented "
-          "~20 GB VRAM requirement for VoxCPM2 LoRA is an artefact of upstream leaving frozen "
-          "weights in float32 while running the forward pass under bfloat16 autocast. Casting them "
-          "fits the job in 12 GB with room to spare.")
-
-# =========================================================================
-heading(doc, "2.  The built-in control already does most of this", 1, page_break=True)
-
-para(doc, "VoxCPM2 accepts a natural-language description in parentheses before the text — "
-          "`(speaking quickly)`, `(a high-pitched voice)`. OpenBMB document this for voice design "
-          "and for style-guided cloning, listing “gender, age, tone, emotion, pace” among what it "
-          "steers. Nothing in their documentation covers Khmer, and this project had already been "
-          "burned once by assuming a control surface transfers to an undocumented language — "
-          "document 10 carries exactly that caveat for Higgs TTS 3.")
-
-para(doc, "So it was measured, with the same instrument used on the fine-tuned adapter: the same "
-          "sentences from the frozen eval set, the same four measurements, the same correlation "
-          "against a commanded level, the same corpus ceilings for scale. One addition — each "
-          "cell is generated three times at different seeds, because the model card states "
-          "results “may vary between runs”. That warning turns out to matter more than the "
-          "effect sizes.", space_after=10)
+para(doc, "A natural-language description in parentheses before the text — (speaking quickly), "
+          "(a high-pitched voice) — steers the delivery. Measured on the stock model: 8 sentences "
+          "from the frozen evaluation set, three levels per axis, three seeds per cell, median "
+          "taken within each cell.")
 
 table(doc,
-      ["Axis", "low", "mid", "high", "low → high", "Corpus ceiling", "rho", "p",
-       "Run-to-run sd", "Effect ÷ noise"],
-      [["`pitch`", f"{PAR['pitch']['median_by_level']['0']:.1f}",
-        f"{PAR['pitch']['median_by_level']['1']:.1f}",
-        f"{PAR['pitch']['median_by_level']['2']:.1f}",
-        f"**+{PAR['pitch']['low_to_high']:.1f} Hz**", "+28.3 Hz",
-        f"**{PAR['pitch']['spearman_rho']:+.3f}**", f"{PAR['pitch']['p']:.4f}",
-        f"{PAR['pitch']['mean_run_to_run_sd']:.1f}", "**3.7**"],
-       ["`energy`", f"{PAR['energy']['median_by_level']['0']:.1f}",
-        f"{PAR['energy']['median_by_level']['1']:.1f}",
-        f"{PAR['energy']['median_by_level']['2']:.1f}",
-        f"+{PAR['energy']['low_to_high']:.2f} dB", "+5.8 dB",
-        f"{PAR['energy']['spearman_rho']:+.3f}", f"{PAR['energy']['p']:.4f}",
-        f"{PAR['energy']['mean_run_to_run_sd']:.2f}", "0.8"],
-       ["`rate`", f"{PAR['rate']['median_by_level']['0']:.2f}",
-        f"{PAR['rate']['median_by_level']['1']:.2f}",
-        f"{PAR['rate']['median_by_level']['2']:.2f}",
-        f"+{PAR['rate']['low_to_high']:.2f} ch/s", "+6.6 ch/s",
-        f"{PAR['rate']['spearman_rho']:+.3f}", f"{PAR['rate']['p']:.4f}",
-        f"{PAR['rate']['mean_run_to_run_sd']:.2f}", "1.4"],
-       ["`var`", f"{PAR['var']['median_by_level']['0']:.2f}",
-        f"{PAR['var']['median_by_level']['1']:.2f}",
-        f"{PAR['var']['median_by_level']['2']:.2f}",
-        f"**{PAR['var']['low_to_high']:.2f} st**", "+1.7 st",
-        f"**{PAR['var']['spearman_rho']:+.3f}**", f"{PAR['var']['p']:.4f}",
-        f"{PAR['var']['mean_run_to_run_sd']:.2f}", "—"]],
-      widths=[0.6, 0.62, 0.62, 0.62, 0.95, 0.85, 0.62, 0.6, 0.75, 0.72],
-      size=8.2, align_right=(1, 2, 3, 4, 5, 6, 7, 8, 9))
-tcap(doc, "Base VoxCPM2, no adapter. 8 sentences × 3 levels × 3 generations, median per cell. "
-          "The last two columns are the ones that decide the question.")
+      ["axis", "low", "mid", "high", "low→high", "corpus ceiling", "rho", "p", "seed sd", "effect ÷ noise"],
+      [parrow("pitch", "Hz", ".1f", True, True, "**3.7**"),
+       parrow("energy", "dB", ".2f", ratio="0.8"),
+       parrow("rate", "ch/s", ".2f", ratio="1.4"),
+       parrow("var", "st", ".2f")],
+      widths=[0.62, 0.52, 0.52, 0.52, 0.86, 0.86, 0.55, 0.5, 0.5, 0.65], size=8.0)
+tcap(doc, "The built-in parenthetical prompt, measured on the base model. "
+          "“corpus ceiling” is the separation this project's hand-labelled Khmer corpus achieves "
+          "on the same quantity — the upper bound on what a fine-tune on it could teach. "
+          "“seed sd” is the spread across repeated generations of the same prompt on the same "
+          "sentence. Instrument: finetune/verify_parenthetical.py.")
 
-rich(doc, [("Pitch is the headline.", {"bold": True}),
-           (" A 106 Hz range at rho +0.76, against a corpus ceiling of 28 Hz. The built-in prompt "
-            "spans nearly four times what the hand-labelled corpus can express, because the labels "
-            "are bounded by the twenty speakers who happened to be recorded and the prompt is not. "
-            "On this axis a fine-tune is not merely unnecessary — it is worse than the thing it "
-            "would replace.", {})])
+bullet(doc, [("Pitch. ", {"bold": True}), ("A 106 Hz range at rho +0.76, against a corpus ceiling "
+             "of 28 Hz — nearly four times what the 20 available Khmer speakers can express "
+             "between them.", {})])
+bullet(doc, [("Rate and loudness respond, but are not control. ", {"bold": True}),
+             ("Both correlations are statistically solid across sentences. For energy the seed "
+              "spread is 5.69 dB against a 4.50 dB effect: re-rolling the seed moves the output "
+              "further than changing the command does. Averaging across sentences hides this "
+              "entirely, which is why every cell was generated three times.", {})])
+bullet(doc, [("Pitch variation fails. ", {"bold": True}), ("rho −0.27 at p = 0.20 — not "
+             "significant, and pointing the wrong way. Asking for a lively, expressive delivery "
+             "produced less pitch movement than asking for a flat one.", {})])
 
-rich(doc, [("Rate and energy respond, but read the last two columns.", {"bold": True}),
-           (" “Run-to-run sd” is the spread across repeated generations of the same prompt on the "
-            "same sentence. For energy it is 5.69 dB against a 4.50 dB effect: re-rolling the seed "
-            "moves the output further than changing the command does. Both correlations are real "
-            "across many sentences; neither gives a caller a delivery they can rely on for one "
-            "utterance. That is the difference between a measurable effect and control, and "
-            "averaging over sentences hides it — which is why the repeats were built in.", {})])
-
-rich(doc, [("Pitch variation fails.", {"bold": True}),
-           (" rho −0.27 at p = 0.20: not significant, and pointing the wrong way. Asking for “a "
-            "lively, expressive delivery” produced less pitch movement than asking for a flat one. "
-            "This is the axis closest to what “expressive TTS” ordinarily means, and it is the one "
-            "the built-in mechanism does not deliver on Khmer.", {})], space_after=10)
-
-callout(doc, "A caveat on this measurement", [
-    "The prompt wordings are mine, not OpenBMB's — only `(slightly faster, cheerful tone)` and "
-    "`(A young woman, gentle and sweet voice)` appear in their documentation, so these phrasings "
-    "are a reasonable extrapolation rather than a sanctioned API. A negative result could in "
-    "principle be a wording problem rather than a model limitation, and `var` is where that doubt "
-    "deserves the most weight: “lively” and “expressive” may simply not be the vocabulary the "
-    "model was trained against. The positive results do not carry the same doubt — they establish "
-    "that the channel works, whatever better wording might add.",
+callout(doc, "Caveat on the wordings", [
+    "The prompt phrasings are extrapolated from OpenBMB's two documented examples — "
+    "*(slightly faster, cheerful tone)* and *(A young woman, gentle and sweet voice)*. A negative "
+    "result on one axis could therefore be a vocabulary mismatch rather than a model limit, and "
+    "`var` is where that doubt deserves the most weight. The positive results do not carry the "
+    "same doubt: they establish the channel works, whatever better wording might add.",
 ], accent=SIENNA, fill=SIENNA_SOFT)
 
-heading(doc, "2.1  What is left for a fine-tune, and why the work was stopped", 2)
+heading(doc, "1.2  A global attribute in the text field earns almost no gradient", 3)
+
+para(doc, "Measured on the training objective itself rather than on generated audio, with a "
+          "positive control. Teacher-forced forward passes over 40 held-out clips, reseeded "
+          "identically before each so the flow-matching timestep and noise are the same.")
 
 table(doc,
-      ["", "Built-in prompt", "Fine-tuned tag"],
-      [["pitch", "**+106 Hz, robust**", "ceiling +28 Hz — strictly worse"],
-       ["rate", "+2.29 ch/s, 1.4× noise", "comparable at best"],
-       ["energy", "effect below the noise", "possible improvement, unproven"],
-       ["pitch variation", "**fails, wrong direction**", "possible improvement, unproven"],
-       ["named speaker, no reference clip", "not available", "**only the tag does this**"],
-       ["reproducible for one utterance", "no — see the sd column", "yes, deterministic given a seed"],
-       ["enumerable, sweepable, verifiable", "no", "yes"]],
-      widths=[1.9, 1.9, 2.0])
-tcap(doc, "The residue. Two genuine gaps — pitch variation, and selecting one of twenty voices by "
-          "name — plus reproducibility. A real product, but a far narrower one than “add "
-          "expressive control to VoxCPM2”.")
+      ["condition", "mean loss/diff", "delta", "rows worse", "sign test"],
+      [["correct speaker tag", f"{S_PROJ['true_mean']:.5f}", "—", "—", "—"],
+       ["swapped speaker tag", f"{S_PROJ['swap_mean']:.5f}", pctdelta(S_PROJ),
+        f"{S_PROJ['worse']}/{S_PROJ['n']}", f"p = {S_PROJ['p']:.2f}"],
+       ["scrambled transcript (control)", f"{CTRL['scramble_mean']:.5f}",
+        f"**{100*(CTRL['scramble_mean']-CTRL['true_mean'])/CTRL['true_mean']:+.1f}%**",
+        f"{CTRL['worse']}/{CTRL['n_ctrl']}", "—"]],
+      widths=[2.0, 1.2, 1.0, 1.0, 1.0])
+tcap(doc, "A 290× ratio between what the transcript is worth to the model and what the control "
+          "tag is worth. The positive control is the load-bearing row: it proves the instrument "
+          "can detect a signal the model does use.")
 
-callout(doc, "The work was stopped at step 1,980 of 4,000", [
-    "The residue above does not justify the remaining GPU time on the terms the project "
-    "originally assumed. The checkpoint is kept and the run resumes from it if closing that "
-    "residue later proves worth it.",
-    "What follows stands on its own regardless: the corpus method, the 12 GB result, and above "
-    "all the conditioning failure in section 7 — which is not about prosody, and does not go "
-    "away. It is the part that transfers.",
+para(doc, "The cause is teacher forcing. Every audio patch is predicted with the preceding "
+          "ground-truth patches visible, and a speaker's pitch is trivially readable off those, "
+          "so the tag supplies nothing the prefix does not already carry. Restricting the loss to "
+          "the first K patches confirms it: the swap penalty is +0.00318 at K = 1 and decays "
+          "monotonically to +0.00022 over the whole clip, a 14× decay. The tag matters exactly "
+          "where no prefix exists yet.")
+
+heading(doc, "1.3  That is a cost, not a wall", 3)
+
+rich(doc, [("The parenthetical prompt of finding 1.1 is also a global attribute in the text "
+            "field, and it works.", {"bold": True}),
+           (" So the teacher-forcing shortcut does not make global conditioning impossible — it "
+            "makes it data-expensive. A signal worth 0.03% of the loss is still learnable given "
+            "enough data and a full training run. OpenBMB paid that cost at pre-training scale; "
+            "11.7 hours of Khmer through a LoRA did not.", {})])
+
+heading(doc, "1.4  Two changes let a small run learn a global tag anyway", 3)
+
+para(doc, "Isolated one variable at a time on the easiest discrimination available — two "
+          "speakers roughly an octave apart, one binary tag, 400 steps — against a threshold "
+          "fixed before any arm was run.")
+
+table(doc,
+      ["arm", "change from the previous arm", "separation", "verdict"],
+      [["`end`", "tag adjacent to `audio_start`", sep("end"), verdict("end")],
+       ["`proj`", "+ `enable_proj: true`", sep("proj"), verdict("proj")],
+       ["`onset`", "+ 8× onset-weighted loss, τ = 4 patches", f"**{sep('onset')}**",
+        f"**{verdict('onset')}**"]],
+      widths=[0.8, 2.9, 1.1, 0.9])
+tcap(doc, "Probe ladder. Pass bar: the two speaker tags must produce generated F0 medians more "
+          "than 30 Hz apart, in the correct direction. The real speakers are 175 Hz apart.")
+
+para(doc, "Confirmed at the objective level, on the same instrument as finding 1.2: the swap "
+          f"penalty moved from +{S_PROJ['delta_mean']:.5f} (p = {S_PROJ['p']:.2f}) to "
+          f"+{S_ONSET['delta_mean']:.5f} (p = {S_ONSET['p']:.3f}).")
+
+heading(doc, "1.5  VoxCPM2 LoRA fine-tuning fits in 12 GB", 3)
+
+para(doc, "The documented requirement is roughly 20 GB. Casting frozen weights to bfloat16 while "
+          "keeping LoRA parameters in float32, and checkpointing all 36 transformer layers, "
+          "brings measured peak usage to 11.3 GiB of 12.3 GiB on an RTX 3060, desktop included. "
+          "Section 3.5 gives the detail.")
+
+heading(doc, "1.6  Local events are cheap where global attributes are expensive", 3)
+
+para(doc, "Nothing in the acoustic prefix predicts that a laugh is coming, so a local event faces "
+          "none of the competition finding 1.2 measures. This is the argument for prioritising "
+          "the non-verbal layer over emotion or voice quality, and section 5 is the plan that "
+          "follows from it.")
+
+# =========================================================================
+heading(doc, "2.  The taxonomy of speech control", 1, page_break=True)
+
+md(doc, "Expressive control is not one capability, and treating it as one is how a roadmap "
+          "goes wrong. The distinction that decides everything downstream is between "
+          "**attributes that hold over a whole utterance** and **events that happen at a point "
+          "in it**. A speaker's pitch register is true of every frame; a laugh occupies 400 ms "
+          "and nothing else.")
+
+rich(doc, [("That distinction is not cosmetic. ", {"bold": True}),
+           ("Finding 1.2 measures its consequence: a global attribute competes with the "
+            "teacher-forced acoustic prefix and loses by a factor of 290. A local event has no "
+            "such competitor, so it earns an ordinary gradient and needs no special machinery.",
+            {})], space_after=10)
+
+table(doc,
+      ["#", "layer", "controls", "scope", "mechanism in VoxCPM2", "Khmer status"],
+      [["1", "**Prosodic**", "pitch register, rate, loudness", "global",
+        "parenthetical prompt `(…)`, built in", "**measured, works** (§3)"],
+       ["1b", "**Prosodic residue**", "pitch *variation*; named speaker; reproducibility",
+        "global", "would need a fine-tune", "gaps confirmed (§3.8)"],
+       ["2", "**Non-verbal**", "laughter, sighs, hesitation, breath", "**local**",
+        "inline `[laughing]` tags, built in", "**untested** (§4, §5)"],
+       ["3", "Affective", "emotion — sadness, joy, anger", "global",
+        "plausibly the same `(…)` prompt", "unmeasured (§6)"],
+       ["4", "Voice quality", "whisper, breathy, creaky", "global",
+        "plausibly the same `(…)` prompt", "unmeasured (§6)"],
+       ["5", "Discourse", "word emphasis, contrastive focus", "**local**",
+        "none — needs a span syntax", "not designed (§6)"],
+       ["6", "Timing", "pause insertion, phrase breaks", "local",
+        "punctuation only, implicit", "not designed"]],
+      widths=[0.28, 1.05, 1.6, 0.5, 1.6, 1.0], size=8.3)
+tcap(doc, "The six layers. Each row's literature is given in the section it points to, and "
+          "collected in section 9.")
+
+callout(doc, "Layers 3 and 4 are unmeasured, not blocked", [
+    "An earlier draft called emotion and voice quality “blocked: no expressive Khmer corpus”. "
+    "That was wrong in the same way the whole project was wrong before finding 1.1. Both are "
+    "global attributes that the parenthetical channel plausibly already carries — OpenBMB's own "
+    "documented example, *(slightly faster, cheerful tone)*, is a layer-3 prompt.",
+    "Extending `finetune/verify_parenthetical.py` to them is one dictionary edit and about "
+    "twenty minutes of GPU time per layer. The corpus problem only applies if that measurement "
+    "returns negative — and then finding 1.3 sets the price.",
 ])
 
-# =========================================================================
-heading(doc, "3.  The control layers", 1)
-
-para(doc, "“Expressive control” is not one capability. It is several, and they behave differently "
-          "enough that lumping them together is how a roadmap goes wrong. This report covers one "
-          "of them in depth and names the rest so the sequencing is deliberate rather than "
-          "accidental.")
-
-para(doc, "The distinction that matters most is between attributes that hold over a whole "
-          "utterance and events that happen at a point in it. A speaker's pitch register is true "
-          "of every frame; a laugh occupies 400 ms and nothing else. Section 8 shows why that "
-          "distinction is not cosmetic: it decides whether a control signal earns any gradient "
-          "at all.", space_after=10)
-
-table(doc,
-      ["Layer", "What it controls", "Scope", "Mechanism", "Status"],
-      [["**1. Prosodic**", "voice, rate, pitch register, pitch variation, level",
-        "global — true of the whole utterance", "our tag, LoRA-trained on measured labels",
-        "**this report**"],
-       ["**2. Non-verbal vocalization**", "laughter, sighs, hesitation, breath",
-        "local — a bounded event at one position", "shipped with VoxCPM2; no training required",
-        "untested on Khmer"],
-       ["**3. Affective**", "emotion: sadness, joy, anger",
-        "global, sometimes shifting mid-utterance", "the same tag mechanism as layer 1",
-        "blocked on corpus"],
-       ["**4. Voice quality**", "whisper, breathy, creaky, projected",
-        "global or spanning a phrase", "the same tag mechanism as layer 1",
-        "blocked on corpus"],
-       ["**5. Discourse**", "emphasis and focus, contrastive stress, question contour",
-        "local — one word or phrase", "would need a span-marking syntax, not a header tag",
-        "not designed"]],
-      widths=[1.15, 1.55, 1.35, 1.5, 0.85])
-tcap(doc, "The control layers. Layers 1 and 2 are the near-term roadmap; 3 and 4 are the same "
-          "machinery waiting on data that does not exist for Khmer; 5 would need a different tag "
-          "grammar and is listed so that it is not later mistaken for a small addition.")
-
-callout(doc, "Why the scope column is the important one", [
-    "Section 8 measures that a global attribute supplied through the text field earns almost no "
-    "gradient, because teacher forcing lets the model read that attribute off the ground-truth "
-    "audio prefix instead. Pitch is already in the previous 40 ms of audio; the tag adds nothing.",
-    "A **local event does not have this problem.** Nothing in the acoustic prefix predicts that a "
-    "laugh is about to occur — the tag is the only thing that does, at exactly the position where "
-    "it appears. On the measurement in section 8.1, that is the difference between a signal worth "
-    "+0.003 of loss and one worth +0.00022.",
-    "This predicts, without any further experiment, that **layer 2 should be far easier than "
-    "layer 1**, and it is consistent with what OpenBMB actually shipped: working non-verbal tags "
-    "and no global prosodic control surface at all. Layers 3 and 4 are global, so they inherit "
-    "layer 1's difficulty along with its fix.",
-], accent=VIOLET, fill=VIOLET_SOFT)
+md(doc, "**Layers 5 and 6 need a different syntax, not more data.** A header tag cannot say "
+          "*which word* to emphasise. That requires span marking in the text, or a parallel "
+          "per-token flag, and the strongest reference in the literature avoids training an "
+          "emphasis label at all — see section 6.")
 
 # =========================================================================
-heading(doc, "4.  The fine-tune's mechanism", 1)
+heading(doc, "3.  Layer 1 — prosody", 1, page_break=True)
 
-para(doc, "Control is delivered by a tag prefixed to the text field:")
+heading(doc, "3.1  The built-in channel", 2)
 
-code(doc, "<|spk:f2|rate:fast|pitch:high|var:lively|energy:mid|>ថ្ងៃនេះអាកាសធាតុល្អណាស់។")
+code(doc, 'wav = model.generate(text="(speaking quickly)ថ្ងៃនេះអាកាសធាតុល្អណាស់។")')
 
-para(doc, "That is the entire architectural change. There is none. The reason it works rather "
-          "than merely being convenient is in the training packer: `process_tts_data()` builds "
-          "each sequence as [text tokens][audio start][audio patches][audio end] and sets the "
-          "loss mask to zero across every text position. The model is never asked to reproduce "
-          "the text, only to use it in predicting the audio latents that follow. A tag therefore "
-          "costs 25 tokens of sequence length and nothing else.")
+para(doc, "OpenBMB document this for voice design and for style-guided cloning over a reference "
+          "clip, listing gender, age, tone, emotion and pace as what it steers. Nothing in their "
+          "documentation covers Khmer, and this project had already been burned once by assuming "
+          "a control surface transfers to an undocumented language — document 10 carries exactly "
+          "that caveat for Higgs TTS 3's control tokens. The measurement in finding 1.1 is, as "
+          "far as this project can establish, the first on Khmer.")
 
-para(doc, "A prior worry, checked before training anything: would the model read the tag aloud? "
-          "The base model was asked to synthesise a Khmer sentence with and without a tag, and "
-          "both clips were transcribed with the project's Khmer CTC ASR. The transcripts are "
-          "identical and both clips are 2.08 s. The base model silently ignores the tag — which "
-          "also makes it a clean control condition for verification later.", space_after=10)
+md(doc, "Prompts used, three levels each: *(speaking slowly / at a normal pace / quickly)*, "
+          "*(a low- / normal- / high-pitched voice)*, *(a flat, monotone / a normal / a lively, "
+          "expressive delivery)*, *(speaking softly, quietly / at a normal volume / loudly)*.")
 
-table(doc,
-      ["Axis", "Levels", "What it moves", "Measured as"],
-      [["`spk`", "`f1`…`f9`, `m1`…`m11`", "which corpus voice, no reference clip needed",
-        "speaker identity"],
-       ["`rate`", "`slow` `mid` `fast`", "speaking rate", "Khmer characters per second"],
-       ["`pitch`", "`low` `mid` `high`", "pitch register, relative to that voice", "median F0"],
-       ["`var`", "`flat` `mid` `lively`", "monotone versus expressive", "F0 std, semitones"],
-       ["`energy`", "`soft` `mid` `loud`", "level and projection", "RMS level"]],
-      widths=[0.8, 1.5, 2.4, 1.5])
-tcap(doc, "The five control axes. Every one is defined as something measurable on a "
-             "waveform, which is what makes the claim “did asking for rate:fast produce faster "
-             "speech?” a matter of arithmetic rather than opinion.")
+para(doc, "This places VoxCPM2 in the natural-language-prompt family of controllable TTS — "
+          "PromptTTS, InstructTTS, PromptTTS 2 and Parler-TTS all condition on a free-text style "
+          "description rather than on categorical labels, and TextrolSpeech and SpeechCraft are "
+          "the corpora that made that family trainable.")
 
-# =========================================================================
-heading(doc, "5.  Where the prosodic labels come from", 1)
+heading(doc, "3.2  The fine-tuned tag: mechanism", 2)
 
-para(doc, "There is no expressive Khmer speech corpus, and no Khmer emotion corpus. Copying "
+para(doc, "The alternative built here prefixes a compact, enumerable tag to the text field:")
+
+code(doc, '<|spk:f2|rate:fast|pitch:high|var:lively|energy:mid|>ថ្ងៃនេះអាកាសធាតុល្អណាស់។')
+
+md(doc, "That is the entire architectural change. There is none. The reason it works rather "
+          "than merely being convenient is in the training packer: "
+          "`voxcpm/training/packers.py::process_tts_data()` builds each sequence as "
+          "`[text tokens] [audio start] [audio patches] [audio end]` and sets")
+
+code(doc, "loss_mask = cat([zeros(text_length), ones(audio_length), zeros(1)])")
+
+rich(doc, [("Zero across every text position.", {"bold": True}),
+           (" The model is never asked to reproduce the text, only to use it in predicting the "
+            "audio latents that follow. Anything placed in the text field is therefore pure "
+            "conditioning, costing exactly what it costs in sequence length — 25 tokens against "
+            "roughly 140 for a typical Khmer sentence — and nothing else. Parler-TTS uses the "
+            "same arrangement with a separate description encoder, which VoxCPM2 does not need "
+            "because its tokenizer is byte-level over raw text.", {})])
+
+para(doc, "A prior worry, checked before anything was trained: would the model read the tag "
+          "aloud? The base model was asked to synthesize a Khmer sentence with and without a "
+          "tag, and both clips were transcribed with the project's Khmer CTC ASR. The "
+          "transcripts are identical and both clips are 2.08 s. The base model silently ignores "
+          "the tag — which also hands the verification pass a clean control condition.")
+
+heading(doc, "3.3  Where the labels come from", 2)
+
+md(doc, "There is no expressive Khmer speech corpus and no Khmer emotion corpus. Copying "
           "Higgs's 21-emotion catalogue would mean inventing labels for data that does not carry "
-          "them, and the result would be unfalsifiable. So the axes are restricted to attributes "
-          "that can be measured directly.")
+          "them, and the result would be unfalsifiable. So the axes are defined as **quantities "
+          "measurable on a waveform**.")
 
-para(doc, "This is the Parler-TTS recipe (Lyth & King, 2024), which exists precisely because "
-          "“reliance on human-labeled descriptions prevents scaling”: measure speaking rate, "
-          "pitch, SNR and reverberation automatically, bin each continuous measurement, and name "
-          "the bins. Their dataspeech tooling uses seven bins for speaking rate, from very slowly "
-          "to very fast. The tag used here is the same idea in a more compact syntax.")
-
-rich(doc, [("Two design decisions were made independently and then found to agree with that "
-            "pipeline, which is mild evidence they are right rather than local quirks. First, "
-            "pitch, variation and energy are ranked ", {}),
-           ("within speaker", {"bold": True}),
-           (" while rate is ranked globally — a 105 Hz voice and a 280 Hz voice do not share a "
-            "definition of “high”. "
-            "dataspeech compares a speaker's pitch against others of the same gender for the "
-            "same reason. Second, the level boundaries are taken from the outer 15% tails rather "
-            "than from balanced tertiles; dataspeech likewise computes its bin edges from "
-            "histograms “from which the extreme values have been eliminated”.", {})],
-     space_after=10)
+md(doc, "This is the Parler-TTS recipe, which exists precisely because “reliance on "
+          "human-labeled descriptions prevents scaling”: annotate speaking rate, pitch, SNR and "
+          "reverberation automatically over 45k hours, then render the measurements into a text "
+          "description the model conditions on. The accompanying `dataspeech` tooling bins each "
+          "continuous measurement into categorical descriptors. The tag here is the same idea in "
+          "a more compact syntax.")
 
 table(doc,
-      ["Axis", "Balanced tertiles", "15/85 tails", "Gain"],
-      [["`rate`", "+4.49 chars/s", "**+6.57 chars/s**", "+46%"],
-       ["`pitch`", "+20.3 Hz", "**+28.3 Hz**", "+40%"],
-       ["`var`", "+1.16 st", "**+1.71 st**", "+47%"],
-       ["`energy`", "+3.78 dB", "**+5.81 dB**", "+54%"]],
-      widths=[1.0, 1.6, 1.6, 0.9], align_right=(1, 2, 3))
-tcap(doc, "Separation between the outer levels under two labelling schemes, measured "
-             "on the same 6000 candidate clips. Taking the tails leaves 880 exemplars of each "
-             "extreme instead of 2000, and buys roughly 1.5× the separation on every axis. For "
-             "teaching a direction, unambiguous examples beat numerous borderline ones.")
+      ["axis", "levels", "measured as"],
+      [["`spk`", "`f1`…`f9`, `m1`…`m11`", "speaker identity, from the corpus"],
+       ["`rate`", "`slow` `mid` `fast`", "Khmer characters per second"],
+       ["`pitch`", "`low` `mid` `high`", "median F0"],
+       ["`var`", "`flat` `mid` `lively`", "F0 standard deviation, in semitones"],
+       ["`energy`", "`soft` `mid` `loud`", "RMS level"]],
+      widths=[0.8, 1.9, 3.0])
+tcap(doc, "Five axes, 32 slot values. Narrower than Higgs's catalogue, and deliberately so: "
+          "every one of these is checkable by arithmetic on the output.")
 
-callout(doc, "Measure the ceiling before training, not after",
-        ["The separation the labels themselves achieve is an upper bound on anything the model "
-         "can learn from them. It costs seconds to compute and it caught a too-narrow control "
-         "range before a single GPU-hour was spent. Every result in section 8 is quoted against "
-         "these ceilings rather than in isolation."],
-        accent=VIOLET, fill=VIOLET_SOFT)
+md(doc, "Two design choices, both of which `dataspeech` independently also makes. **Bin edges "
+          "come from the 15/85 tails rather than tertiles**, which widens the control range by "
+          "40–54% across the four axes. And **`pitch`, `var` and `energy` are ranked within "
+          "speaker**, so each axis describes *how* something is said rather than *who* says it; "
+          "ranking them globally measures better but lets the axis select a voice instead of a "
+          "delivery. `rate` is ranked globally, because characters per second means the same "
+          "thing from any voice.")
 
-# =========================================================================
-heading(doc, "6.  The corpus and the training setup", 1)
-
-para(doc, "Source speech is this project's sibling ASR corpus — real recorded Khmer read speech, "
-          "not synthetic. Clips were extracted, measured, labelled and written as manifests by "
-          "`finetune/build_corpus.py`, then validated with the package's own dataset checker "
-          "(5820/5820 passed).", space_after=10)
-
-table(doc,
-      ["", ""],
-      [["Clips", "5,820 (5,646 train / 174 validation)"],
-       ["Duration", "11.73 hours, clips of 3–10 s"],
-       ["Speakers", "20, spanning roughly 105–280 Hz median F0"],
-       ["Sample rate", "16 kHz in (AudioVAE encoder rate), 48 kHz out"],
-       ["Gain handling", "normalised per speaker, not per clip, so the energy axis survives"],
-       ["Partial tags", "per-slot dropout during training, so an underspecified tag still works"]],
-      widths=[1.2, 4.0], size=9.5, header=False)
-tcap(doc, "The training corpus.")
-
-heading(doc, "6.1  Fitting a documented 20 GB job into 12 GB", 2)
-
-para(doc, "OpenBMB's figure for VoxCPM2 LoRA is roughly 20 GB; this machine has 12.3. The gap is "
-          "almost entirely one line in upstream's `from_local`: in training mode the model is left "
-          "in float32, so 2.29 B frozen parameters occupy 8.6 GiB before a single activation is "
-          "allocated — while the forward pass runs under bfloat16 autocast anyway, which means the "
-          "float32 master copy buys nothing for the 99.9% of parameters that are frozen.")
-
-para(doc, "`finetune/train.py` wraps the upstream trainer without modifying it and applies three "
-          "patches: frozen weights cast to bfloat16 (halving the resident model to 4.3 GiB) while "
-          "LoRA parameters stay float32 so AdamW updates are not quantised away; gradient "
-          "checkpointing across all 36 transformer layers; and the AudioVAE kept in float32 but "
-          "explicitly on GPU under no_grad. Measured peak is 10.3–11.7 GiB with the desktop "
-          "running. Peak turns out to be nearly independent of sequence length — halving "
-          "`max_batch_tokens` moved it by 0.6 GiB — so the ceiling is resident weights and the "
-          "AudioVAE encode, not activations.")
-
-heading(doc, "6.2  What a training row actually looks like", 2)
-
-para(doc, "The trainer consumes JSON Lines. One object per clip, three fields: a path to the "
-          "audio, the text with the control tag already prefixed, and the duration used for "
-          "length-based batching. Nothing else — no separate label column, no side channel. The "
-          "tag lives inside the text, which is the whole point of the mechanism in section 4.")
+heading(doc, "3.4  What a training row looks like", 2)
 
 code(doc, TRAIN_ROWS)
+tcap(doc, "Two rows of `finetune/data/train.jsonl`. The tag is ordinary text in the `text` "
+          "field; nothing in the schema knows it is a tag.")
 
-para(doc, "The second row shows per-slot dropout at work: `var` is `any` rather than a level. "
-          f"Each slot is independently blanked with probability {META['slot_dropout']:.2f} during "
-          "corpus construction, so the model sees partially specified tags in training and a "
-          "caller can leave slots out at inference without going off distribution.",
-     space_after=10)
-
-table(doc,
-      ["`any` slots in the tag", "0", "1", "2", "3", "4", "5"],
-      [["Training rows", "2,507", "2,234", "743", "145", "15", "2"]],
-      widths=[1.7, 0.62, 0.62, 0.62, 0.62, 0.62, 0.62], align_right=(1, 2, 3, 4, 5, 6))
-tcap(doc, "Tag shapes across the 5,646 training rows. Fully specified tags are the "
-             "plurality at 44%, and four fifths of rows carry at least one level, so a partial "
-             "tag is ordinary rather than exotic. Tags with every slot blank are vanishingly "
-             "rare — which is why the verification sweep pins unswept slots to `mid` "
-             "rather than leaving them unspecified.")
-
-para(doc, "Alongside the manifests, the corpus builder writes `corpus_meta.json`: the measurement "
-          "behind every label, and the decision boundaries themselves. This is what makes the "
-          "labelling auditable — the thresholds are recorded rather than left implicit in a "
-          "script that has since moved on.")
+md(doc, "Per-slot dropout leaves partial tags valid at inference: a caller can ask for "
+          "`rate:fast` alone and leave every other slot `any`. The label metadata each row "
+          "derives from is kept separately, so a relabelling never requires re-extracting audio:")
 
 code(doc, META_ROW)
 
-rich(doc, [("The same file records the cut points. ", {}),
-           ("Rate is ranked globally", {"bold": True}),
-           (" — the 15th and 85th percentiles over the whole corpus, at "
-            f"{META['rate_cuts_chars_per_s'][0]:.2f} and "
-            f"{META['rate_cuts_chars_per_s'][1]:.2f} characters per second. ", {}),
-           ("Pitch, variation and energy are ranked within each speaker", {"bold": True}),
-           (", so speaker f2's boundary for `pitch:high` sits at 226.8 Hz while a bass voice's "
-            "sits far lower. A single global pitch threshold would have collapsed `spk` and "
-            "`pitch` into the same axis, and the model could never have learned to move one "
-            "without the other.", {})],
-     space_after=10)
-
-# =========================================================================
-heading(doc, "7.  The run that failed", 1, page_break=True)
-
-para(doc, "The first full run trained without incident: 4000 steps, 6.5 hours, validation "
-          "loss/diff falling 0.8819 → 0.8076, ten checkpoints. The adapter was real, and it "
-          "audibly changed the model.", space_after=10)
+heading(doc, "3.5  The corpus, and fitting a 20 GB job into 12 GB", 2)
 
 table(doc,
-      ["Check", "Result"],
-      [["LoRA weight delta, median ‖ΔW‖/‖W‖ over 192 adapted layers",
-        "**3.03e-02** (range 2.78e-03 – 8.31e-02)"],
-       ["`lora_B` tensors non-zero (they initialise to exactly zero)", "**192 / 192**"],
-       ["Generated F0, base model, across sentences", "wanders 105.9 – 231.5 Hz"],
-       ["Generated F0, adapter", "clamped 201.3 – 261.6 Hz (median delta +66.5 Hz)"],
-       ["Speaking rate, base → adapter", "17.61 → 14.07 chars/s"]],
-      widths=[3.0, 2.6])
-tcap(doc, "The fine-tune itself succeeded. The adapter has a large, audible effect.")
+      ["", "value"],
+      [["Clips", f"{META['n_clips']:,} (5,646 train / 174 val)"],
+       ["Speakers", f"{len(META['speaker_tags'])}"],
+       ["Audio", f"{META['hours']:.2f} h of Khmer read speech"],
+       ["Steps", "4000 (≈5.5 epochs) planned"],
+       ["LoRA", "r = 64, α = 64, `enable_lm` + `enable_dit` + `enable_proj`"],
+       ["Effective batch", "8 (`batch_size` 1 × `grad_accum_steps` 8)"],
+       ["Learning rate", "1e-4, the documented LoRA rate"],
+       ["Peak VRAM", "11.3 GiB of 12.3 GiB, desktop included"]],
+      widths=[1.6, 4.1])
+tcap(doc, "The prosodic run. Trainable parameters are roughly 0.1% of the 2.29 B total.")
 
-para(doc, "It ignored the control tag completely.", bold=True, space_after=8)
+md(doc, "The published VRAM figure for VoxCPM2 LoRA is roughly 20 GB. The gap is almost "
+          "entirely one line in upstream's `from_local`: in training mode the model is left in "
+          "float32, so 2.29 B parameters occupy about 8.6 GiB before a single activation is "
+          "allocated — while the forward pass then runs under bfloat16 autocast anyway. Three "
+          "patches in `finetune/train.py` close it.")
 
-table(doc,
-      ["Axis", "Measured", "Commanded low → high", "rho", "p", "Corpus ceiling"],
-      [["`rate`", "chars/s", "+0.27", "+0.141", "0.46", "**+6.57**"],
-       ["`pitch`", "F0 median", "−2.81 Hz", "+0.019", "0.93", "**+28.27 Hz**"],
-       ["`var`", "F0 std", "+0.02 st", "−0.057", "0.77", "**+1.71 st**"],
-       ["`energy`", "RMS", "−0.37 dB", "−0.038", "0.85", "**+5.81 dB**"]],
-      widths=[0.75, 0.9, 1.35, 0.75, 0.6, 1.15], align_right=(2, 3, 4, 5))
-tcap(doc, "Ten eval-set sentences per level, every axis swept, unswept slots pinned "
-             "to mid so the tag stays in distribution. rho is Spearman's correlation between "
-             "commanded level and measured quantity; p is a 10,000-shuffle permutation test. "
-             "Null on every axis, against ceilings measured before training started.")
+bullet(doc, [("Frozen weights to bfloat16, LoRA parameters kept in float32. ", {"bold": True}),
+             ("Halves the resident model. The adapters stay fp32 because AdamW at 1e-4 produces "
+              "updates around 1e-2 the size of the weights, and bfloat16's three significant "
+              "decimal digits would quantise a meaningful share of them away.", {})])
+bullet(doc, [("Gradient checkpointing on all 36 transformer layers. ", {"bold": True}),
+             ("Applied only where the installed MiniCPM4 block exposes a usable entry point, and "
+              "reported at startup either way rather than silently skipped.", {})])
+bullet(doc, [("AudioVAE in float32 on GPU, encode() under no_grad. ", {"bold": True}),
+             ("Upstream already freezes it; this makes the memory behaviour explicit.", {})])
 
-para(doc, "Ranking all nine checkpoints by control response — not by validation loss, which "
-          "cannot see this failure — found no trend across training and a best mean rho of "
-          "+0.026. It was not a matter of picking the wrong checkpoint.")
+heading(doc, "3.6  Why the first run ignored its own control tag", 2)
 
-para(doc, "The decisive axis is `spk`. Six speaker tags spanning 105–280 Hz of real corpus pitch "
-          "produced generated medians of 198.5, 209.3, 210.3, 222.9, 208.6 and 196.7 Hz: 26 Hz of "
-          "spread against 175 Hz in the corpus, rho = −0.200. Speaker identity is the one "
-          "attribute the model cannot infer from the text, so if that axis does not land, nothing "
-          "is landing. It also explains the voice collapse noted above — a model that cannot read "
-          "the tag can only average its twenty speakers.")
+md(doc, "The first 4000-step run trained cleanly and produced an adapter that demonstrably "
+          "changed the model — median |ΔW|/|W| of 3.0%, and generated F0 moved from the base "
+          "model's wandering 106–232 Hz into a tight 201–262 Hz — while responding to the "
+          "control tag not at all. Every axis came back at rho ≈ 0. The `spk` axis is the proof: "
+          "tags spanning 105–280 Hz of real speaker pitch produced 26 Hz of output spread at "
+          "rho −0.20. Speaker identity is the axis carrying the most information, because the "
+          "model cannot infer it from the text; if that one does not land, nothing is landing.")
 
-heading(doc, "7.1  Eliminating the easy explanations", 2)
+md(doc, "Tokenisation was eliminated first — the tags survive the model's own wrapped "
+          "tokenizer, differ in ten positions between extremes, and contain no UNK. Text "
+          "normalisation was eliminated too, since `normalize` defaults to False. Neither "
+          "explained anything, and neither could: both are questions about the input, and "
+          "generated-audio metrics cannot distinguish a signal that was never learned from one "
+          "lost in sampling.")
 
-table(doc,
-      ["Hypothesis", "How it was ruled out"],
-      [["Tag shape out of distribution",
-        "per-slot dropout made all-`any` tags 0.27% of rows — but the in-distribution sweep "
-        "the in-distribution sweep pins unswept slots to `mid` and is equally null"],
-       ["Adapter inert", "3% weight delta, all 192 `lora_B` tensors non-zero"],
-       ["Tokenization", "tags survive the model's wrapped tokenizer, differ in ten token "
-        "positions between extremes, produce zero UNK"],
-       ["Train/inference mismatch", "both paths call the same `text_tokenizer`; inference passes "
-        "the text through unsplit and un-chunked"],
-       ["Text normalization", "`normalize` defaults to False and is never passed"],
-       ["Tag placement", "Khmer tokenises to ~330 UTF-8 byte tokens, burying a prefix ~350 "
-        "positions from the audio. Moving the tag adjacent to `audio_start` gave " + sep("end") +
-        " of speaker separation. Not it either."]],
-      widths=[1.5, 4.1])
-tcap(doc, "Six hypotheses, eliminated in the order they were tried.")
+rich(doc, [("The step that settled it was abandoning generated audio for the training objective.",
+            {"bold": True}),
+           (" Finding 1.2 is that measurement. Two minutes of teacher-forced forward passes "
+            "answered a question a 6.5-hour run had left ambiguous, and the positive control is "
+            "what makes the null interpretable.", {})])
 
-# =========================================================================
-heading(doc, "8.  The measurement that settled it", 1)
+heading(doc, "3.7  The fix", 2)
 
-para(doc, "Everything above measures generated audio, and generated audio cannot distinguish "
-          "“never learned the tag” from “learned it, but sampling washes it out”. So the "
-          "question went back to the training objective. For each held-out clip: one "
-          "teacher-forced forward pass with the true speaker tag, one with the other speaker's, "
-          "with the diffusion timestep and the noise held identical by reseeding from the row "
-          "index. The flow-matching loss is stochastic, and unseeded this measures nothing but "
-          "noise.", space_after=10)
+para(doc, "Two changes, isolated one at a time by the probe ladder in finding 1.4.")
 
-table(doc,
-      ["Condition", "Mean loss/diff", "Delta", "Rows worse"],
-      [["Correct tag", f"{S_PROJ['true_mean']:.5f}", "—", "—"],
-       ["Swapped tag", f"{S_PROJ['swap_mean']:.5f}", pctdelta(S_PROJ),
-        f"{S_PROJ['worse']}/{S_PROJ['n']}  (sign-test p = {S_PROJ['p']:.2f})"],
-       ["Scrambled transcript (positive control)", f"{CTRL['scramble_mean']:.5f}",
-        f"**{100 * CTRL['delta_mean'] / CTRL['true_mean']:+.1f}%**",
-        f"{CTRL['worse']}/{S_PROJ['n']}"]],
-      widths=[2.2, 1.2, 1.0, 1.6], align_right=(1, 2))
-tcap(doc, "The positive control is what makes this readable. Corrupting the "
-             "transcript, which the model certainly uses, moves the loss by 7.4%. Corrupting the "
-             "tag moves it by 0.03%, a 290× difference indistinguishable from chance.")
+rich(doc, [("The projection layers were frozen. ", {"bold": True}),
+           ("`enable_proj` adapts `enc_to_lm_proj`, `lm_to_dit_proj`, `res_to_dit_proj` and "
+            "`fusion_concat_proj` — the linear bottleneck through which everything the language "
+            "model knows reaches the diffusion transformer that produces the acoustics. The "
+            "first run left it false, following document 9's recommendation, which is sound "
+            "advice for speaker cloning (where the voice arrives through the reference-audio "
+            "encoder) and wrong for conditioning that arrives only as text and has no other "
+            "route across.", {})])
 
-para(doc, "The model reads the text and does not read the tag, in its own objective. No "
-          "inference-side change could have rescued that.", bold=True)
+rich(doc, [("The loss was weighted toward the onset. ", {"bold": True}),
+           ("If the tag is redundant with the acoustic prefix everywhere except the start of the "
+            "clip, put the gradient at the start of the clip. Position i of the audio span gets "
+            "weight 1 + (W−1)·exp(−i/τ), which at W = 8, τ = 4 is 8.0 on the first patch, 3.6 on "
+            "the fifth and about 1 by the twentieth. If the onset is set correctly, "
+            "autoregression carries it — the rest of the utterance is generated conditioned on "
+            "that first patch.", {})])
 
-heading(doc, "8.1  Why: the acoustic prefix already answers the question", 2)
+md(doc, "Nothing downstream has to change for this to be a true per-position weight: "
+          "`unified_cfm.compute_loss` computes `(mask*losses).sum() / sum(mask)`, and "
+          "`adaptive_loss_weighting` at p = 0 returns the mask unaltered, so a non-binary mask "
+          "is a weighted mean that renormalises itself. Upstream casts the mask to `int32`, "
+          "which would truncate the weights, so it is rebuilt as float in PATCH 4.")
 
-para(doc, "Training is teacher-forced. Every audio patch is predicted with the preceding "
-          "ground-truth patches visible, and a speaker's pitch is trivially readable off those. "
-          "The tag is redundant with the acoustic prefix everywhere except the very beginning of "
-          "the clip, and redundant information receives no gradient. That yields a sharp "
-          "prediction: restrict the loss to the first K patches, where no prefix exists yet, and "
-          "the tag must start to matter.", space_after=10)
+callout(doc, "What the more principled version of this would be", [
+    "The literature's fix for information preference is to **corrupt the shortcut** — word "
+    "dropout in Bowman et al., a deliberately weakened decoder in Chen et al. — rather than to "
+    "reweight around it. The equivalent here is corrupting the acoustic prefix during training so "
+    "the model cannot read pitch off it.",
+    "Onset weighting was chosen because it is a loss-side change that cannot destabilise "
+    "generation, and because it was cheap enough to probe in 35 minutes. If this were being "
+    "written up as research rather than as a build log, prefix corruption is the comparison that "
+    "would have to be run.",
+], accent=VIOLET, fill=VIOLET_SOFT)
 
-table(doc,
-      ["Loss restricted to first K patches", "1", "2", "4", "8", "all"],
-      [["Penalty for the wrong tag", "**+0.00318**", "+0.00214", "+0.00143", "+0.00082",
-        "+0.00022"]],
-      widths=[2.2, 0.9, 0.85, 0.85, 0.85, 0.85], align_right=(1, 2, 3, 4, 5))
-tcap(doc, "Monotone, and 14× larger on the first patch than over the whole clip. The "
-             "tag matters exactly where the prefix cannot answer for it, and is drowned everywhere "
-             "else.")
-
-callout(doc, "A known problem, met in an unexpected place", [
-    "This is the **information-preference problem** described by Chen et al. in Variational "
-    "Lossy Autoencoder (ICLR 2017): a sufficiently expressive autoregressive decoder ignores a "
-    "conditioning signal, because predicting the next step from its own history is cheaper in "
-    "coding terms than routing information through the conditioning path. Their remedies are all "
-    "forms of taking the shortcut away — weakening the decoder, dropout, limiting its receptive "
-    "field.",
-    "The same failure is Bowman et al.'s KL-vanishing in text VAEs (2016), fixed there by word "
-    "dropout: replace part of the decoder's history with UNK so it cannot recover the next word "
-    "without consulting the latent. The link to teacher forcing generally is Bengio et al. (2015) "
-    "on scheduled sampling.",
-    "None of this literature is about TTS, and the diagnosis here was reached by measurement "
-    "rather than through it — the family was recognised afterwards. But it means the finding is "
-    "not exotic. It is the standard failure of conditional autoregressive generation, arriving in "
-    "a place the VoxCPM2 documentation does not warn about.",
-])
-
-para(doc, "It follows that any global attribute supplied through the text field — speaker, rate, "
-          "register, and by extension emotion — competes against a teacher-forced acoustic prefix "
-          "that already encodes it, and loses. This is a property of the training objective, not "
-          "of VoxCPM2 and not of the tag format.")
-
-# =========================================================================
-heading(doc, "9.  The fix", 1, page_break=True)
-
-para(doc, "Two changes, each isolated by its own 400-step probe on the easiest discrimination the "
-          "corpus offers: two speakers an octave apart (m5 at ~105 Hz, f4 at ~280 Hz), 765 "
-          "training rows, one binary tag. The pass mark — more than 30 Hz of separation, in the "
-          "correct direction — was fixed before the first probe ran, against 175 Hz of real "
-          "separation. Each arm changes exactly one thing from the arm above it, so a result "
-          "attaches to a cause rather than to a bundle of changes.", space_after=10)
+heading(doc, "3.8  What a fine-tune would still add", 2)
 
 table(doc,
-      ["Arm", "What it changes", "m5", "f4", "Separation", ""],
-      [["`end`", "tag moved adjacent to `audio_start`",
-        f"{ARMS['end']['low']:.1f}" if ARMS['end'] else "266.5",
-        f"{ARMS['end']['high']:.1f}" if ARMS['end'] else "272.3",
-        f"**{sep('end')}**", verdict("end")],
-       ["`proj`", "`end` + `enable_proj: true`",
-        f"{ARMS['proj']['low']:.1f}" if ARMS['proj'] else "269.7",
-        f"{ARMS['proj']['high']:.1f}" if ARMS['proj'] else "289.2",
-        f"**{sep('proj')}**", verdict("proj")],
-       ["`onset`", "`proj` + diffusion loss weighted 8× at the onset",
-        f"{ARMS['onset']['low']:.1f}" if ARMS['onset'] else "272.3",
-        f"{ARMS['onset']['high']:.1f}" if ARMS['onset'] else "312.2",
-        f"**{sep('onset')}**", f"**{verdict('onset')}**"]],
-      widths=[0.7, 2.7, 0.65, 0.65, 1.0, 0.65], align_right=(2, 3, 4))
-tcap(doc, "The probe ladder. Generated F0 median in Hz, six sentences per tag. "
-             "Placement was not the problem; the two things that were are below.")
+      ["", "built-in prompt", "fine-tuned tag"],
+      [["pitch", "**+106 Hz, robust**", "ceiling +28 Hz — strictly worse"],
+       ["rate", "+2.29 ch/s, 1.4× noise", "comparable at best"],
+       ["energy", "effect below the noise", "*possible* improvement, unproven"],
+       ["pitch variation", "**fails, wrong direction**", "*possible* improvement, unproven"],
+       ["named speaker, no reference clip", "not available", "**only the tag does this**"],
+       ["reproducible for one utterance", "no", "yes, deterministic given a seed"],
+       ["enumerable and sweepable", "no", "yes"]],
+      widths=[2.0, 2.0, 2.2])
+tcap(doc, "Three residues: pitch variation, named-speaker selection, and reproducibility.")
 
-heading(doc, "9.1  The projection layers were frozen", 2)
+para(doc, "The prosodic run was stopped at step 1,980 of 4,000 on that accounting. The "
+          "checkpoint is on disk and the run resumes from it if the residue proves worth "
+          "closing. Findings 1.2 through 1.5 come from that work and stand independently of "
+          "whether it is ever finished.")
 
-para(doc, "`enc_to_lm_proj`, `lm_to_dit_proj`, `res_to_dit_proj` and `fusion_concat_proj` are the "
-          "linear bottleneck through which everything the language model knows reaches the "
-          "diffusion transformer that produces the acoustics. The project's own architecture notes "
-          "recommend leaving them frozen, and for speaker cloning that is correct — the voice "
-          "arrives through the reference-audio encoder and never needs to cross that bridge. For "
-          "conditioning that arrives only as text there is no other route across. Worth +13.7 Hz.")
-
-heading(doc, "9.2  Weighting the loss toward the onset", 2)
-
-para(doc, "Position i of the audio span is given weight 1 + 7·exp(−i/4): eight times on the first "
-          "patch, decaying to about one by the twentieth. This puts the gradient where the tag is "
-          "the only available cue. Nothing downstream needs modifying — the flow-matching loss "
-          "computes a mask-weighted mean and the adaptive weighting returns the mask unchanged, so "
-          "a non-binary mask is a self-renormalising weight. Upstream casts the mask to int32, "
-          "which would truncate the weights, so the wrapper rebuilds it as float. Worth a further "
-          "+20.4 Hz, and the change that clears the bar.")
-
-para(doc, "If the onset is set correctly, autoregression carries it: the rest of the utterance is "
-          "generated conditioned on that first patch.")
-
-callout(doc, "Provenance: this one is not borrowed", [
-    "Onset weighting has no precedent in the literature cited above, and it would be misleading "
-    "to imply otherwise. The published fixes all attack the shortcut itself — corrupt the "
-    "decoder's history, or restrict what it can see. The equivalent here would be noising or "
-    "masking the ground-truth audio prefix during training, and VoxCPM2 already contains machinery "
-    "of that shape: it noises the diffusion head's previous-patch conditioning on a ramping "
-    "schedule, and drops the LM conditioning entirely at a fixed rate for classifier-free "
-    "guidance. That the designers included both suggests they knew about the problem.",
-    "The reason for not doing it that way is practical: the shortcut is the **language model's** "
-    "view of the prefix, not only the diffusion head's, and removing that properly means surgery "
-    "inside the library rather than a wrapper around it. Onset weighting attacks the same target "
-    "from the other side, and required no library change at all. Whether prefix corruption would "
-    "work better is untested, and it is the more principled experiment.",
-], accent=SIENNA, fill=SIENNA_SOFT)
-
-para(doc, "The diagnostic that found the failure confirms the repair at the same level:",
-     space_after=8)
-
-table(doc,
-      ["Checkpoint", "Correct tag", "Swapped tag", "Delta", "Rows worse", "Sign-test p"],
-      [["`proj`", f"{S_PROJ['true_mean']:.5f}", f"{S_PROJ['swap_mean']:.5f}",
-        f"{S_PROJ['delta_mean']:+.5f}", f"{S_PROJ['worse']}/{S_PROJ['n']}",
-        f"{S_PROJ['p']:.2f}"],
-       ["`onset`", f"{S_ONSET['true_mean']:.5f}", f"{S_ONSET['swap_mean']:.5f}",
-        f"**{S_ONSET['delta_mean']:+.5f}**", f"{S_ONSET['worse']}/{S_ONSET['n']}",
-        f"**{S_ONSET['p']:.3f}**"]],
-      widths=[0.9, 1.0, 1.0, 1.0, 0.85, 0.95], align_right=(1, 2, 3, 4, 5))
-tcap(doc, "Four times the penalty for the wrong tag, and significant where it was "
-             "not. The model now reads the tag in its own loss, which is the thing that was "
-             "actually missing.")
-
-# =========================================================================
-heading(doc, "10.  The two runs", 1)
-
-table(doc,
-      ["", "Run 1", "Run 2"],
-      [["Corpus", "5,646 train / 174 val, 20 speakers, 11.73 h", "same"],
-       ["Steps", "4000 (≈5.5 epochs), 6.5 h", "**stopped at 1,980 of 4,000**"],
-       ["LoRA", "r=64, α=64, `enable_lm` + `enable_dit`", "same, **plus `enable_proj`**"],
-       ["Loss", "uniform over audio positions", "**8× at onset, τ = 4 patches**"],
-       ["Peak VRAM", "10.3–11.7 GiB", "11.3 GiB"],
-       ["Control response", "**none** — rho ≈ 0 on every axis", "not measured — stopped first, see below"]],
-      widths=[1.0, 2.5, 2.1])
-tcap(doc, "Run 1's checkpoints and sweep are kept rather than deleted: they are the "
-             "control condition for run 2, and the evidence for sections 5 and 6.")
-
-callout(doc, "Why run 2 was stopped at step 1,980", [
-    "**Not because it was failing.** The loss was falling normally and the probe (section 9) had "
-    "already shown, against a threshold fixed in advance, that the two fixes let the model read a "
-    "tag at all.",
-    "It was stopped because section 2 was measured while it ran, and the answer changed what the "
-    "run was worth. Four of the five axes it was learning are ones the base model already handles "
-    "through the parenthetical prompt, and on pitch it handles them across a range nearly four "
-    "times wider than the training labels could express. Finishing would have spent another three "
-    "hours to reproduce, worse, something already available for free.",
-    "The checkpoint is on disk and the run is resumable from it, so this is a decision that can be "
-    "revisited. The case for resuming would have to rest on the residue in section 2.1 — pitch "
-    "variation, named-speaker selection, reproducibility — not on the original five axes.",
-], accent=SIENNA, fill=SIENNA_SOFT)
-
-# =========================================================================
-heading(doc, "11.  Using the fine-tuned tag at inference", 1, page_break=True)
-
-para(doc, "The adapter is a set of LoRA weights loaded on top of the stock checkpoint. Inference "
-          "is ordinary VoxCPM2 generation with a tag glued to the front of the text — no separate "
-          "conditioning argument, no reference clip, no change to the calling convention.")
-
-heading(doc, "11.1  From Python", 2)
+heading(doc, "3.9  Using the tag", 2)
 
 code(doc, PY_USAGE)
-
-para(doc, "Two details matter. The adapter must be loaded with the LoRA configuration it was "
-          "trained under — `from_pretrained` otherwise invents a default of rank 8 and silently "
-          "fails to load a rank-64 adapter — so the helper reads `lora_config.json` from the "
-          "checkpoint directory. And the tag must be prefixed to the text, not passed separately; "
-          "there is no separate channel for it to travel through.")
-
-heading(doc, "11.2  From the command line", 2)
-
 code(doc, CLI_USAGE)
 
-para(doc, "`--style` takes comma-separated `slot=level` pairs, and any slot left out is filled "
-          "with `any`. That is a real distinction rather than a convenience: because per-slot "
-          "dropout trained the model on partial tags, `--style var=lively` means “expressive, "
-          "everything else free” rather than “expressive plus four accidental defaults”.",
-     space_after=10)
-
-table(doc,
-      ["What you want", "`--style` argument"],
-      [["A specific voice, nothing else constrained", "`spk=f2`"],
-       ["Faster delivery, voice unconstrained", "`rate=fast`"],
-       ["An expressive reading of a named voice", "`spk=f2,var=lively`"],
-       ["Slow, low, flat — a subdued delivery", "`rate=slow,pitch=low,var=flat`"],
-       ["Everything pinned", "`spk=m3,rate=fast,pitch=high,var=lively,energy=loud`"],
-       ["The base model, no adapter (for A/B)", "omit `--lora` entirely"]],
-      widths=[2.6, 3.0])
-tcap(doc, "Common inference patterns. All 32 slot values and the `any` fallback "
-             "compose freely: 5,376 distinct tags, of which 1,620 are fully specified.")
-
-callout(doc, "The adapter is removable, and that is the point", [
-    "`model.set_lora_enabled(False)` restores the base model bit for bit. VoxCPM2's other 29 "
-    "languages cannot be damaged by a Khmer adapter that can be switched off, and the same "
-    "process can serve both styled Khmer and stock multilingual output without loading a second "
-    "model. A full fine-tune would have no such escape hatch — which is the main argument for "
-    "LoRA here beyond the 12 GB budget.",
-])
+md(doc, "The adapter hot-swaps: `model.set_lora_enabled(False)` restores the base model bit "
+          "for bit, so the base model's other 29 languages cannot be damaged by a Khmer adapter "
+          "that can be switched off. A full fine-tune would have no such escape hatch.")
 
 # =========================================================================
-heading(doc, "12.  Layer 2 — non-verbal vocalization", 1, page_break=True)
+heading(doc, "4.  Layer 2 — non-verbal vocalization", 1, page_break=True)
 
-para(doc, "This layer needs no fine-tuning at all. VoxCPM2 ships with it, documented in the "
-          "project's cookbook: inline square-bracket tags placed in the text at the point where "
-          "the vocalization should occur. They are part of the base model's training, so they are "
-          "available today, on the stock checkpoint, alongside or independent of the prosodic "
-          "adapter.", space_after=10)
+para(doc, "This layer needs no fine-tuning to exist. VoxCPM2 ships with it: inline square-bracket "
+          "tags placed in the text at the point where the vocalization should occur, part of the "
+          "base model's training and available today on the stock checkpoint.")
 
 table(doc,
-      ["Category", "Tags", "Effect"],
-      [["Laughter and breath", "`[laughing]`, `[sigh]`", "audible laugh or exhalation"],
-       ["Hesitation", "`[Uhm]`, `[Shh]`", "filled pause; a shushing sound"],
-       ["Question particles", "`[Question-ah]`, `[Question-ei]`, `[Question-en]`, "
-        "`[Question-oh]`", "interrogative interjections"],
-       ["Emotional interjections", "`[Surprise-wa]`, `[Surprise-yo]`, "
-        "`[Dissatisfaction-hnn]`", "surprise; dissatisfaction"]],
-      widths=[1.3, 2.6, 1.6])
-tcap(doc, "The non-verbal tag inventory documented by OpenBMB. Eleven tags in four groups.")
+      ["category", "tags", "effect"],
+      [["laughter and breath", "`[laughing]`, `[sigh]`", "audible laugh or exhalation"],
+       ["hesitation", "`[Uhm]`, `[Shh]`", "filled pause; a shushing sound"],
+       ["question particles",
+        "`[Question-ah]`, `[Question-ei]`, `[Question-en]`, `[Question-oh]`",
+        "interrogative interjections"],
+       ["emotional interjections",
+        "`[Surprise-wa]`, `[Surprise-yo]`, `[Dissatisfaction-hnn]`",
+        "surprise; dissatisfaction"]],
+      widths=[1.4, 2.7, 2.1])
+tcap(doc, "The inventory, from the VoxCPM2 cookbook. Twelve tags across four categories.")
 
 code(doc, NONVERBAL_USAGE)
 
-para(doc, "OpenBMB's own guidance is worth repeating exactly, because it is unusually specific: "
-          "use the tags sparingly, prefer the lowercase forms such as `[laughing]` over variants "
-          "like `[Laughter]`, and avoid stacking several into one sentence. The model card lists "
-          "instability on “very long or highly expressive inputs” among its limitations, which is "
-          "the same caution from the other direction.")
+md(doc, "OpenBMB's guidance is unusually specific and worth repeating: use them sparingly, "
+          "prefer the lowercase `[laughing]` over variants like `[Laughter]`, and do not stack "
+          "several into one sentence. The model card lists instability on “very long or highly "
+          "expressive inputs” among its limitations, which is the same caution from the other "
+          "side.")
 
-heading(doc, "12.1  Voice design: the same channel, used differently", 2)
+callout(doc, "All of this is documented for VoxCPM2 in general and none of it for Khmer", [
+    "**Do the tags fire in Khmer text at all?** They are English strings inside a Khmer sentence. "
+    "Khmer tokenises to UTF-8 byte tokens, roughly three per character; the tag does not. Whether "
+    "the model recognises the pattern in that context is empirical.",
+    "**Are they spoken instead of performed?** The failure to check for is the model pronouncing "
+    "“laughing” as a word — the same check section 3.2 ran on the prosodic tag, which passed.",
+    "**Does the prosodic adapter erode them?** It was trained on read speech containing no "
+    "laughter, and LoRA can erode capabilities absent from the fine-tuning distribution. Testable "
+    "against the same clip with the adapter disabled.",
+], accent=SIENNA, fill=SIENNA_SOFT)
 
-para(doc, "Distinct from the bracket tags, and easy to confuse with them, VoxCPM2 also accepts a "
-          "natural-language description in parentheses at the start of the text — "
-          "`(A young woman, gentle and sweet voice)` for voice design from nothing, or "
-          "`(slightly faster, cheerful tone)` layered on top of a reference clip for cloning with "
-          "style guidance.")
+rich(doc, [("Why this layer is tractable for Khmer when emotion is not. ", {"bold": True}),
+           ("Non-verbal vocalizations are largely language-independent in their acoustics — a "
+            "laugh is a laugh. That is also why detectors trained on English data can be pointed "
+            "at Khmer audio to manufacture labels, which is the whole basis of the plan in "
+            "section 5.", {})])
 
-para(doc, "This overlaps our layer 1 and is not a replacement for it. It is free-text, so it is "
-          "not enumerable, not reproducible across runs — the model card explicitly recommends "
-          "generating one to three times to get the output you want — and offers no way to sweep "
-          "an axis or verify that a request was honoured. Our tag trades expressiveness for "
-          "exactly those properties: 32 slot values, deterministic given a seed, and measurable. "
-          "The two can coexist in the same call, since one is a parenthetical prefix and the other "
-          "a bracketed header.")
+# =========================================================================
+heading(doc, "5.  Training plan: non-verbal vocalization by tag", 1, page_break=True)
 
-heading(doc, "12.2  What is not known, and the experiment that settles it", 2)
+para(doc, "The goal is not to add the capability — VoxCPM2 has it — but to make it fire reliably "
+          "on Khmer text, with Khmer-appropriate vocalization, and without damaging anything "
+          "else. Two published results bound the approach.")
 
-para(doc, "Everything above is documented for VoxCPM2 in general. None of it is documented for "
-          "Khmer, and this project has already been bitten once by assuming a control surface "
-          "transfers to a language it was not demonstrated on — document 10 records exactly that "
-          "caveat for Higgs TTS 3's control tokens, whose Khmer behaviour is untested because "
-          "Khmer is not among its documented languages.", space_after=10)
-
-table(doc,
-      ["Open question", "Why it is genuinely open"],
-      [["Do the tags fire in Khmer text at all?",
-        "The tags are English strings inside a Khmer sentence. Khmer tokenises to UTF-8 byte "
-        "tokens; the tag does not. Whether the model recognises the pattern in that context is "
-        "an empirical question."],
-       ["Are they read aloud instead?",
-        "The failure mode to check for is the model pronouncing “laughing” rather than "
-        "laughing — the same check run on the prosodic tag in section 4, which passed."],
-       ["Does the prosodic adapter damage them?",
-        "The adapter was trained on read speech containing no laughter, and LoRA adaptation can "
-        "erode capabilities absent from the fine-tuning distribution. This is testable against "
-        "the same clip generated with the adapter disabled."]],
-      widths=[1.9, 3.6])
-tcap(doc, "Three questions, none of which cost more than an afternoon to answer.")
-
-callout(doc, "The cheapest useful next experiment", [
-    "Synthesize a fixed set of Khmer sentences with and without each tag, three ways: base model, "
-    "adapter enabled, adapter disabled. Then measure rather than listen — duration delta (a real "
-    "laugh lengthens the clip), and the project's Khmer CTC ASR on the transcript, which will show "
-    "immediately whether “laughing” is being spoken as a word.",
-    "This reuses `verify_control.py`'s measurement layer and `score_cer.py` unchanged. It needs no "
-    "corpus, no labels and no training — which is what makes layer 2 the right next step rather "
-    "than layers 3 and 4, where the blocker is data that does not exist.",
+callout(doc, "The two reference recipes", [
+    "**ELaTE** (Kanda et al., 2024) fine-tunes a conditional-flow-matching zero-shot TTS — the "
+    "same decoder family as VoxCPM2's Local DiT — for laughter control, conditioning on "
+    "frame-level output from a laughter detector. Two results transfer directly: a *small* "
+    "laughter-conditioned set suffices, and mixing it with general data preserves base quality.",
+    "**NonverbalTTS** (Borisov et al., SSW 2025) builds a 17-hour corpus covering 10 non-verbal "
+    "types by automatic detection followed by human validation over VoxCeleb and Expresso, then "
+    "shows open TTS models fine-tuned on it reaching parity with closed systems. That is the "
+    "labelling pipeline to copy.",
 ])
 
+heading(doc, "5.1  Phase 0 — measure the base model", 2)
+
+para(doc, "No data, no training, and it may end the project. Synthesize a fixed set of Khmer "
+          "sentences three ways — base model, prosodic adapter enabled, adapter disabled — with "
+          "and without each tag. Every metric is automatic.")
+
+table(doc,
+      ["signal", "what it answers", "tool"],
+      [["duration delta", "did anything get inserted?",
+        "`verify_control.py`'s measurement layer"],
+       ["Khmer CTC ASR transcript", "is the tag being *spoken*?",
+        "`evaluation/score_cer_khmer.py`"],
+       ["laughter-detector probability", "is what was inserted actually a laugh?",
+        "`jrgillick/laughter-detection`"]],
+      widths=[1.6, 2.3, 2.3])
+tcap(doc, "The go/no-go. The third row is load-bearing, and it is the same instrument that "
+          "later produces training labels.")
+
+para(doc, "If the tags already fire on Khmer, no training is needed for those tags and the plan "
+          "reduces to whatever subset failed. This phase is the direct application of the lesson "
+          "in finding 1.1.")
+
+heading(doc, "5.2  Phase 1 — source audio", 2)
+
+para(doc, "Read-speech corpora contain no non-verbal events; the 11.73-hour prosody corpus has "
+          "none at all. The material has to be conversational — Khmer podcasts, interviews, "
+          "broadcast talk — and the pipeline follows NonverbalTTS: voice-activity detection, "
+          "diarization, ASR, non-verbal detection, then human validation of a sample.")
+
+rich(doc, [("Budget. ", {"bold": True}),
+           ("NonverbalTTS is 17 hours for 10 types across many speakers, and ELaTE shows a "
+            "single event type needs far less. Target ", {}),
+           ("500–1,000 validated events per tag", {"bold": True}),
+           (", starting with `[laughing]`, `[sigh]` and `[Uhm]`; the interjection tags are "
+            "lower value and can wait.", {})])
+
+heading(doc, "5.3  Phase 2 — detection and labelling", 2)
+
+bullet(doc, [("Laughter. ", {"bold": True}), ("Gillick et al.'s detector gives start and end "
+             "timestamps directly, and is the same tool used in phase 0.", {})])
+bullet(doc, [("Other events. ", {"bold": True}), ("A classifier trained on VocalSound — 21k "
+             "crowdsourced clips of laughter, sighs, coughs, sneezes, sniffs and throat-clearing "
+             "— or the corresponding AudioSet classes.", {})])
+bullet(doc, [("Alignment. ", {"bold": True}), ("Force-align the ASR transcript to get word "
+             "timings, then insert the tag string at the word boundary nearest the detected "
+             "event onset.", {})])
+bullet(doc, [("Validation. ", {"bold": True}), ("Listen to a sample. NonverbalTTS's precision "
+             "came from human validation over automatic detection, not from the detector "
+             "alone.", {})])
+
+para(doc, "Output rows look exactly like the existing prosody manifest, with the tag inline "
+          "rather than in a header:")
+
+code(doc, MANIFEST_NV)
+
+heading(doc, "5.4  Phase 3 — training", 2)
+
+para(doc, "The same harness as the prosodic run. Every difference follows from the layer being "
+          "local rather than global.")
+
+table(doc,
+      ["setting", "prosody run", "non-verbal run", "why"],
+      [["tag position", "header, before the text", "**inline, at the event**",
+        "the model must learn *when*, not only *whether*"],
+       ["`--onset-weight`", "8.0", "**1.0 (off)**",
+        "onset weighting exists to beat the prefix shortcut for global attributes; a local event "
+        "has no prefix competitor"],
+       ["`enable_proj`", "true", "true", "still the only text→DiT route"],
+       ["data mixing", "n/a", "**≈1:4 tagged to untagged**",
+        "ELaTE's finding; prevents unprompted laughter and preserves base quality"],
+       ["negative examples", "n/a", "**required**",
+        "clips with no tag and no event, so absence is trained too"]],
+      widths=[1.0, 1.15, 1.35, 2.7], size=8.3)
+tcap(doc, "The last two rows are the ones most likely to be skipped and most likely to cause the "
+          "characteristic failure: a model that laughs everywhere.")
+
+heading(doc, "5.5  Phase 3b — frame-level conditioning, only if timing is poor", 2)
+
+para(doc, "If the inline tag places the event but with unreliable timing, ELaTE's actual method "
+          "is the escalation: condition the DiT on a per-frame laughter-probability channel from "
+          "the detector rather than on a discrete text token. This is invasive — it adds an input "
+          "to the flow-matching head — and should not be attempted before the cheap version has "
+          "been measured.")
+
+heading(doc, "5.6  Phase 4 — evaluation", 2)
+
+table(doc,
+      ["axis", "metric", "pass condition"],
+      [["does the event occur", "detector fires on the output",
+        "precision and recall against the commanded tag"],
+       ["is it in the right place", "detector onset vs commanded position",
+        "within a stated tolerance"],
+       ["is the tag silent", "Khmer CTC ASR transcript", "no tag text in the transcript"],
+       ["no intelligibility regression", "CER on the frozen 100-sentence eval set",
+        "within noise of the base model's 2.47%"],
+       ["does it sound right", "`evaluation/listening_test.py`", "blind A/B against base"]],
+      widths=[1.6, 2.1, 2.5])
+tcap(doc, "Four objective checks and one subjective. The apparatus for all five already exists "
+          "in this repository.")
+
+rich(doc, [("The CER regression check is the one that must not be skipped. ", {"bold": True}),
+           ("`eval-set/eval.json` is held fixed across all four models in this project's "
+            "comparison precisely so that a change like this can be checked against it. A "
+            "non-verbal adapter that improves expressiveness while costing intelligibility is "
+            "not obviously a good trade, and the only way to know is to measure both.", {})])
+
 # =========================================================================
-heading(doc, "13.  What this settles, and what it does not", 1)
+heading(doc, "6.  Layers 3 to 6", 1, page_break=True)
 
-rich(doc, [('Settled, and the reason this report exists.', {"bold": True}), (' VoxCPM2 already has a prosodic control surface, it is documented only as a passing example in the model card, and on Khmer it moves pitch 106 Hz at rho +0.76. Nothing in this project needed to be built to get that. It was found by pointing an instrument that already existed at the base model, after the fine-tune had been designed, the corpus built, and one full run completed and diagnosed.', {})])
+heading(doc, "6.1  Affective — emotion", 2)
 
-rich(doc, [('Settled about the fine-tune.', {"bold": True}), (' VoxCPM2 can be given a control surface without touching its architecture, and it trains on 12 GB rather than the documented 20. The failure mode that makes the obvious construction quietly not work is identified, measured and fixed. That result is worth keeping because it transfers: any attribute a fine-tune adds through the text field faces it, including the layers still ahead.', {})])
+md(doc, "Measure the parenthetical channel first — *(a sad tone)*, *(an angry voice)*, "
+          "*(cheerful)* — since OpenBMB's own documented example is already an emotion prompt. "
+          "If it fails, the corpus problem is real: no Khmer emotion corpus exists, and the "
+          "English reference points are ESD and the emotion annotations in NonverbalTTS. The "
+          "closest method reference is *Laugh Now Cry Later*, which controls time-varying "
+          "emotional state on the same flow-matching zero-shot TTS family as ELaTE — the same "
+          "family as VoxCPM2.")
 
-rich(doc, [('Settled about method, and more durable than any of the numbers.', {"bold": True}), (' Three habits did more work than any single idea, and none is novel. Measuring what the base model already does before building anything, which is the lesson this report paid the most for. Measuring the label separation before training, because it bounds what the model can possibly learn. And taking a null result back to the training objective with a positive control, because generated-audio metrics cannot distinguish a signal that was never learned from one lost in sampling — that answered in two minutes a question a 6.5-hour run had left ambiguous.', {})])
+heading(doc, "6.2  Voice quality — whisper, breathy, creaky", 2)
 
-rich(doc, [('Not settled.', {"bold": True}), (' Naturalness. No automatic metric ranks Khmer TTS — this project has already established that MOS predictors are inverted for Khmer and that prosody statistics cannot tell well-placed pitch movement from badly-placed pitch movement. Whether prompted or styled output sounds better is a listening-test question, and the apparatus exists but has not been run with real listeners.', {})])
+para(doc, "Same measurement first. Whisper is the tractable case in the literature: wTIMIT "
+          "provides parallel normal and whispered recordings, and Amazon's voice-conversion "
+          "approach to whispered synthesis shipped in Alexa's Whisper Mode. No Khmer equivalent "
+          "exists, so a positive result from the prompt channel is the only cheap path.")
 
-rich(doc, [('Not settled, and next.', {"bold": True}), (' Layer 2 — the non-verbal tags in section 12 — has not been measured on Khmer at all, and it is the cheapest thing left: the tags ship with the model, they are local events rather than global attributes, and the experiment in section 12.2 is an afternoon. Section 2 is the argument for doing that before anything is trained.', {})])
+heading(doc, "6.3  Discourse — emphasis and contrastive focus", 2)
 
-rich(doc, [('Out of reach with this data.', {"bold": True}), (' Layers 3 and 4 — emotion, and voice qualities such as whispering — if they turn out not to be reachable through the prompt either. Those need expressive Khmer recordings, and no such corpus exists. The mechanism in section 4 would carry them, but section 8 is the correction to the obvious next thought: the mechanism alone is not enough. Both are global attributes, so an emotion tag would face exactly the same competition against the acoustic prefix that the speaker tag lost, and would need the same onset weighting. Laughter specifically is NOT in this category — as a local event it belongs to layer 2, which ships with the model and needs no corpus at all.', {})])
+md(doc, "This layer needs a syntax that does not exist yet. A header tag cannot say which word "
+          "to emphasise; that requires span marking in the text, or a parallel per-token flag. "
+          "The strongest reference avoids the problem entirely: *Controllable Emphasis with zero "
+          "data* increases the predicted duration of the target word rather than training an "
+          "emphasis label at all, improving correct identification of the emphasised word by "
+          "40% across four languages with no recordings and no annotations.")
+
+rich(doc, [("Why that does not port directly. ", {"bold": True}),
+           ("It is a decoder-side intervention on an explicit per-word duration predictor. "
+            "VoxCPM2's patch-level diffusion decoder has no such component to reach into, so "
+            "this layer is genuinely undesigned rather than merely unbuilt.", {})])
+
+heading(doc, "6.4  Timing — pauses and phrase breaks", 2)
+
+para(doc, "Currently implicit in punctuation. No work done, and no measurement run.")
 
 # =========================================================================
-heading(doc, "14.  References", 1)
+heading(doc, "7.  What is standard here, and what is not", 1)
 
-for txt in [
+para(doc, "Worth stating plainly, because a method document that does not separate borrowed "
+          "ideas from local inventions is hard to trust and harder to build on.")
+
+rich(doc, [("Standard, and deliberately so. ", {"bold": True}),
+           ("Text-side style descriptions as conditioning — the PromptTTS, InstructTTS and "
+            "Parler-TTS line. Manufacturing labels by measurement rather than annotation, "
+            "including two details arrived at independently here and then found to agree with "
+            "`dataspeech`: dropping the extremes when computing bin edges, and judging pitch "
+            "relative to comparable speakers rather than the whole corpus. LoRA with float32 "
+            "adapters over frozen bfloat16 weights. Condition dropout for classifier-free "
+            "guidance, already present in VoxCPM2 as `training_cfg_rate`.", {})])
+
+rich(doc, [("A known problem, met in an unexpected place. ", {"bold": True}),
+           ("Finding 1.2 is the information-preference and posterior-collapse failure of "
+            "conditional autoregressive models — Chen et al.'s Variational Lossy Autoencoder and "
+            "Bowman et al.'s continuous-space sentence VAE — combined with the teacher-forcing "
+            "mismatch of Bengio et al.'s scheduled sampling. It is not documented for this class "
+            "of TTS system, and recognising it took longer than it should have because the "
+            "measurement came before the reading.", {})])
+
+rich(doc, [("Local to this repository, with no citation behind it. ", {"bold": True}),
+           ("`enable_proj: true` is an architectural fact about VoxCPM2 — four projection layers "
+            "are the only route from the language model into the acoustic generator — not a "
+            "general principle; document 9's advice to freeze them is correct for the case it "
+            "was written for. The onset-weighted loss is mine, and section 3.7 says what the "
+            "more principled comparison would be.", {})])
+
+# =========================================================================
+heading(doc, "8.  What this settles, and what it does not", 1)
+
+rich(doc, [('Settled, and the most useful thing here.', {"bold": True}),
+           (' VoxCPM2 already has a prosodic control surface, documented only as a passing '
+            'example in the model card, and on Khmer it moves pitch 106 Hz at rho +0.76. Nothing '
+            'had to be built to get that. Measuring the base model costs about twenty minutes '
+            'per layer, and sections 5.1 and 6 are that lesson applied forward.', {})])
+
+rich(doc, [('Settled about the fine-tune.', {"bold": True}),
+           (' VoxCPM2 can be given a control surface without touching its architecture, and it '
+            'trains on 12 GB rather than the documented 20. The failure mode that makes the '
+            'obvious construction quietly not work is identified, measured and fixed — and that '
+            'result transfers, because any attribute a fine-tune adds through the text field '
+            'faces it.', {})])
+
+rich(doc, [('Settled about method.', {"bold": True}),
+           (' Measure what the base model already does before building anything. Measure the '
+            'label separation before training, because it bounds what the model can possibly '
+            'learn. And take a null result back to the training objective with a positive '
+            'control, because generated-audio metrics cannot distinguish a signal that was never '
+            'learned from one lost in sampling.', {})])
+
+rich(doc, [('Not settled.', {"bold": True}),
+           (' Naturalness. No automatic metric ranks Khmer TTS — this project has already '
+            'established that MOS predictors are inverted for Khmer and that prosody statistics '
+            'cannot tell well-placed pitch movement from badly-placed pitch movement. Whether '
+            'prompted or styled output sounds better is a listening-test question, and the '
+            'apparatus exists but has not been run with real listeners.', {})])
+
+rich(doc, [('Next.', {"bold": True}),
+           (' Section 5.1. It is an afternoon, it needs no corpus and no GPU time beyond '
+            'inference, and it decides whether section 5 is a project or a paragraph.', {})])
+
+# =========================================================================
+heading(doc, "9.  References", 1, page_break=True)
+
+def refs(title, items):
+    heading(doc, title, 3)
+    for txt in items:
+        p = doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(5)
+        p.paragraph_format.left_indent = Inches(0.18)
+        p.paragraph_format.first_line_indent = Inches(-0.18)
+        p.paragraph_format.line_spacing = 1.12
+        for i, seg in enumerate(txt.split("*")):
+            if seg:
+                set_font(p.add_run(seg), BODY_FONT, 9.2, False, i % 2 == 1, INK)
+
+refs("Prompt- and description-based control (layer 1, and layers 3–4 by extension)", [
+    "Guo, Z. et al. (2023). *PromptTTS: Controllable text-to-speech with text descriptions.* "
+    "ICASSP. arXiv:2211.12171.",
+    "Leng, Y. et al. (2024). *PromptTTS 2: Describing and generating voices with text prompt.* "
+    "ICLR. arXiv:2309.02285 — a diffusion variation network for the one-to-many problem.",
+    "Yang, D. et al. (2023). *InstructTTS: Modelling expressive TTS in discrete latent space with "
+    "natural language style prompt.* arXiv:2301.13662.",
     "Lyth, D. & King, S. (2024). *Natural language guidance of high-fidelity text-to-speech with "
     "synthetic annotations.* arXiv:2402.01912 — Parler-TTS; measured attributes as text "
-    "conditioning, and the `dataspeech` binning pipeline.",
-    "Chen, X. et al. (2017). *Variational Lossy Autoencoder.* ICLR 2017, arXiv:1611.02731 — why "
-    "an expressive autoregressive decoder ignores its conditioning, and what removing the "
-    "shortcut looks like.",
-    "Bowman, S. R. et al. (2016). *Generating Sentences from a Continuous Space.* arXiv:1511.06349 "
-    "— the same collapse in text VAEs; word dropout as the cure.",
-    "Bengio, S. et al. (2015). *Scheduled Sampling for Sequence Prediction with Recurrent Neural "
-    "Networks.* arXiv:1506.03099 — teacher forcing and the train/inference mismatch.",
-    "Hu, E. J. et al. (2021). *LoRA: Low-Rank Adaptation of Large Language Models.* "
-    "arXiv:2106.09685.",
-    "Ho, J. & Salimans, T. (2022). *Classifier-Free Diffusion Guidance.* arXiv:2207.12598 — the "
-    "condition dropout VoxCPM2 implements as `training_cfg_rate`.",
-    "OpenBMB. *A Voice Chef's Guide to VoxCPM2* (cookbook), "
-    "voxcpm.readthedocs.io/en/latest/cookbook.html — the non-verbal tag inventory in section 11, "
-    "and the guidance to use them sparingly and prefer the lowercase forms.",
-    "OpenBMB. *VoxCPM2 model card*, huggingface.co/openbmb/VoxCPM2 — parenthetical voice design "
-    "and style-guided cloning, and the stated limitation that results vary between runs.",
-]:
-    # split on the italic markers so paper titles render as italics, not asterisks
-    bullet(doc, [(seg, {"italic": i % 2 == 1}) for i, seg in enumerate(txt.split("*")) if seg])
+    "conditioning, and the dataspeech measure-and-bin pipeline.",
+    "Ji, S. et al. (2024). *TextrolSpeech: A text style control speech corpus with codec language "
+    "text-to-speech models.* ICASSP. arXiv:2308.14430.",
+])
 
-para(doc, "", space_after=4)
-para(doc, "Internal: docs/09 (VoxCPM2 architecture and training), docs/10 (Higgs TTS 3), docs/11 "
-          "(the full engineering write-up), finetune/README.md (runbook), and "
-          "finetune/results/diagnosis.md (the complete measurement record).",
-     size=9.5, color=STONE)
+refs("Non-verbal vocalization (layer 2)", [
+    "Kanda, N. et al. (2024). *Making flow-matching-based zero-shot text-to-speech laugh as you "
+    "like.* arXiv:2402.07383 — ELaTE. The closest method reference: same conditional "
+    "flow-matching decoder family as VoxCPM2, frame-level detector conditioning, and the "
+    "small-data-plus-mixing result.",
+    "Borisov, M. et al. (2025). *NonverbalTTS: A public English corpus of text-aligned nonverbal "
+    "vocalizations with emotion annotations for text-to-speech.* SSW. arXiv:2507.13155 — 17 h, "
+    "10 non-verbal types; the automatic-detection-plus-human-validation pipeline copied in "
+    "section 5.3. Dataset: huggingface.co/datasets/deepvk/NonverbalTTS.",
+    "Gillick, J., Deng, W., Ryokai, K. & Bamman, D. (2021). *Robust laughter detection in noisy "
+    "environments.* Interspeech — the detector used in phases 0 and 2. "
+    "Code: github.com/jrgillick/laughter-detection.",
+    "Gong, Y., Yu, J. & Glass, J. (2022). *VocalSound: A dataset for improving human vocal sounds "
+    "recognition.* ICASSP. arXiv:2205.03433 — 21k clips across six non-verbal classes.",
+])
+
+refs("Affective and voice quality (layers 3–4)", [
+    "Kanda, N. et al. (2024). *Laugh now cry later: Controlling time-varying emotional states of "
+    "flow-matching-based zero-shot text-to-speech.* arXiv:2407.12229.",
+    "Zhou, K. et al. (2022). *Emotional voice conversion: Theory, databases and ESD.* Speech "
+    "Communication — the reference emotional speech dataset.",
+    "Amazon (2019). *Voice conversion for whispered speech synthesis.* arXiv:1912.05289 — wTIMIT, "
+    "and the method behind Alexa's Whisper Mode.",
+])
+
+refs("Emphasis (layer 5)", [
+    "Amazon (2023). *Controllable emphasis with zero data for text-to-speech.* arXiv:2307.07062 — "
+    "lengthen the target word's predicted duration; +40% correct identification of the emphasised "
+    "word, across four languages, with no recordings and no annotations.",
+])
+
+refs("Conditioning failure and training method", [
+    "Chen, X. et al. (2017). *Variational Lossy Autoencoder.* ICLR. arXiv:1611.02731 — why an "
+    "expressive autoregressive decoder ignores its conditioning, and what taking the shortcut "
+    "away looks like.",
+    "Bowman, S. et al. (2016). *Generating sentences from a continuous space.* CoNLL. "
+    "arXiv:1511.06349 — the same collapse in text VAEs; word dropout as the cure.",
+    "Bengio, S. et al. (2015). *Scheduled sampling for sequence prediction with recurrent neural "
+    "networks.* NeurIPS. arXiv:1506.03099 — teacher forcing and the train/inference mismatch.",
+    "Hu, E. et al. (2021). *LoRA: Low-rank adaptation of large language models.* arXiv:2106.09685.",
+    "Ho, J. & Salimans, T. (2022). *Classifier-free diffusion guidance.* arXiv:2207.12598 — the "
+    "condition dropout VoxCPM2 implements as training_cfg_rate.",
+])
+
+refs("VoxCPM2 sources and companion documents", [
+    "OpenBMB. *VoxCPM2 model card*, huggingface.co/openbmb/VoxCPM2 — parenthetical voice design "
+    "and style-guided cloning, and the stated variability between runs.",
+    "OpenBMB. *VoxCPM documentation* — fine-tuning guide, FAQ, and the cookbook that lists the "
+    "non-verbal tag inventory in section 4.",
+    "Source: voxcpm/training/packers.py (the zero text loss-mask) and voxcpm/model/voxcpm2.py "
+    "(from_local, and the float32-in-training line behind the VRAM gap).",
+    "This project: docs/09 — VoxCPM2 architecture and training; docs/10 — Higgs TTS 3; "
+    "docs/11 — the markdown companion to this report; finetune/README.md — the runbook.",
+])
 
 doc.save(OUT)
 print(f"wrote {OUT}")

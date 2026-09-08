@@ -103,6 +103,45 @@ def set_font(run, name=BODY_FONT, size=None, bold=None, italic=None, color=None)
     return run
 
 
+def inline(p, text, size=10.5, color=INK, bold_all=False, italic_all=False):
+    """Render **bold**, *italic* and `code` markers into runs on paragraph `p`.
+
+    One tokenizer shared by para-level md(), table cells and callouts, so a
+    marker means the same thing everywhere. Splitting is ordered bold -> code ->
+    italic; a lone `*` in prose (a glob, a footnote mark) would be mis-read, so
+    write those as literal text through a chunk list instead.
+    """
+    for i, seg in enumerate(str(text).split("**")):
+        if not seg:
+            continue
+        bold = bold_all or i % 2 == 1
+        for j, piece in enumerate(seg.split("`")):
+            if not piece:
+                continue
+            if j % 2 == 1:
+                set_font(p.add_run(piece), MONO_FONT, size - 0.6, bold, italic_all, color)
+                continue
+            for k, bit in enumerate(piece.split("*")):
+                if bit:
+                    set_font(p.add_run(bit), BODY_FONT, size, bold,
+                             italic_all or k % 2 == 1, color)
+
+
+def md(doc, text, size=10.5, space_after=6, space_before=0, indent=None, align=None):
+    """A body paragraph that understands **bold**, *italic* and `code`."""
+    p = doc.add_paragraph()
+    pf = p.paragraph_format
+    pf.space_after = Pt(space_after)
+    pf.space_before = Pt(space_before)
+    pf.line_spacing = 1.28
+    if indent is not None:
+        pf.left_indent = Inches(indent)
+    if align is not None:
+        p.alignment = align
+    inline(p, text, size)
+    return p
+
+
 def para(doc, text="", size=10.5, style=None, space_after=6, space_before=0,
          color=INK, bold=False, italic=False, align=None, font=BODY_FONT, indent=None):
     p = doc.add_paragraph(style=style)
@@ -130,9 +169,14 @@ def rich(doc, chunks, size=10.5, space_after=6, indent=None, align=None):
     if align is not None:
         p.alignment = align
     for text, opts in chunks:
-        set_font(p.add_run(text),
-                 opts.get("font", BODY_FONT), opts.get("size", size),
-                 opts.get("bold"), opts.get("italic"), opts.get("color", INK))
+        font, sz = opts.get("font", BODY_FONT), opts.get("size", size)
+        bold, ital, col = opts.get("bold"), opts.get("italic"), opts.get("color", INK)
+        # `code` spans inside a chunk keep the chunk's bold/italic, swap the font
+        for j, piece in enumerate(str(text).split("`")):
+            if piece:
+                mono = j % 2 == 1
+                set_font(p.add_run(piece), MONO_FONT if mono else font,
+                         sz - 0.6 if mono else sz, bold, ital, col)
     return p
 
 
@@ -166,8 +210,13 @@ def bullet(doc, chunks, indent=0.25, size=10.5):
     pf.space_after = Pt(3)
     pf.line_spacing = 1.15
     for text, opts in chunks:
-        set_font(p.add_run(text), opts.get("font", BODY_FONT), opts.get("size", size),
-                 opts.get("bold"), opts.get("italic"), opts.get("color", INK))
+        font, sz = opts.get("font", BODY_FONT), opts.get("size", size)
+        bold, ital, col = opts.get("bold"), opts.get("italic"), opts.get("color", INK)
+        for j, piece in enumerate(str(text).split("`")):
+            if piece:
+                mono = j % 2 == 1
+                set_font(p.add_run(piece), MONO_FONT if mono else font,
+                         sz - 0.6 if mono else sz, bold, ital, col)
     return p
 
 
@@ -186,17 +235,7 @@ def table(doc, headers, rows, widths=None, size=8.8, header_fill=TEAL,
         p.paragraph_format.line_spacing = 1.06
         if right:
             p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        # inline **bold** and `code` markers
-        for i, seg in enumerate(str(text).split("**")):
-            if not seg:
-                continue
-            is_bold = bold or i % 2 == 1
-            for j, piece in enumerate(seg.split("`")):
-                if not piece:
-                    continue
-                mono = j % 2 == 1
-                set_font(p.add_run(piece), MONO_FONT if mono else BODY_FONT,
-                         sz - 0.6 if mono else sz, is_bold, False, color)
+        inline(p, text, sz, color, bold_all=bold)
         if fill:
             shade(cell._tc, fill)
         cell_borders(cell, OAT, 4)
@@ -221,7 +260,13 @@ def table(doc, headers, rows, widths=None, size=8.8, header_fill=TEAL,
 
 
 def caption(doc, text):
-    para(doc, text, size=8.5, color=STONE, italic=True, space_after=12, space_before=0)
+    p = doc.add_paragraph()
+    pf = p.paragraph_format
+    pf.space_after = Pt(12)
+    pf.space_before = Pt(0)
+    pf.line_spacing = 1.28
+    inline(p, text, 8.5, STONE, italic_all=True)
+    return p
 
 
 def callout(doc, title, body, accent=TEAL, fill=TEAL_SOFT):
@@ -243,9 +288,7 @@ def callout(doc, title, body, accent=TEAL, fill=TEAL_SOFT):
         q.paragraph_format.space_after = Pt(5)
         q.paragraph_format.left_indent = Inches(0.1)
         q.paragraph_format.line_spacing = 1.15
-        for i, seg in enumerate(line.split("**")):
-            if seg:
-                set_font(q.add_run(seg), BODY_FONT, 9.5, i % 2 == 1, False, INK)
+        inline(q, line, 9.5)
     doc.add_paragraph().paragraph_format.space_after = Pt(4)
     return t
 
