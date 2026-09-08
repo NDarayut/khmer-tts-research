@@ -61,7 +61,7 @@ def _load(path):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
 
-# Numbers for sections 6.6-6.7 and Table 5 are read from the harness output
+# Numbers for sections 6.6-6.7 and Table 9 are read from the harness output
 # rather than retyped, so the document cannot drift from the run it describes.
 # Regenerate those first (see evaluation/README.md), then rebuild this file.
 CER_KM = {m: _load(RESULTS / m / "cer_khmer_asr.json") for m in MODELS}
@@ -235,10 +235,17 @@ def table(doc, headers, rows, widths=None, size=8.8, header_fill=TEAL,
         p.paragraph_format.line_spacing = 1.06
         if right:
             p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-        # inline **bold** markers
+        # inline **bold** and `code` markers
         for i, seg in enumerate(str(text).split("**")):
-            if seg:
-                set_font(p.add_run(seg), BODY_FONT, sz, bold or i % 2 == 1, False, color)
+            if not seg:
+                continue
+            is_bold = bold or i % 2 == 1
+            for j, piece in enumerate(seg.split("`")):
+                if not piece:
+                    continue
+                mono = j % 2 == 1
+                set_font(p.add_run(piece), MONO_FONT if mono else BODY_FONT,
+                         sz - 0.6 if mono else sz, is_bold, False, color)
         if fill:
             shade(cell._tc, fill)
         cell_borders(cell, OAT, 4)
@@ -867,7 +874,7 @@ padded with BOC = 1024 before its span and EOC = 1025 after
 """, size=8.0)
 para(doc, "At generation time a small state machine ramps the delay up, watches for EOC, and winds "
           "down; the rows are then de-delayed and handed to the codec. Any training code must apply "
-          "exactly this transform to its targets — see §4.4.")
+          "exactly this transform to its targets — see §4.7.")
 
 heading(doc, "Prompt format", 3)
 code(doc, """
@@ -902,7 +909,163 @@ para(doc, "Whether these transfer to Khmer is untested. They were trained on the
           "rather than an English-shaped one. This is cheap to check by hand and worth checking "
           "before relying on it.")
 
-heading(doc, "4.3  The training situation", 2)
+heading(doc, "4.3  The numbers that govern deployment", 2)
+
+para(doc, "VoxCPM2's equivalent table (§3.2) governs training, because training is supported. The "
+          "figures below govern inference and any trainer written against the model, and every one "
+          "is read from the shipped config.json or the remote-code module rather than from "
+          "documentation.")
+
+table(doc,
+      ["Property", "Value", "Why it matters"],
+      [["num_codebooks", "8", "Eight tokens per frame. A 10 s clip is 250 frames — 2,000 audio tokens."],
+       ["Codebook vocab", "1026", "1024 codes + BOC (1024) + EOC (1025)."],
+       ["Frame rate", "25 fps", "One row per 40 ms; the DAC branch uses hop 960 at 24 kHz."],
+       ["mel_per_sample", "8", "Mel frames consumed per codec sample in the tokenizer front end."],
+       ["out_dim", "2560", "Fused audio embedding width — identical to the backbone hidden size, "
+        "which is what lets audio and text share one residual stream."],
+       ["use_delay_pattern", "**true**", "`[T, 8]` → `[T+7, 8]`. **Any trainer must apply the same "
+        "transform to its targets** — see §4.7."],
+       ["audio_token_id", "**−100**", "Placeholder in the text stream, overwritten by the fused audio "
+        "embedding in `_prefill_embeds()`. See the warning below."],
+       ["tie_word_embeddings", "true", "The audio head is tied (`_tied_weights_keys = "
+        "[\"audio_head.weight\"]`); adapting it is a deliberate decision, not a free one."],
+       ["max_position_embeddings", "32,768", "Context ceiling; the training sequence length is 8,192."],
+       ["rope_theta", "1e6", "Long-context RoPE base, inherited from Qwen3."],
+       ["dtype", "bfloat16", "The checkpoint is ~9.4 GB on disk; the codec loads separately in fp32."],
+       ["sample_rate", "24,000", "Output rate. Reference audio at any rate is resampled to it "
+        "internally, so no caller-side resampling is needed."],
+       ["max_new_tokens", "2048 (default)", "Frames, not seconds — a ceiling of about 81 s per call."]],
+      widths=[1.4, 0.8, 2.5], header_fill=VIOLET)
+caption(doc, "Table 3 — Higgs TTS 3 deployment constants, read from config.json and "
+             "modeling_higgs_multimodal_qwen3.py in the checkpoint.")
+
+callout(doc, "A trap worth knowing before you write a training loop", [
+    "`audio_token_id` is **−100**, and `ignore_index` is also **−100**. The placeholder that marks "
+    "an audio position in the text stream is byte-identical to the value PyTorch's cross-entropy "
+    "uses to mean “skip this position”. Build a labels tensor naively and every audio position is "
+    "silently masked out; the loss falls, and the model learns nothing about audio. Nothing errors.",
+], accent=SIENNA, fill=SIENNA_SOFT)
+
+heading(doc, "4.4  Where Khmer actually stands", 2)
+
+para(doc, "Boson publish no Khmer number, so unlike VoxCPM2 there is no vendor claim to check. What "
+          "follows is measured here, over the same fixed 100-sentence set both models were given, "
+          "scored by the same Khmer ASR and the same ASR-free diagnostics described in §6.")
+
+table(doc,
+      ["Measure", "VoxCPM2", "Higgs TTS 3", "Reading"],
+      [["Median CER", pct(cer_med("voxcpm2")), pct(cer_med("higgs3")),
+        "Both intelligible. Higgs is behind, but well inside usable."],
+       ["Mean CER", pct(cer_mean("voxcpm2")), pct(cer_mean("higgs3")), "Tail-sensitive."],
+       ["p90 CER", "11.11%", "20.59%", "One clip in ten degrades noticeably."],
+       ["pure_khmer median", "1.90%", "8.90%", "Higgs's **weaker** half."],
+       ["code_switched median", "3.19%", "7.13%", "Higgs's **stronger** half — the inversion is the "
+        "point; see below."],
+       ["Worst category (numbers/dates)", "11.1%", "23.0%", "Numerals are the sharpest failure for "
+        "both, and much sharper for Higgs."],
+       ["Median RTF", num(1.3822, 3), "**" + num(0.7446, 3) + "**",
+        "**Higgs is the faster model** — 1.9× — and the only one of the two that runs "
+        "faster than real time on a 12 GB RTX 3060."],
+       ["Median duration", "5.20 s", "7.56 s", "Higgs speaks slower: 11.4 vs 16.0 Khmer chars/s."],
+       ["Median RMS", "−15.6 dBFS", "−24.5 dBFS", "A 9 dB level gap. It confounds every perceptual "
+        "metric until normalised — §6.7."],
+       ["Median F0", "about 206 Hz", "about 114 Hz", "Different default voices, roughly an octave "
+        "apart. A voice confound, not a quality difference — §6.7."],
+       ["Suspected truncations", "0 / 100", "0 / 100", "Neither model drops text the way fish-s2 did."]],
+      widths=[1.35, 0.75, 0.8, 1.8], header_fill=VIOLET)
+caption(doc, "Table 4 — Higgs TTS 3's Khmer, measured. CER from the project's own Khmer CTC ASR; "
+             "duration, level and F0 from the ASR-free diagnostics.")
+
+para(doc, "The row that says the most is the pure-Khmer / code-switched inversion. VoxCPM2 does "
+          "better on pure Khmer than on code-switched text, which is what a model with documented "
+          "Khmer support should do. Higgs does the opposite — it handles Khmer sentences containing "
+          "English better than Khmer sentences alone. That is exactly the signature of a model whose "
+          "Latin-script ability is trained and documented and whose Khmer is emergent: the English "
+          "spans are carrying part of the utterance.")
+
+callout(doc, "Read the gap as an upper bound, not a measurement", [
+    "The scoring ASR trained on roughly 47 hours of VoxCPM2-synthesized Khmer and zero Higgs TTS 3, "
+    "so acoustic domain familiarity favours VoxCPM2 by an unknown amount. The direction of the "
+    "result survives that (a probe across sentence categories contradicted the bias's own "
+    "prediction — §6.6), but **the size of the gap does not**. Higgs's true Khmer CER is somewhere "
+    "at or below the figure in the table.",
+], accent=VIOLET, fill=VIOLET_SOFT)
+
+heading(doc, "4.5  Running it", 2)
+
+para(doc, "This is the section that has no VoxCPM2 asymmetry in the other direction: inference is "
+          "the part of Higgs TTS 3 that is fully supported, documented in code, and stable. One "
+          "method does everything.")
+
+code(doc, """
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+MODEL = "multimodalart/higgs-audio-v3-tts-4b-transformers"
+
+tokenizer = AutoTokenizer.from_pretrained(MODEL)
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL, trust_remote_code=True, dtype=torch.bfloat16,
+).to("cuda").eval()
+
+# default voice
+wav = model.generate_speech("<Khmer text>", tokenizer)          # [L] float32, 24 kHz
+
+# zero-shot voice cloning
+wav = model.generate_speech(
+    "<Khmer text>", tokenizer,
+    reference_audio=ref_waveform,        # [L] or [C, L]
+    reference_sample_rate=16000,         # resampled to 24 kHz internally
+    reference_text="<transcript of the reference clip>",
+)
+""", size=7.8)
+
+para(doc, "The official bosonai/higgs-tts-3-4b repository cannot be loaded directly: its "
+          "architecture, higgs_multimodal_qwen3, is not in transformers, and the repo ships no "
+          "remote code. The multimodalart repackaging above is the same weights with a "
+          "modeling/configuration pair and an auto_map added. It needs transformers ≥ 5.5.")
+
+table(doc,
+      ["Parameter", "Default", "Effect"],
+      [["text", "**required**", "Raw Khmer. No phonemiser, no segmentation, no language tag."],
+       ["tokenizer", "**required**", "Must carry the Higgs special tokens — `_special_ids()` raises "
+        "if any are missing. Load it from the same repo as the weights."],
+       ["reference_audio", "None", "`[L]` or `[C, L]`. Resampled to 24 kHz and zero-padded up to 1 s "
+        "before encoding, so a reference shorter than a second is padded silence."],
+       ["reference_sample_rate", "None", "Required alongside reference_audio."],
+       ["reference_codes", "None", "Pre-encoded `[T, 8]` codes. Skips the codec encode — use it to "
+        "hold one voice fixed across many calls."],
+       ["reference_text", "None", "Transcript of the reference clip, emitted after `<|ref_text|>`. "
+        "The docstring states it improves cloning."],
+       ["max_new_tokens", "2048", "Frames at 25 fps — about 81 s. Long text needs splitting."],
+       ["temperature", "1.0", "**Sampling is on by default.** At ≤ 1e-5 the sampler switches to "
+        "argmax, giving deterministic output."],
+       ["top_p", "None", "Disabled by default."],
+       ["top_k", "None", "Disabled by default."]],
+      widths=[1.15, 0.65, 2.9], header_fill=VIOLET)
+caption(doc, "Table 5 — the full generate_speech() surface. There is no second entry point; "
+             "everything the model does is reachable from these ten arguments plus the inline "
+             "control tokens of §4.2.")
+
+heading(doc, "What it costs to run", 3)
+bullet(doc, [("Weights. ", {"bold": True}),
+             ("~9.4 GB in bfloat16, plus the higgs-audio-v2-tokenizer codec, which is a separate "
+              "download fetched on first use and held in fp32.", {})])
+bullet(doc, [("Hardware. ", {"bold": True}),
+             ("It ran the full 100-sentence set on a 12 GB RTX 3060 with zero failures — the same "
+              "card that is below VoxCPM2's LoRA training minimum. Inference is comfortable; "
+              "training is the expensive part, and there is no training.", {})])
+bullet(doc, [("Speed. ", {"bold": True}),
+             ("Median RTF 0.745 against VoxCPM2's 1.382 on identical hardware and text. Higgs is "
+              "the only one of the two contenders that synthesizes faster than real time here, "
+              "which matters for anything interactive.", {})])
+bullet(doc, [("Determinism. ", {"bold": True}),
+             ("With temperature 1.0 and no top-p or top-k, repeated calls on the same text differ. "
+              "The evaluation harness reseeds torch per utterance from (seed, sentence) so a "
+              "resumed run reproduces a full one; production code needs the same discipline, or "
+              "temperature at zero.", {})])
+
+heading(doc, "4.6  The training situation", 2)
 
 para(doc, "Boson ship no training or fine-tuning code for Higgs TTS 3. This was verified rather than "
           "inferred:")
@@ -928,7 +1091,7 @@ para(doc, "The nearest prior art is the community LoRA trainer JimmyMa99/train-h
           "with a fused multi-codebook embedding and head), so that code is a useful reference for "
           "the data pipeline, not a drop-in.", space_after=10)
 
-heading(doc, "4.4  What writing a trainer would involve", 2)
+heading(doc, "4.7  What writing a trainer would involve", 2)
 para(doc, "This is tractable — it is a standard codec-LM training loop, and the architecture is fully "
           "legible from the shipped remote code — but it is real engineering, not configuration.")
 
@@ -954,6 +1117,54 @@ table(doc,
 para(doc, "Data requirements would resemble VoxCPM2's — paired 16 kHz-or-better audio with accurate "
           "Khmer transcripts, silence-trimmed, 3–30 s clips — and the same corpus scarcity applies. "
           "See §5.")
+
+heading(doc, "4.8  Failure modes", 2)
+
+para(doc, "VoxCPM2's failure table (§3.6) is a training table, because training is what you do with "
+          "VoxCPM2. Higgs TTS 3's is a deployment table. Every row below was either hit during the "
+          "evaluation run or is enforced explicitly in the shipped code.")
+
+table(doc,
+      ["Symptom", "Cause", "Fix"],
+      [["`ValueError: Tokenizer is missing Higgs TTS specials`",
+        "The tokenizer came from somewhere other than the weights repo",
+        "Load tokenizer and model from the same repo id. `_special_ids()` checks this on every call "
+        "and refuses to guess."],
+       ["Architecture unrecognised at load time",
+        "`higgs_multimodal_qwen3` is not in transformers, and bosonai/higgs-tts-3-4b ships no remote "
+        "code",
+        "Use the multimodalart repackaging with `trust_remote_code=True`, transformers ≥ 5.5."],
+       ["Output stops mid-sentence, or runs to the token cap",
+        "**2048 frames ≈ 81 s** — long input hits the ceiling before the EOC state machine fires",
+        "Split the text at sentence boundaries, or raise max_new_tokens and pay the latency."],
+       ["The same text gives different audio each run",
+        "temperature 1.0 with no top-p or top-k — sampling is on by default",
+        "Seed per utterance, or set temperature ≈ 0 for greedy decoding."],
+       ["Cloned voice does not resemble the reference",
+        "Reference under 1 s (silently zero-padded), or reference_text omitted",
+        "Give a clean 3–10 s reference **and** its transcript."],
+       ["Sounds quiet next to other TTS output",
+        "**Measured median RMS −24.5 dBFS — about 9 dB below VoxCPM2**",
+        "Loudness-normalise (ITU-R BS.1770) downstream. Never compare perceptual metrics across the "
+        "two models without doing this first."],
+       ["Numerals and dates mis-spoken",
+        "Worst measured category: **23.0% median CER**, roughly triple its own overall median",
+        "Expand numerals to Khmer words in the text layer before synthesis. Cheap, and it removes "
+        "the model's sharpest weakness."],
+       ["Emotion or style tag gives English-shaped prosody",
+        "The control tokens were trained on the documented languages; Khmer is unlisted",
+        "Verify each tag by ear in Khmer before shipping it. Untested — see §4.2."],
+       ["Khmer regresses after a model update",
+        "**Khmer is an emergent capability under no vendor commitment**",
+        "Pin the checkpoint revision. There is no upgrade path that can be assumed safe."]],
+      widths=[1.55, 1.55, 2.1], header_fill=VIOLET)
+caption(doc, "Table 6 — Higgs TTS 3 failure modes. The last row is not a bug; it is the structural "
+             "consequence of §4.1.")
+
+para(doc, "The asymmetry between this table and §3.6 is the whole shape of the choice. VoxCPM2's "
+          "failures are the failures of a model you are training — overfitting, bad manifests, "
+          "out-of-memory — and every one of them has a lever you control. Higgs TTS 3's failures "
+          "are the failures of a model you are consuming, and the last one has no lever at all.")
 
 # =========================================================================
 heading(doc, "5.  Data requirements for Khmer", 1, page_break=True)
@@ -1100,7 +1311,7 @@ table(doc,
         "**Not benchmarked — Khmer is not on either language list**"],
        ["Speed", "RTF ~0.30 on RTX 4090; ~0.13 with Nano-vLLM", "Optimised for SGLang-Omni serving"]],
       widths=[1.2, 1.8, 1.8])
-caption(doc, "Table 3 — vendor-reported figures. Both columns are self-reported and should be read "
+caption(doc, "Table 7 — vendor-reported figures. Both columns are self-reported and should be read "
              "as upper bounds. VoxCPM2's Khmer figure comes from a competitor comparison published "
              "by OpenBMB, not an independent third party; it is directionally credible given the "
              "size of the gap it claims over Fish Audio S2-Pro (75.15% CER on the same test), but "
@@ -1119,8 +1330,8 @@ table(doc,
        ["fish-s2", "101.0%", "3.75", "3.21", "3.79", "2.651", "**Eliminated** — correctness"],
        ["higgs3", "98.2%", "2.98", "3.14", "3.84", "0.745", "**Contender**"]],
       widths=[0.75, 0.7, 0.5, 0.75, 0.5, 0.7, 1.6], align_right=(1, 2, 3, 4, 5))
-caption(doc, "Table 4 — the first pass, scored with Whisper-large-v3. Superseded for CER by "
-             "Table 5; kept because the failure is instructive and because UTMOS, DNSMOS and RTF "
+caption(doc, "Table 8 — the first pass, scored with Whisper-large-v3. Superseded for CER by "
+             "Table 9; kept because the failure is instructive and because UTMOS, DNSMOS and RTF "
              "were never affected by it.")
 
 callout(doc, "Why the CER column here is meaningless", [
@@ -1152,7 +1363,7 @@ table(doc,
        ["fish-s2", pct(cer_med("fish-s2")), pct(cer_mean("fish-s2")), "81.67%", "73.76%",
         "**Eliminated** — correctness"]],
       widths=[0.8, 0.75, 0.7, 0.8, 0.9, 1.55], align_right=(1, 2, 3, 4))
-caption(doc, "Table 5 — CER re-scored with a Khmer-capable ASR, same 400 clips, same CER "
+caption(doc, "Table 9 — CER re-scored with a Khmer-capable ASR, same 400 clips, same CER "
              "definition (evaluation/metrics/khmer_text.py). Rows ordered by CER. The metric now "
              "agrees with the listening verdict instead of contradicting it.")
 
@@ -1218,7 +1429,7 @@ table(doc,
        ["trimmed", "loudness-normalized, then silence trimmed",
         num(utmos_at("trimmed", "voxcpm2"), 3), num(utmos_at("trimmed", "higgs3"), 3)]],
       widths=[0.75, 2.4, 0.9, 0.9], align_right=(2, 3))
-caption(doc, "Table 6 — UTMOS medians under level and silence control. The ranking does not move "
+caption(doc, "Table 10 — UTMOS medians under level and silence control. The ranking does not move "
              "under any condition. This is a negative result, and a useful one: it rules out the "
              "cheap fix.")
 
@@ -1318,7 +1529,7 @@ table(doc,
         "CER already answers intelligibility. Without the instruction the test re-measures it — "
         "where VoxCPM2 already wins — and manufactures agreement instead of testing for it."]],
       widths=[0.85, 1.85, 2.6])
-caption(doc, "Table 7 — the design requirements. Implemented in "
+caption(doc, "Table 11 — the design requirements. Implemented in "
              "evaluation/listening_test.py, which emits a single self-contained HTML file per "
              "study and a separate answer key that never travels with it.")
 
@@ -1334,7 +1545,7 @@ table(doc,
        ["55 / 45", "776", "10 listeners × 80 — rarely worth it; at this margin the "
         "two systems are interchangeable for most purposes"]],
       widths=[1.5, 0.9, 2.9])
-caption(doc, "Table 8 — statistical power for a two-alternative forced choice. Trials from one "
+caption(doc, "Table 12 — statistical power for a two-alternative forced choice. Trials from one "
              "listener are correlated, so the totals here flatter the real power; the honest "
              "unit of replication is the listener, which is why the analysis reports per-listener "
              "rates and a sign test across listeners alongside the pooled interval.")
@@ -1387,8 +1598,10 @@ table(doc,
         "**None** — you would write the trainer"],
        ["Effort to a first adapted result", "**A YAML file and a 24 GB card**",
         "Weeks of implementation, then a 24 GB card"],
-       ["Expressive control", "None", "**21 emotions, 3 styles, 9 sound effects, prosody tags** "
-        "(untested in Khmer)"],
+       ["Expressive control", "Natural-language instruction, prepended as "
+        "**(instruction)text**",
+        "**21 emotions, 3 styles, 9 sound effects, prosody tags**, inline"],
+       ["Streaming synthesis", "**generate_streaming()** yields chunks", "Not in the shipped API"],
        ["Measured RTF (RTX 3060)", "1.382", "**0.745**"],
        ["**Measured CER (Khmer ASR)**", "**" + pct(cer_med("voxcpm2")) + " median**",
         pct(cer_med("higgs3")) + " median"],
@@ -1396,7 +1609,7 @@ table(doc,
        ["Measured UTMOS", "2.46 (last of four)", "3.02 (second of four)"],
        ["Listening verdict", "**Contender** — preferred by ear", "**Contender**"]],
       widths=[1.15, 1.75, 1.85])
-caption(doc, "Table 9 — side by side. The CER row is the one that changed: measured against a "
+caption(doc, "Table 13 — side by side. The CER row is the one that changed: measured against a "
              "Khmer-capable ASR it separates the two contenders, where every metric in the first "
              "pass failed to. The UTMOS row is retained only to show what was measured — per §6.7 "
              "it is inverted for Khmer and must not be used to rank.")
@@ -1459,7 +1672,179 @@ table(doc,
       widths=[0.25, 1.6, 3.1])
 
 # =========================================================================
-heading(doc, "8.  Sources", 1, page_break=True)
+# =========================================================================
+heading(doc, "8.  Using them: the practical surface", 1, page_break=True)
+
+para(doc, "Sections 3 and 4 cover what these models are. This section covers what you can "
+          "actually ask them to do. Everything below is read from the shipped code — the "
+          "voxcpm 2.0.3 package installed in this repo, and the "
+          "modeling_higgs_multimodal_qwen3.py remote code that ships with the Higgs weights — "
+          "rather than from either vendor's feature list.")
+
+heading(doc, "8.1  Capability matrix", 2)
+
+table(doc,
+      ["Capability", "VoxCPM2", "Higgs TTS 3"],
+      [["Plain synthesis", "`generate(text)`", "`generate_speech(text, tokenizer)`"],
+       ["**Streaming output**", "**Yes** — `generate_streaming()` yields chunks as they are "
+        "produced", "Not in the shipped API; serving stacks (vLLM, SGLang-Omni) handle it "
+        "outside the model class"],
+       ["Zero-shot voice cloning", "`reference_wav_path` — isolated via ref_audio tokens",
+        "`reference_audio` + `reference_sample_rate`, optionally `reference_text`"],
+       ["Continuation / in-context cloning", "`prompt_wav_path` + `prompt_text` — the model "
+        "continues the prompt's voice and manner", "Same idea via `reference_text` + "
+        "`reference_audio`; no separate continuation mode"],
+       ["**Pre-encoded / cached voice**", "Re-encodes the reference on every call",
+        "**`reference_codes`** — encode a voice once, reuse the codes. Meaningful saving if one "
+        "voice serves many requests"],
+       ["Expressive control", "Natural-language instruction (§8.2)", "Fixed inline tag "
+        "vocabulary (§8.2)"],
+       ["Sampling controls", "`cfg_value` 1.0–3.0 (guidance strength)",
+        "`temperature`, `top_p`, `top_k` — the usual LM sampling dials"],
+       ["Quality / speed dial", "**`inference_timesteps` 4–30** — fewer diffusion steps is "
+        "faster and rougher", "`max_new_tokens` only; no quality dial"],
+       ["Reference denoising", "**Built in** — `denoise=True` runs ZipEnhancer over the "
+        "reference first", "None; clean your reference yourself"],
+       ["Runaway / truncation guard", "**Built in** — `retry_badcase` re-rolls when the "
+        "audio-to-text ratio exceeds a threshold (default 6.0)", "None"],
+       ["Text normalization", "`normalize=True`", "None"],
+       ["Batch CLI", "`voxcpm batch --input lines.txt --output-dir out/`",
+        "Example scripts only"],
+       ["Fine-tuning", "**LoRA, hot-swappable at runtime** — `load_lora()`, "
+        "`set_lora_enabled(False)`, `unload_lora()`", "No training code ships at all"],
+       ["Dataset validator", "**`voxcpm validate --manifest …`**", "None"]],
+      widths=[1.15, 1.9, 1.9])
+caption(doc, "Table 14 — the usage surface of each model, from the shipped code. The pattern is "
+             "consistent: VoxCPM2 ships more operational machinery (streaming, denoising, retry, "
+             "validation, adapters), Higgs ships a richer expressive vocabulary and a cached-voice "
+             "path.")
+
+heading(doc, "8.2  Expressive control — two different paradigms", 2)
+
+para(doc, "Both models can be told how to say something, but they take opposite approaches, and "
+          "the difference matters more than the feature counts suggest.")
+
+heading(doc, "VoxCPM2 — open-ended, natural language", 3)
+para(doc, "There is no tag vocabulary. You write an instruction in plain language and it is "
+          "prepended to the text in parentheses; the model was trained to read a leading "
+          "parenthesised descriptor as a voice and style instruction. The CLI exposes it as "
+          "--control, but the mechanism is only string concatenation, so the plain Python API "
+          "gets it for free:")
+code(doc, """
+# what the CLI does internally is exactly this:
+#     final_text = f"({control}){text}"  if control else text
+
+voxcpm design --text "Hello world" --control "warm female voice" --output out.wav
+
+# and therefore, from Python, with no special argument:
+wav = model.generate(text="(warm female voice, speaking slowly)Hello world")
+""", size=8.0)
+
+bullet(doc, [("Unbounded. ", {"bold": True}),
+             ("“an elderly man, tired, speaking gently”, “a news anchor, brisk and formal”, "
+              "“whispering, conspiratorial” — anything you can describe. It is not limited to a "
+              "list somebody chose in advance.", {})])
+bullet(doc, [("Whole-utterance only. ", {"bold": True}),
+             ("The instruction sits at the front and colours the entire utterance. There is no "
+              "way to change emotion halfway through a sentence.", {})])
+bullet(doc, [("Unverifiable. ", {"bold": True}),
+             ("Nothing validates the instruction. A descriptor the model does not understand is "
+              "silently ignored, or worse, partly spoken. You find out by listening.", {})])
+bullet(doc, [("Mutually exclusive with continuation mode. ", {"bold": True}),
+             ("The CLI rejects --control together with --prompt-text: you are either designing a "
+              "voice from a description or continuing one from audio, not both. It does combine "
+              "with --reference-audio.", {})])
+
+heading(doc, "Higgs TTS 3 — a closed, composable tag set", 3)
+para(doc, "A fixed vocabulary using <|category:value|> syntax, insertable anywhere in the text, "
+          "including mid-sentence:")
+code(doc, """
+text = "<|emotion:sadness|> I have to tell you something. "
+       "<|long_pause|> <|emotion:relief|> But it turned out fine. "
+       "<|laughter|> haha"
+""", size=8.0)
+
+table(doc,
+      ["Category", "Count", "Values"],
+      [["Emotion", "21", "elation, amusement, enthusiasm, determination, pride, contentment, "
+        "affection, relief, contemplation, confusion, surprise, awe, longing, arousal, anger, "
+        "fear, disgust, bitterness, sadness, shame, helplessness"],
+       ["Style", "3", "singing, shouting, whispering"],
+       ["Sound effects", "9", "cough, laughter, crying, screaming, burping, humming, sigh, "
+        "sniff, sneeze — each paired with the matching onomatopoeia"],
+       ["Prosody", "—", "speed very_slow / slow / fast / very_fast (≈0.65×–1.4×); pause "
+        "(400–700 ms); long_pause (700–1500 ms); pitch_low (−3 st); pitch_high (+2.5 st); "
+        "expressive_high / expressive_low"]],
+      widths=[0.8, 0.4, 3.5], header_fill=VIOLET)
+caption(doc, "Table 15 — the full Higgs TTS 3 control vocabulary. Composable, positional, and "
+             "checkable — an unknown tag is a visible mistake rather than a silent one.")
+
+callout(doc, "Neither model's expressive control is verified for Khmer", [
+    "Both mechanisms were trained on each vendor's documented languages. Khmer is one of "
+    "VoxCPM2's 30, but its control instructions are written in English, and nothing establishes "
+    "that an English descriptor steers Khmer prosody the way it steers English prosody. For Higgs "
+    "the gap is wider: Khmer is not on its language list at all, so its tags are unverified in a "
+    "language the model was never documented to speak.",
+    "This is a cheap thing to settle and nobody has settled it. Synthesize ten Khmer sentences "
+    "under three or four emotion settings, listen, and you will know. Do that before designing "
+    "any product feature on top of either mechanism.",
+], accent=SIENNA, fill=SIENNA_SOFT)
+
+heading(doc, "8.3  The same job, written both ways", 2)
+
+para(doc, "Basic synthesis, then the same sentence in a cloned voice:")
+code(doc, """
+# ---------- VoxCPM2 ----------
+from voxcpm import VoxCPM
+
+model = VoxCPM.from_pretrained("openbmb/VoxCPM2")           # + lora_weights_path=...
+wav = model.generate(text="<Khmer text>")                    # 48 kHz float32 numpy
+
+wav = model.generate(
+    text="<Khmer text>",
+    reference_wav_path="speaker.wav",   # zero-shot clone
+    denoise=True,                       # clean the reference first
+    cfg_value=2.0,                      # 1.0-3.0, guidance strength
+    inference_timesteps=10,             # 4-30, quality vs speed
+    normalize=True,
+)
+
+for chunk in model.generate_streaming(text="<Khmer text>"):  # play as it arrives
+    play(chunk)
+
+# ---------- Higgs TTS 3 ----------
+wav = model.generate_speech(text, tokenizer)                 # 24 kHz float32 torch
+
+wav = model.generate_speech(
+    text, tokenizer,
+    reference_audio=ref_tensor,         # or reference_codes=cached, encoded once
+    reference_sample_rate=24000,
+    reference_text="<transcript of the reference>",   # improves cloning
+    temperature=1.0, top_p=0.95,
+    max_new_tokens=2048,
+)
+""", size=7.6)
+
+heading(doc, "8.4  What this means for a Khmer product", 2)
+bullet(doc, [("If you need audio to start playing before it is finished, ", {"bold": True}),
+             ("VoxCPM2 is the one with a streaming generator in the box. This partly offsets its "
+              "worse RTF: 1.38 real-time factor matters much less when the first chunk arrives "
+              "quickly than when the whole file must finish first.", {})])
+bullet(doc, [("If you serve one or two fixed voices, ", {"bold": True}),
+             ("Higgs's `reference_codes` lets you encode each voice once and skip re-encoding on "
+              "every request. VoxCPM2 has no equivalent cache and re-reads the reference each "
+              "call.", {})])
+bullet(doc, [("If you need reliable, repeatable delivery, ", {"bold": True}),
+             ("Higgs's closed tag set is the safer instrument — a typo is a visible error, and "
+              "the same tag means the same thing every time. VoxCPM2's free-text control is more "
+              "expressive in principle and less predictable in practice.", {})])
+bullet(doc, [("If robustness matters more than range, ", {"bold": True}),
+             ("VoxCPM2's built-in bad-case retry deserves attention: it re-rolls generation when "
+              "the audio-to-text ratio goes out of bounds, which is precisely the truncation "
+              "failure that made fish-s2 unusable and that §6.7 had to catch with a separate "
+              "guard. Higgs has no such protection.", {})])
+
+heading(doc, "9.  Sources", 1, page_break=True)
 
 heading(doc, "VoxCPM2", 2)
 for s in [
