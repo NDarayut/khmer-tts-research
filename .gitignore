@@ -62,3 +62,12 @@ finetune/results/*.log
 
 # Microsoft Office lock files -- created while a .docx is open, never content.
 ~$*
+
+# NVV tag-expansion experiment: downloaded corpus, extracted wavs, and the
+# synthesized sweeps. The manifests' metadata, the scripts and the built
+# listening page's inputs are regenerable from these; the corpus is 3 GB.
+finetune/data-nvv/NonverbalTTS/
+finetune/data-nvv/wavs/
+finetune/data-nvv/manifests/*.jsonl
+finetune/results/nvv/*/audio/
+finetune/results/nvv/*.html

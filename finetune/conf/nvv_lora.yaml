@@ -1,0 +1,59 @@
+# VoxCPM2 NVV tag-expansion LoRA -- the English proof-of-concept.
+#
+# PURPOSE: test whether VoxCPM2 can be taught non-verbal tags it never shipped
+# with. Trained on NonverbalTTS (English, 17 h, 10 NV types), not Khmer, because
+# the question is about the tag mechanism and not about the language. Khmer is a
+# separate question that only becomes worth asking if this works.
+#
+# WHAT IS DELIBERATELY ABSENT: --onset-weight. That flag exists because the
+# layer-1b *global* tag sat in a header and was redundant with the ground-truth
+# acoustic prefix under teacher forcing everywhere but the clip onset. An NVV
+# tag is inline at the position of its own event, so on the argument in
+# NVV_PLAN.md §2.1 it should be the only predictor of the frames it occupies and
+# should not need the hack. Running without it makes this experiment a test of
+# that argument as well. If the tags do not take, adding event-span weighting
+# is the first thing to try -- but it needs onset/offset timestamps, which
+# NonverbalTTS does not ship.
+#
+# enable_proj: true is NOT optional. See finetune/results/diagnosis.md: the
+# LM->DiT projections are the only route text-side information has into the
+# acoustic generator, and the first Khmer run failed precisely by leaving them
+# frozen.
+
+pretrained_path: /home/pc/.cache/huggingface/hub/models--openbmb--VoxCPM2/snapshots/32279effe8c19989596f05d353d1447f51d9e915
+train_manifest: /run/media/pc/disk1/text-to-speech/finetune/data-nvv/manifests/train.jsonl
+val_manifest: /run/media/pc/disk1/text-to-speech/finetune/data-nvv/manifests/val.jsonl
+
+sample_rate: 16000
+out_sample_rate: 48000
+
+batch_size: 1
+grad_accum_steps: 8
+num_workers: 4
+num_iters: 2500
+log_interval: 25
+valid_interval: 250
+save_interval: 250          # frequent: checkpoints are picked by tag response,
+                            # never by loss, so we need several to choose from
+
+learning_rate: 0.0001
+weight_decay: 0.01
+warmup_steps: 150
+max_steps: 2500
+max_batch_tokens: 896
+max_grad_norm: 1.0
+
+save_path: /run/media/pc/disk1/text-to-speech/finetune/checkpoints/nvv
+tensorboard: /run/media/pc/disk1/text-to-speech/finetune/logs/nvv
+
+lambdas:
+  loss/diff: 1.0
+  loss/stop: 1.0
+
+lora:
+  enable_lm: true
+  enable_dit: true
+  enable_proj: true
+  r: 64
+  alpha: 64
+  dropout: 0.0
