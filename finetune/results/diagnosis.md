@@ -3,7 +3,7 @@
 The adapter trained. It changed the model. It does not read the control tag.
 This file is the evidence for that claim and for the cause, in the order the
 evidence was collected. The design and the verdict are in
-[`docs/11`](../../docs/11-voxcpm2-style-control-finetune.md) §11.5.
+[`docs/11`](../../docs/11-voxcpm2-style-control-finetune.md) §11.2.
 
 ## 1. The adapter is real, and it did change the model
 
@@ -173,5 +173,5 @@ continuous attributes, drop the extremes, bin the rest, name the bins, and judge
 pitch against comparable speakers rather than the whole corpus.
 
 The onset-weighted loss of §5 has no such precedent — the literature's fix is to
-corrupt the shortcut, not to reweight around it. See docs/11 §11.5 for why the
+corrupt the shortcut, not to reweight around it. See docs/11 §11.2 for why the
 cheaper intervention was chosen and what the more principled experiment would be.

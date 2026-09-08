@@ -10,8 +10,10 @@ Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.
 
 "Expressive control" is several capabilities, not one, and they differ in how hard
 they are to add. The split that matters is **global attributes** (true of the whole
-utterance) versus **local events** (bounded, at one position) — docs/11 finding 2 shows
-that distinction decides whether a control signal earns any gradient at all.
+utterance) versus **local events** (bounded, at one position) — docs/11 §11.2 sets out
+that distinction, and `results/diagnosis.md` measures what it costs: a global attribute in
+the text field earns a gradient ~290x smaller than the transcript does under teacher
+forcing.
 
 **Layer 1 turned out to be mostly built in.** VoxCPM2 accepts a natural-language
 description in parentheses at the start of the text — `(speaking quickly)ថ្ងៃនេះ…` —
@@ -19,13 +21,13 @@ and on Khmer that already controls pitch across +106 Hz at rho +0.76, nearly fou
 times the +28 Hz separation this directory's hand-labelled corpus can express.
 Measured by `verify_parenthetical.py`; results in `results/parenthetical/`. That was
 measured *after* the corpus was built and one full run had failed, which is the
-main lesson in docs/11 §11.1.
+main lesson in `results/diagnosis.md`.
 
 | layer | controls | scope | status |
 |---|---|---|---|
 | **1. Prosodic** | rate, pitch, level | global | **already in the base model** — use `(…)`, no training |
 | **1b. Prosodic residue** | pitch variation, named speaker, reproducibility | global | what a fine-tune would still be for — this directory |
-| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; **measure on Khmer before building** (docs/11 §11.4), with a training plan in §11.5 |
+| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; **measure on Khmer before building** (docs/11 §11.2.3); this is the layer docs/11 §11.3.5 selects |
 | 3. Affective | emotion | global | measure the prompt first; then blocked on corpus |
 | 4. Voice quality | whisper, breathy, creaky | global | same |
 | 5. Discourse | emphasis, contrastive focus | local | needs a span syntax, not a header tag |
@@ -79,7 +81,7 @@ voxcpm validate --manifest finetune/data/train.jsonl --sample-rate 16000
 
 # 3. train                                                        (~7 h, 12 GB)
 #    --onset-weight is NOT optional: without it the adapter trains fine and
-#    ignores the control tag. See docs/11 §11.1, findings 2-4.
+#    ignores the control tag. See finetune/results/diagnosis.md.
 python finetune/train.py --config finetune/conf/khmer_style_lora.yaml \
     --onset-weight 8.0 --onset-tau 4.0
 
@@ -120,7 +122,7 @@ generator) and `--onset-weight 8.0` on the command line (teacher forcing makes
 the tag redundant with the ground-truth acoustic prefix everywhere but the start
 of the clip). Each was isolated by a 400-step probe against a pass bar fixed in
 advance; together they took speaker separation from 5.8 Hz to 39.9 Hz. The
-reasoning is in docs/11 §11.1 (findings 2-4), the numbers in `results/diagnosis.md`.
+reasoning and the numbers are both in `results/diagnosis.md`.
 
 If you change the conditioning scheme, verify it with
 `experiments/tag_sensitivity.py` before committing to a long run. It asks

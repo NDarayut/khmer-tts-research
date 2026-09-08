@@ -14,7 +14,7 @@
 # and language work. Five control axes across 19 voices is style work.
 #
 # TWO SETTINGS HERE EXIST BECAUSE THE FIRST 4000-STEP RUN FAILED. It trained
-# fine and ignored the control tag completely. See docs/11 §11.5 and
+# fine and ignored the control tag completely. See
 # finetune/results/diagnosis.md. Both fixes were isolated by probe, one
 # variable at a time, before being brought back here:
 #

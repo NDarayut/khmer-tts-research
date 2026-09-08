@@ -210,13 +210,11 @@ def bullet(doc, chunks, indent=0.25, size=10.5):
     pf.space_after = Pt(3)
     pf.line_spacing = 1.15
     for text, opts in chunks:
-        font, sz = opts.get("font", BODY_FONT), opts.get("size", size)
+        sz = opts.get("size", size)
         bold, ital, col = opts.get("bold"), opts.get("italic"), opts.get("color", INK)
-        for j, piece in enumerate(str(text).split("`")):
-            if piece:
-                mono = j % 2 == 1
-                set_font(p.add_run(piece), MONO_FONT if mono else font,
-                         sz - 0.6 if mono else sz, bold, ital, col)
+        # inline() handles **bold**, *italic* and `code` inside the chunk; the
+        # opts dict sets the baseline the markers modulate.
+        inline(p, text, sz, col, bold_all=bool(bold), italic_all=bool(ital))
     return p
 
 
