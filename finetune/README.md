@@ -6,23 +6,34 @@ This file is the operational sequence.
 
 Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.
 
-## Scope: this is layer 1 of several
+## Scope: read this before running anything here
 
 "Expressive control" is several capabilities, not one, and they differ in how hard
 they are to add. The split that matters is **global attributes** (true of the whole
-utterance) versus **local events** (bounded, at one position) — docs/11 §11.5 shows
+utterance) versus **local events** (bounded, at one position) — docs/11 §11.7 shows
 that distinction decides whether a control signal earns any gradient at all.
+
+**Layer 1 turned out to be mostly built in.** VoxCPM2 accepts a natural-language
+description in parentheses at the start of the text — `(speaking quickly)ថ្ងៃនេះ…` —
+and on Khmer that already controls pitch across +106 Hz at rho +0.76, nearly four
+times the +28 Hz separation this directory's hand-labelled corpus can express.
+Measured by `verify_parenthetical.py`; results in `results/parenthetical/`. That was
+measured *after* the corpus was built and one full run had failed, which is the
+main lesson in docs/11 §11.1.
 
 | layer | controls | scope | status |
 |---|---|---|---|
-| **1. Prosodic** | voice, rate, pitch, variation, level | global | **this directory** |
-| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; untested on Khmer (docs/11 §11.7) |
-| 3. Affective | emotion | global | blocked: no expressive Khmer corpus |
-| 4. Voice quality | whisper, breathy, creaky | global | blocked: same |
+| **1. Prosodic** | rate, pitch, level | global | **already in the base model** — use `(…)`, no training |
+| **1b. Prosodic residue** | pitch variation, named speaker, reproducibility | global | what a fine-tune would still be for — this directory |
+| **2. Non-verbal** | `[laughing]`, `[sigh]`, `[Uhm]` … | local | ships with VoxCPM2; **measure on Khmer before building** (docs/11 §11.9) |
+| 3. Affective | emotion | global | measure the prompt first; then blocked on corpus |
+| 4. Voice quality | whisper, breathy, creaky | global | same |
 | 5. Discourse | emphasis, contrastive focus | local | needs a span syntax, not a header tag |
 
-Layer 2 needs no training and is the cheapest next step; layers 3 and 4 are this
-same machinery waiting on data that does not exist for Khmer.
+**The fine-tune in this directory is stopped**, at step 1,980 of 4,000, for the
+reason above — not because it was failing. The checkpoint is on disk and the run
+is resumable. Everything else here (the corpus, the diagnosis, the onset-weighted
+loss fix) stands: it is the machinery any later layer will need.
 
 ## What you get
 

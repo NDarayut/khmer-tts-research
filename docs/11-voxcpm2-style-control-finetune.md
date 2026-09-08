@@ -1,42 +1,96 @@
-# 11 — Giving VoxCPM2 Style Control: A Khmer Fine-Tune
+# 11 — Style Control for VoxCPM2: What the Model Already Does, and What a Fine-Tune Adds
 
-[Document 9](09-voxcpm2-architecture-and-training.md) explains what fine-tuning VoxCPM2 would involve. This document is the record of actually doing it, and of the one capability the model comparison found VoxCPM2 lacking.
+[Document 9](09-voxcpm2-architecture-and-training.md) explains what fine-tuning VoxCPM2 would involve. This document is the record of doing it for expressive control, and of a course correction partway through that is more useful than the fine-tune itself.
 
-The gap is easy to state. [Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md) accepts inline control tokens — `<|emotion:sadness|>`, `<|speed:fast|>`, `<|pitch_high|>` — so a caller can ask for a delivery rather than accept whatever the model produces. VoxCPM2 has no equivalent. Its text path is a single `text_tokenizer(text)` call: no language tag, no style channel, no speaker channel. You get one voice and one delivery, and the only lever is a reference clip for zero-shot cloning.
+The gap looked easy to state. [Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md) accepts inline control tokens — `<|emotion:sadness|>`, `<|speed:fast|>` — so a caller can ask for a delivery rather than accept whatever the model produces. VoxCPM2 appeared to have no equivalent, and this project's recommendation rests on VoxCPM2 (2.47% Khmer CER against Higgs's 8.28%, Apache-2.0). So: add the control rather than trade the model.
 
-But VoxCPM2 is the model this project recommends, on the strength of a 2.47% Khmer CER against Higgs's 8.28% and an Apache-2.0 licence you can ship (see CLAUDE.md, "The verdict"). Losing that to gain expressive control would be a bad trade. The question this document answers is whether the control can be added instead.
+**The correction: VoxCPM2 already has a prosodic control channel, and on Khmer it mostly works.** A natural-language description in parentheses at the start of the text — `(speaking quickly)`, `(a high-pitched voice)` — steers the delivery. This is documented by OpenBMB for the model in general, was undocumented for Khmer, and had never been measured by anyone. §11.3 measures it. Pitch moves **106 Hz** across the prompt range, nearly four times what this project's hand-labelled corpus can even express, at rho +0.76.
 
-**It can, but not the way it first appears** — and "expressive control" turns out to be several capabilities rather than one, so §11.0 sets out the layers before this document builds the first of them.
+That finding arrived after a LoRA adapter had been built and one 6.5-hour training run had failed in an instructive way. The work was stopped at that point rather than carried to completion, and the honest accounting is:
 
-**The short version.** The result is a LoRA adapter, trained on a single 12 GB consumer GPU, that gives VoxCPM2 five control axes — voice, speaking rate, pitch register, pitch variation, and level — driven by a tag prefixed to the text.
+- **§11.3 — what the built-in prompt already does**, measured against the same instrument used for everything else. Three of four prosodic axes respond. This is the finding that should have come first.
+- **§11.4 — what it does not do**: pitch *variation* fails outright and in the wrong direction, energy is dominated by run-to-run noise, and nothing selects a specific speaker reproducibly. That residue is what a fine-tune would be for, and it is much smaller than the one this document set out to build.
+- **§11.7–11.7 — why the first fine-tune ignored its own control tag.** This survives the course correction intact, because it is not about prosody. It is about why *any* global attribute supplied through the text field earns no gradient under teacher forcing, and it applies to layers 3 and 4 (emotion, voice quality) exactly as it applied here. It is the transferable result.
 
-The reason for the qualifier is the most useful thing in this document. The obvious construction — put a tag in the text field, train a LoRA on labelled speech — produces an adapter that trains cleanly, converges, audibly changes the model, and **ignores the tag completely**. It took a 6.5-hour run and four falsifying experiments to establish that, and the cause turned out to be neither the tag format nor the architecture but the training objective itself. §11.5 is that story, because a reader who copies the design in §11.1 without it will reproduce the failure exactly.
+A reader who wants only the practical answer needs §11.0 and §11.3. A reader who intends to fine-tune this model for any text-derived conditioning needs §11.7.
 
 ---
 
 ## 11.0 The control layers, and which one this is
 
-"Expressive control" is not one capability. It is several, and they behave differently enough that treating them as one is how a roadmap goes wrong. This document builds **layer 1** and names the rest so the sequencing is a decision rather than an accident.
+"Expressive control" is not one capability. It is several, they behave differently, and treating them as one is how a roadmap goes wrong. The distinction that matters is between **attributes that hold over a whole utterance** and **events that happen at a point in it**. A speaker's pitch register is true of every frame; a laugh occupies 400 ms and nothing else. §11.7 shows this is not cosmetic — it decides how expensive a control signal is to teach.
 
-The distinction that matters is between **attributes that hold over a whole utterance** and **events that happen at a point in it**. A speaker's pitch register is true of every frame; a laugh occupies 400 ms and nothing else. §11.5 shows that this is not cosmetic — it decides whether a control signal earns any gradient at all.
-
-| layer | controls | scope | mechanism | status |
+| layer | controls | scope | where it comes from | status |
 |---|---|---|---|---|
-| **1. Prosodic** | voice, rate, pitch register, pitch variation, level | **global** | this document's tag, LoRA-trained on measured labels | **built; run 2 verifying** |
-| **2. Non-verbal vocalization** | laughter, sighs, hesitation, breath | **local** | ships with VoxCPM2, no training needed | untested on Khmer |
-| **3. Affective** | emotion — sadness, joy, anger | global | same tag mechanism as layer 1 | blocked on corpus |
-| **4. Voice quality** | whisper, breathy, creaky, projected | global | same tag mechanism as layer 1 | blocked on corpus |
+| **1. Prosodic** | pitch register, rate, level | **global** | **already in the base model**, via the parenthetical prompt | **works on Khmer — §11.1** |
+| **1b. Prosodic residue** | pitch *variation*; naming a specific speaker; per-utterance reproducibility | global | would need a fine-tune | gaps confirmed, §11.2; work stopped |
+| **2. Non-verbal vocalization** | laughter, sighs, hesitation, breath | **local** | ships with VoxCPM2, no training | untested on Khmer — §11.9 |
+| **3. Affective** | emotion — sadness, joy, anger | global | partly in the base model already (`(cheerful tone)`); unmeasured on Khmer | **measure before building** |
+| **4. Voice quality** | whisper, breathy, creaky | global | same — plausibly already there | **measure before building** |
 | **5. Discourse** | emphasis, contrastive focus, question contour | local | needs a span-marking syntax, not a header tag | not designed |
 
-**Why the scope column is the important one.** §11.5 measures that a global attribute supplied through the text field earns almost no gradient, because teacher forcing lets the model read that attribute off the ground-truth acoustic prefix instead. Pitch is already in the previous 40 ms of audio; the tag adds nothing.
+**The rule this document paid to learn: measure the base model before training anything.** Layers 3 and 4 are written above as "measure first" rather than "blocked on corpus", which is how an earlier draft had them. The instrument is `finetune/verify_parenthetical.py` and it costs about twenty minutes per layer.
 
-A local event does not have this problem. Nothing in the acoustic prefix predicts that a laugh is about to occur — the tag is the only thing that does, at exactly the position where it appears. On the measurement in §11.5 that is the difference between a signal worth +0.003 of loss and one worth +0.00022.
+**Why the scope column still matters.** §11.7 measures that a global attribute supplied through the text field earns almost no gradient: swapping the speaker tag costs 0.03% of training loss, while corrupting the transcript costs 7.4%. Teacher forcing is why — the model can read pitch off the ground-truth acoustic prefix, so the tag tells it nothing it does not already have. A local event has no such competition: nothing in the prefix predicts a laugh is coming.
 
-This predicts, with no further experiment, that **layer 2 should be far easier than layer 1** — and it is consistent with what OpenBMB actually shipped: working non-verbal tags, and no global prosodic control surface at all. Layers 3 and 4 are global, so they inherit layer 1's difficulty along with its fix.
+**But note what §11.1 proves about that argument.** The parenthetical prompt is *also* a global attribute in the text field, and it works — so the teacher-forcing shortcut does not make global conditioning impossible. It makes it **data-expensive**. A signal worth 0.03% of the loss is still learnable given enough data and a full training run; OpenBMB paid that cost at pre-training scale, and 11.7 hours of Khmer through a LoRA could not. That is the sharper form of the lesson, and it generalises: *the cost of teaching a global attribute is high enough that re-deriving one the base model already has is close to the worst use of a small corpus.*
 
 ---
 
-## 11.1 Layer 1, the mechanism: nearly free, and not sufficient
+## 11.1 The built-in parenthetical control, measured on Khmer
+
+VoxCPM2 accepts a natural-language description in parentheses before the text:
+
+```python
+wav = model.generate(text="(speaking quickly)ថ្ងៃនេះអាកាសធាតុល្អណាស់។")
+```
+
+OpenBMB document this for voice design (`(A young woman, gentle and sweet voice)`) and for style-guided cloning (`(slightly faster, cheerful tone)`), listing "gender, age, tone, emotion, pace" as what it steers. Nothing in their documentation covers Khmer, and this project had already been burned once by assuming a control surface transfers to an undocumented language — docs/10 carries exactly that caveat for Higgs.
+
+So it was measured, with the same instrument used to test the fine-tuned adapter: the same 8 sentences from the frozen eval set, the same four measurements, the same Spearman correlation against a commanded level, and the same corpus ceilings for scale. One addition — **each cell is generated three times at different seeds**, because OpenBMB's model card states results "may vary between runs; generating 1–3 times is recommended". That warning turns out to matter more than the effect sizes.
+
+| axis | low | mid | high | low→high | corpus ceiling | rho | p | run-to-run sd | effect ÷ noise |
+|---|---|---|---|---|---|---|---|---|---|
+| `pitch` | 147.80 | 202.81 | 254.16 | **+106.37 Hz** | +28.27 Hz | **+0.759** | 0.0002 | 28.78 | **3.7** |
+| `energy` | −20.38 | −16.30 | −15.89 | **+4.50 dB** | +5.81 dB | +0.605 | 0.0022 | 5.69 | 0.8 |
+| `rate` | 14.67 | 15.84 | 16.96 | **+2.29 ch/s** | +6.57 ch/s | +0.590 | 0.0035 | 1.58 | 1.4 |
+| `var` | 4.55 | 4.06 | 3.92 | **−0.63 st** | +1.71 st | −0.273 | 0.2039 | 0.68 | — |
+
+Prompts used: `(speaking slowly / at a normal pace / quickly)`, `(a low- / normal- / high-pitched voice)`, `(a flat, monotone / a normal / a lively, expressive delivery)`, `(speaking softly, quietly / at a normal volume / loudly)`.
+
+**Pitch is the headline.** A 106 Hz range at rho +0.76, against a corpus ceiling of 28 Hz — the built-in prompt spans nearly four times what the hand-labelled corpus can express, because the labels are bounded by the 20 speakers who happened to be recorded while the prompt is not. On this axis a fine-tune is not merely unnecessary, it is *worse than the thing it would replace.*
+
+**Rate and energy respond, but read the last column.** `run-to-run sd` is the standard deviation across repeated generations of the *same* prompt on the *same* sentence. For energy it is 5.69 dB against a 4.50 dB effect: re-rolling the seed moves the output further than changing the command does. For rate the effect is 1.4× the noise. Both correlations are real and statistically solid across many sentences; neither gives a caller a delivery they can rely on for one utterance. This is the distinction between *a measurable effect* and *control*, and averaging over sentences hides it — which is why the repeats were built in.
+
+**Pitch variation fails.** rho −0.273 at p = 0.20: not significant, and pointing the wrong way. Asking for "a lively, expressive delivery" produced *less* pitch movement than asking for a flat one. This is the axis closest to what "expressive TTS" ordinarily means, and it is the one axis the built-in mechanism does not deliver on Khmer.
+
+### A caveat on this measurement
+
+The prompt wordings are mine, not OpenBMB's. Only `(slightly faster, cheerful tone)` and `(A young woman, gentle and sweet voice)` appear in their documentation, so the phrasings above are a reasonable extrapolation rather than a sanctioned API. A negative result on one axis could in principle be a wording problem rather than a model limitation — `var` is the axis where this doubt should be taken most seriously, since "lively" and "expressive" may simply not be the vocabulary the model was trained against. The positive results do not carry this doubt in the same way: they establish that the channel works, whatever better wording might add.
+
+---
+
+## 11.2 What is left for a fine-tune, and why the work was stopped
+
+Given §11.3, the case for the adapter this document describes shrinks to a residue:
+
+| | built-in prompt | fine-tuned tag |
+|---|---|---|
+| pitch | **+106 Hz, robust** | ceiling +28 Hz — strictly worse |
+| rate | +2.29 ch/s, 1.4× noise | comparable at best |
+| energy | effect below the noise | *possible* improvement, unproven |
+| pitch variation | **fails, wrong direction** | *possible* improvement, unproven |
+| named speaker, no reference clip | not available | **only the tag does this** |
+| reproducible for one utterance | no — see the sd column | yes, deterministic given a seed |
+| enumerable / sweepable / verifiable | no | yes |
+
+Two genuine gaps — pitch variation, and selecting one of twenty specific voices by name — plus reproducibility. That is a real but much narrower product than "add expressive control to VoxCPM2", and it does not justify the remaining GPU time on the terms the project originally assumed.
+
+**Training was therefore stopped at step 1,980 of 4,000.** The checkpoint is kept and the run resumes from it if the residue above later proves worth closing. What follows in §11.5 onward is the record of the work up to that point: it stands on its own for the corpus method, the 12 GB result, and — most importantly — the conditioning failure in §11.7, which is not about prosody and does not go away.
+
+---
+
+## 11.3 The fine-tune's mechanism: nearly free, and not sufficient
 
 Prefix a control tag to the text field:
 
@@ -63,11 +117,11 @@ loss_mask = cat([zeros(text_length), ones(audio_length), zeros(1)])
 
 Identical, and both 2.08 s. The base model silently ignores the tag. That settles the risk, and it also hands the verification pass a free gift: the base model is a **clean control condition**, because whatever the adapter does with the tag, the base model demonstrably does nothing with it.
 
-**What this section does not establish.** That the tag *can* condition the model is not the same as the model *learning* to use it. The loss-mask argument shows the channel is free and lossless; it says nothing about whether gradient descent has any reason to send anything down it. It does not, by default — see §11.5. Two further changes are needed, and both are in the run that produced the numbers here: `enable_proj: true`, and a loss weighted toward the audio onset.
+**What this section does not establish.** That the tag *can* condition the model is not the same as the model *learning* to use it. The loss-mask argument shows the channel is free and lossless; it says nothing about whether gradient descent has any reason to send anything down it. It does not, by default — see §11.7. Two further changes are needed, and both are in the run that produced the numbers here: `enable_proj: true`, and a loss weighted toward the audio onset.
 
 ---
 
-## 11.2 Where the prosodic labels come from
+## 11.4 Where the prosodic labels come from
 
 There is no expressive Khmer speech corpus. There is no Khmer emotion corpus. Trying to copy Higgs's 21-emotion catalogue would mean inventing labels for data that does not carry them, and the result would be unfalsifiable.
 
@@ -81,7 +135,7 @@ So the axes are defined as **things that can be measured on a waveform**. This i
 | `var` | `flat` `mid` `lively` | F0 standard deviation, in semitones |
 | `energy` | `soft` `mid` `loud` | RMS level |
 
-This is a narrower promise than Higgs makes, and a deliberate one. It buys something Higgs's Khmer control does not have: **the claim is checkable.** "Did asking for `rate:fast` produce faster speech?" is arithmetic. Document 10 notes that Higgs's own control tokens are untested on Khmer — they were trained on the documented languages, and Khmer is not one of them. Here, every axis is verified on Khmer by construction, against a control condition, in §11.5.
+This is a narrower promise than Higgs makes, and a deliberate one. It buys something Higgs's Khmer control does not have: **the claim is checkable.** "Did asking for `rate:fast` produce faster speech?" is arithmetic. Document 10 notes that Higgs's own control tokens are untested on Khmer — they were trained on the documented languages, and Khmer is not one of them. Here, every axis is verified on Khmer by construction, against a control condition, in §11.7.
 
 It also sidesteps the trap this project has already documented at length. CLAUDE.md, "Metrics", establishes that no learned metric ranks Khmer TTS correctly — UTMOS is *inverted*, rho = +0.55 against CER. An axis defined as a measurable acoustic quantity needs no learned metric to score it.
 
@@ -112,7 +166,7 @@ Each slot is independently replaced by `any` with probability 0.15 during traini
 
 ---
 
-## 11.3 The corpus
+## 11.5 The corpus
 
 | | |
 |---|---|
@@ -135,7 +189,7 @@ The corpus is real human speech throughout. Document 9 flags `Panhapich/khmer-en
 
 ---
 
-## 11.4 Fitting a 20 GB job into 12 GB
+## 11.6 Fitting a 20 GB job into 12 GB
 
 Document 9 §9.5 records OpenBMB's figure for VoxCPM2 LoRA: **~20 GB**, with a hardware reality check noting that this project's RTX 3060 has 12 GB and is "below the LoRA minimum", and recommending a rented 24 GB card.
 
@@ -172,7 +226,7 @@ One diagnostic worth recording: dropping `max_batch_tokens` from 1024 to 512 mov
 
 ---
 
-## 11.5 It did not work, and why
+## 11.7 It did not work, and why
 
 The first full run trained without incident. 4000 steps, 6.5 hours, validation `loss/diff` 0.8819 → 0.8076, ten checkpoints. The adapter was real: median `‖ΔW‖/‖W‖` of **3.03e-02** across 192 adapted layers, and all 192 `lora_B` tensors non-zero, which matters because they initialise to exactly zero. It audibly changed the model — the base model's F0 wanders between 105.9 and 231.5 Hz from sentence to sentence, the adapter clamps output to 201.3–261.6 Hz, and speaking rate moved 17.61 → 14.07 chars/s.
 
@@ -263,7 +317,7 @@ Run 1's checkpoints and sweep are kept under `finetune/checkpoints/khmer_style_r
 
 ---
 
-## 11.6 Using prosodic control
+## 11.8 Using the fine-tuned tag
 
 ```python
 from voxcpm import VoxCPM
@@ -290,7 +344,7 @@ The adapter hot-swaps: `model.set_lora_enabled(False)` restores the base model b
 
 ---
 
-## 11.7 Layer 2 — non-verbal vocalization
+## 11.9 Layer 2 — non-verbal vocalization
 
 This layer needs no fine-tuning. VoxCPM2 ships with it: inline square-bracket tags placed in the text at the point where the vocalization should occur, part of the base model's training and available today on the stock checkpoint.
 
@@ -318,7 +372,7 @@ OpenBMB's guidance is unusually specific and worth repeating: use them sparingly
 
 VoxCPM2 also accepts a natural-language description in parentheses at the start of the text — `(A young woman, gentle and sweet voice)` for voice design from nothing, or `(slightly faster, cheerful tone)` over a reference clip for style-guided cloning.
 
-This overlaps layer 1 and does not replace it. It is free text: not enumerable, not reproducible across runs — the model card recommends generating one to three times to get what you want — and it offers no way to sweep an axis or check that a request was honoured. The tag in §11.1 trades expressiveness for exactly those properties: 32 slot values, deterministic given a seed, measurable. The two compose, one being a parenthetical prefix and the other a bracketed header.
+This overlaps layer 1 and does not replace it. It is free text: not enumerable, not reproducible across runs — the model card recommends generating one to three times to get what you want — and it offers no way to sweep an axis or check that a request was honoured. The tag in §11.3 trades expressiveness for exactly those properties: 32 slot values, deterministic given a seed, measurable. The two compose, one being a parenthetical prefix and the other a bracketed header.
 
 ### What is not known
 
@@ -327,26 +381,30 @@ All of the above is documented for VoxCPM2 in general and **none of it for Khmer
 | open question | why it is genuinely open |
 |---|---|
 | Do the tags fire in Khmer text at all? | They are English strings inside a Khmer sentence. Khmer tokenises to UTF-8 byte tokens; the tag does not. Whether the model recognises the pattern in that context is empirical. |
-| Are they read aloud instead? | The failure to check for is the model pronouncing "laughing" rather than laughing — the same check §11.1 ran on the prosodic tag, which passed. |
+| Are they read aloud instead? | The failure to check for is the model pronouncing "laughing" rather than laughing — the same check §11.3 ran on the prosodic tag, which passed. |
 | Does the prosodic adapter damage them? | The adapter was trained on read speech containing no laughter, and LoRA can erode capabilities absent from the fine-tuning distribution. Testable against the same clip with the adapter disabled. |
 
 **The cheapest useful experiment.** Synthesize a fixed set of Khmer sentences with and without each tag, three ways: base model, adapter enabled, adapter disabled. Then measure rather than listen — duration delta, since a real laugh lengthens the clip, and the project's Khmer CTC ASR on the transcript, which shows immediately whether "laughing" is being spoken as a word. This reuses `verify_control.py`'s measurement layer and `score_cer.py` unchanged, and needs no corpus, no labels and no training. That is what makes layer 2 the right next step rather than layers 3 or 4, where the blocker is data that does not exist.
 
 ---
 
-## 11.8 What this does and does not settle
+## 11.10 What this does and does not settle
 
-**Settled.** VoxCPM2 can be given a control surface without touching its architecture; the packer's zero text loss-mask makes the text field a free conditioning channel. It trains on 12 GB, not the documented 20. And the failure mode that makes the obvious construction quietly not work is identified, measured and fixed: a text-side control tag is redundant with the teacher-forced acoustic prefix, so it earns no gradient unless the loss is weighted toward the onset and the LM→DiT projections are adapted.
+**The result that matters most, and it is not the fine-tune.** VoxCPM2's built-in parenthetical prompt already controls Khmer pitch, rate and level (§11.1). Pitch spans 106 Hz at rho +0.76 — nearly four times what this project's hand-labelled corpus can even express. The fine-tune was building something the model largely already had, and nobody checked first. **Measure the base model before training anything** is the cheapest lesson in this document and it cost the most to learn: about twenty minutes of measurement would have saved two training runs.
 
-**Settled about method, and more durable than the numbers.** Generated-audio metrics could not tell "never learned it" from "learned it, sampling lost it"; going back to the training objective with a positive control could, in minutes. Any future conditioning work on this model should run that test first — it is far cheaper than a 6.5-hour run that answers nothing.
+**Settled about the fine-tune.** VoxCPM2 can be given a control surface without touching its architecture; the packer's zero text loss-mask makes the text field a free conditioning channel. It trains on 12 GB, not the documented 20. And the failure mode that makes the obvious construction quietly not work is identified and measured: a text-side global attribute is redundant with the teacher-forced acoustic prefix, so it earns a gradient roughly 290× smaller than the transcript does. Weighting the loss toward the onset and adapting the LM→DiT projections took a two-speaker probe from +5.8 Hz to +39.9 Hz of separation, over a bar fixed in advance.
 
-**Not settled.** Naturalness, still — for the same reason CLAUDE.md gives at length. Nothing here changes the fact that no automatic metric ranks Khmer TTS, and whether the styled output *sounds* better is a listening-test question. The apparatus exists (`evaluation/listening_test.py`) and has not been run with real listeners.
+**Settled about method, and more durable than any number here.** Two habits did the real work. Generated-audio metrics could not distinguish "never learned it" from "learned it, sampling lost it"; going back to the training objective with a positive control could, in minutes. And measuring the label separation *before* training bounds what a model can possibly learn from those labels. Both are ordinary practice. Neither was applied to the base model's own capabilities until far too late, which is precisely the mistake §11.1 corrects.
 
-**Out of reach with this data.** Layers 3 and 4 — emotion, and voice qualities such as `whispering`. Those need expressive Khmer recordings, and no such corpus exists. The mechanism in §11.1 would carry them, but §11.5 is the correction to the obvious next thought: the mechanism alone is not enough. Both are *global* attributes, so an emotion tag faces exactly the same competition against the acoustic prefix that the speaker tag lost, and needs the same onset weighting. `laughter` is **not** in this category — as a local event it belongs to layer 2 (§11.7), which ships with the model and needs no corpus at all.
+**Not settled.** Naturalness, still — for the same reason CLAUDE.md gives at length. No automatic metric ranks Khmer TTS, and whether any of this *sounds* better is a listening-test question. The apparatus exists (`evaluation/listening_test.py`) and has not been run with real listeners.
+
+**Open, and cheap to close.** Whether the parenthetical prompt also covers layers 3 and 4 — emotion, voice quality — on Khmer. An earlier draft of this document called those "blocked on corpus"; §11.1 is the reason that phrasing was wrong. They are blocked on a measurement nobody has run, and only on a corpus if that measurement comes back negative. `finetune/verify_parenthetical.py` extends to them by editing one dictionary.
+
+**Genuinely needs data, if it is wanted at all.** Pitch *variation* — the one prosodic axis the built-in prompt fails (rho −0.27, wrong direction) — and reproducible selection of a named speaker. Note that `laughter` is **not** in this category — as a local event it belongs to layer 2 (§11.9), which ships with the model and needs no corpus at all.
 
 ---
 
-## 11.9 What here is standard, and what is not
+## 11.11 What here is standard, and what is not
 
 Worth stating plainly, because a method document that does not separate borrowed
 ideas from local inventions is hard to trust and harder to build on.
@@ -358,12 +416,12 @@ ideas from local inventions is hard to trust and harder to build on.
 - *LoRA for adaptation* ([Hu et al., 2021](https://arxiv.org/abs/2106.09685)), and the mixed-precision arrangement of fp32 adapters over frozen bf16 weights.
 - *Condition dropout for classifier-free guidance* ([Ho & Salimans, 2022](https://arxiv.org/abs/2207.12598)) — already in VoxCPM2 as `training_cfg_rate`.
 
-**A known problem, met in an unexpected place.** The tag being ignored is the information-preference / posterior-collapse failure of conditional autoregressive models: [Chen et al. (2017)](https://arxiv.org/abs/1611.02731), [Bowman et al. (2016)](https://arxiv.org/abs/1511.06349), and the teacher-forcing mismatch of [Bengio et al. (2015)](https://arxiv.org/abs/1506.03099). §11.5 gives the argument. The measurement came first; the literature was recognised afterwards, which is worth admitting because it is why the search took as long as it did. Anyone who saw the connection earlier would have gone straight to the fix.
+**A known problem, met in an unexpected place.** The tag being ignored is the information-preference / posterior-collapse failure of conditional autoregressive models: [Chen et al. (2017)](https://arxiv.org/abs/1611.02731), [Bowman et al. (2016)](https://arxiv.org/abs/1511.06349), and the teacher-forcing mismatch of [Bengio et al. (2015)](https://arxiv.org/abs/1506.03099). §11.7 gives the argument. The measurement came first; the literature was recognised afterwards, which is worth admitting because it is why the search took as long as it did. Anyone who saw the connection earlier would have gone straight to the fix.
 
 **Local to this repo, with no citation behind it.**
 
 - *`enable_proj: true`.* An architectural fact about VoxCPM2 — four projection layers are the only route from the LM into the acoustic generator — not a general principle. docs/09's advice to freeze them is correct for the case it was written for.
-- *Onset-weighted loss.* Mine. The literature's fix is to corrupt the shortcut, not to reweight around it; §11.5 says why the cheaper version was chosen and what the more principled experiment would be. If this were being written up as research rather than as a build log, prefix corruption is the comparison that would have to be run.
+- *Onset-weighted loss.* Mine. The literature's fix is to corrupt the shortcut, not to reweight around it; §11.7 says why the cheaper version was chosen and what the more principled experiment would be. If this were being written up as research rather than as a build log, prefix corruption is the comparison that would have to be run.
 
 **Method, rather than result.** Two habits did more work than any single idea and neither is novel: measuring the label separation *before* training, because it bounds what the model can possibly learn; and taking a null result back to the training objective with a positive control, because generated-audio metrics cannot distinguish "never learned it" from "learned it and lost it in sampling". The second is ordinary ablation practice. It answered in two minutes a question that a 6.5-hour run had left ambiguous.
 
@@ -374,7 +432,7 @@ ideas from local inventions is hard to trust and harder to build on.
 - `voxcpm/training/packers.py` — the zero text loss-mask that makes the whole approach work
 - `voxcpm/model/voxcpm2.py` — `from_local`, and the fp32-in-training line behind the VRAM gap
 - [VoxCPM Fine-Tuning Guide](https://voxcpm.readthedocs.io/en/latest/finetuning/finetune.html) and [FAQ](https://voxcpm.readthedocs.io/en/latest/finetuning/faq.html)
-- [VoxCPM2 cookbook](https://voxcpm.readthedocs.io/en/latest/cookbook.html) — the non-verbal tag inventory in §11.7, and the guidance to use them sparingly and prefer lowercase forms
+- [VoxCPM2 cookbook](https://voxcpm.readthedocs.io/en/latest/cookbook.html) — the non-verbal tag inventory in §11.9, and the guidance to use them sparingly and prefer lowercase forms
 - [VoxCPM2 model card](https://huggingface.co/openbmb/VoxCPM2) — parenthetical voice design and style-guided cloning, and the stated variability between runs
 - Companion documents: [09 — VoxCPM2 architecture and training](09-voxcpm2-architecture-and-training.md), [10 — Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md)
 
