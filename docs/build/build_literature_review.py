@@ -8,9 +8,9 @@ repo, plus the in-house evaluation run in evaluation/results_report.md.
 Brand tokens (colors, logo, typography) are taken from https://www.smean.ai/ --
 the palette below is the site's own :root custom-property block.
 
-    python docs/build_literature_review.py
+    python docs/build/build_literature_review.py
 
-Writes docs/Smean-TTS-Literature-Review.docx
+Writes reports/Smean-TTS-Literature-Review.docx
 """
 
 from pathlib import Path
@@ -46,11 +46,14 @@ BODY_FONT = "Calibri"        # stand-in for Inter Tight (brand --font-sans)
 MONO_FONT = "Courier New"   # metric-compatible everywhere; Consolas is Windows-only
 KHMER_FONT = "Khmer OS System"
 
-ROOT = Path(__file__).resolve().parent
-LOGO = ROOT / "assets" / "smean-logo.png"
-OUT = ROOT / "Smean-TTS-Literature-Review.docx"
+HERE = Path(__file__).resolve().parent      # docs/build
+DOCS = HERE.parent                          # docs
+REPO = DOCS.parent                          # repository root
 
-REPO = ROOT.parent
+LOGO = DOCS / "assets" / "smean-logo.png"
+OUT = REPO / "reports" / "Smean-TTS-Literature-Review.docx"
+OUT.parent.mkdir(parents=True, exist_ok=True)
+
 RESULTS = REPO / "evaluation" / "results"
 MODELS = ("mms", "voxcpm2", "fish-s2", "higgs3")
 
@@ -1901,7 +1904,7 @@ for s in [
     "eval-set/eval.json — the fixed 100-sentence Khmer test set (50 pure Khmer, 50 code-switched)",
     "evaluation/results_report.md and evaluation/results/*/scores.json — the full four-model, "
     "400-clip synthesis and scoring run, including raw Whisper transcripts",
-    "docs/09-voxcpm2-architecture-and-training.md and docs/10-higgs-tts-3-architecture-and-training.md "
+    "docs/deep-dives/09-voxcpm2-architecture-and-training.md and docs/deep-dives/10-higgs-tts-3-architecture-and-training.md "
     "— the working notes this review consolidates",
 ]:
     bullet(doc, s, size=9.5)

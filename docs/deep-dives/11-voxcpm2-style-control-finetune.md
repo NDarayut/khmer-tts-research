@@ -3,7 +3,7 @@
 An assessment of VoxCPM2 for Khmer and a review of the literature on
 controllable speech synthesis.
 
-Markdown companion to [`Speech-Control-VoxCPM2.docx`](Speech-Control-VoxCPM2.docx),
+Markdown companion to [`Speech-Control-VoxCPM2.docx`](../../reports/Speech-Control-VoxCPM2.docx),
 built by `build_style_control_report.py`. Both carry the same content; the docx
 is the formatted version.
 
@@ -56,8 +56,8 @@ for this project, Fish Audio S2-Pro failed in exactly that manner, returning a
 median character error rate of 78.01 per cent on Khmer. Over the same fixed set
 of one hundred sentences VoxCPM2 returned 2.47 per cent, against 8.28 per cent
 for Higgs TTS 3 and 25.12 per cent for Meta MMS. VoxCPM2 was selected on that
-evidence. (See [`docs/03`](03-evaluation-benchmarking.md) for the metric and
-[`CLAUDE.md`](../CLAUDE.md) for the scorer's known bias.)
+evidence. (See [`docs/03`](../research/03-evaluation-benchmarking.md) for the metric and
+[`CLAUDE.md`](../../CLAUDE.md) for the scorer's known bias.)
 
 A second property follows from the input side. The model reads raw UTF-8 bytes
 through a 73,448-entry tokenizer and is given no language identifier, inferring
@@ -629,8 +629,8 @@ theory, databases and ESD. *Speech Communication*, 137, 1–18.
 
 ---
 
-**Project companions.** [`docs/03`](03-evaluation-benchmarking.md) — evaluation
+**Project companions.** [`docs/03`](../research/03-evaluation-benchmarking.md) — evaluation
 metrics · [`docs/09`](09-voxcpm2-architecture-and-training.md) — VoxCPM2
-architecture and training · [`finetune/README.md`](../finetune/README.md) — the
-runbook · [`finetune/results/diagnosis.md`](../finetune/results/diagnosis.md) —
+architecture and training · [`finetune/README.md`](../../finetune/README.md) — the
+runbook · [`finetune/results/diagnosis.md`](../../finetune/results/diagnosis.md) —
 the measurement record of the prosodic fine-tune and its conditioning failure.

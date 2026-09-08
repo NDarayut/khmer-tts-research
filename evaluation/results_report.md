@@ -141,7 +141,7 @@ RTF is hardware-bound and is only comparable between models measured on the same
 
 ## Reading these numbers
 
-- **The CER floor is not zero.** Per `docs/03-evaluation-benchmarking.md` section 3.4, ASR-based CER is only as good as the scoring ASR, and Whisper-large-v3's own Khmer accuracy is limited. Differences between the 3 models are meaningful (same ASR, same sentences); the absolute value is not.
+- **The CER floor is not zero.** Per `docs/research/03-evaluation-benchmarking.md` section 3.4, ASR-based CER is only as good as the scoring ASR, and Whisper-large-v3's own Khmer accuracy is limited. Differences between the 3 models are meaningful (same ASR, same sentences); the absolute value is not.
 - **UTMOS and DNSMOS have never heard Khmer.** Both were trained on MOS studies of mostly English speech. They rate acoustic quality and prosodic naturalness, which transfers reasonably, but treat them as a relative ranking rather than a calibrated Khmer MOS.
 - **DNSMOS BAK is near its ceiling for clean synthesis** and carries little signal here; SIG and OVRL are the informative columns.
 - **Published figures are self-reported upper bounds** -- both the VoxCPM2 and Fish S2-Pro Khmer numbers come from OpenBMB's own benchmark, not an independent evaluation.

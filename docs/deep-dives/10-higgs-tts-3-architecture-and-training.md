@@ -1,6 +1,6 @@
 # 10 — Higgs TTS 3: How It Works, and How to Train It
 
-The second of the two models left standing after the listening evaluation (`evaluation/results_report.html`, §5), and the newest model in this survey. It arrived after the original research pass, which is why [Document 7](07-other-models-checked.md) still lists *Higgs Audio v2* under "no Khmer support" — that verdict was correct for v2 and is superseded here for v3.
+The second of the two models left standing after the listening evaluation (`evaluation/results_report.html`, §5), and the newest model in this survey. It arrived after the original research pass, which is why [Document 7](../research/07-other-models-checked.md) still lists *Higgs Audio v2* under "no Khmer support" — that verdict was correct for v2 and is superseded here for v3.
 
 This document mirrors [Document 9](09-voxcpm2-architecture-and-training.md) for VoxCPM2: how the model works, and what training it would actually involve. The two answers are very different, and the second one is mostly bad news.
 
@@ -171,4 +171,4 @@ If you do proceed, the first step is not code — it is **confirming with Boson 
 - `config.json` from `multimodalart/higgs-audio-v3-tts-4b-transformers` — every backbone figure in §10.2
 - `config.json` from `bosonai/higgs-audio-v2-tokenizer` — semantic/acoustic branch specs
 - `modeling_higgs_multimodal_qwen3.py` — delay pattern, BOC/EOC ids, prompt format, fused embedding and head, and the absence of a loss-returning `forward()`
-- Companion documents: [09 — VoxCPM2](09-voxcpm2-architecture-and-training.md), [07 — Other Models Checked](07-other-models-checked.md) (supersedes its Higgs Audio v2 entry), [02 — What Data TTS Needs](02-training-data-requirements.md)
+- Companion documents: [09 — VoxCPM2](09-voxcpm2-architecture-and-training.md), [07 — Other Models Checked](../research/07-other-models-checked.md) (supersedes its Higgs Audio v2 entry), [02 — What Data TTS Needs](../research/02-training-data-requirements.md)

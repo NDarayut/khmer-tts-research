@@ -1,7 +1,7 @@
 # `finetune/` — runbook
 
 Style- and voice-controlled VoxCPM2 for Khmer. The *why*, the design reasoning
-and the results are in [`docs/11-voxcpm2-style-control-finetune.md`](../docs/11-voxcpm2-style-control-finetune.md).
+and the results are in [`docs/deep-dives/11-voxcpm2-style-control-finetune.md`](../docs/deep-dives/11-voxcpm2-style-control-finetune.md).
 This file is the operational sequence.
 
 Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.

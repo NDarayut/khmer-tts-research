@@ -3,7 +3,7 @@
 The adapter trained. It changed the model. It does not read the control tag.
 This file is the evidence for that claim and for the cause, in the order the
 evidence was collected. The design and the verdict are in
-[`docs/11`](../../docs/11-voxcpm2-style-control-finetune.md) §2.1.
+[`docs/11`](../../docs/deep-dives/11-voxcpm2-style-control-finetune.md) §2.1.
 
 ## 1. The adapter is real, and it did change the model
 

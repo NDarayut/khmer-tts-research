@@ -25,7 +25,7 @@ Higgs TTS 3 (`bosonai/higgs-tts-3-4b`) still does **not** list Khmer — its mod
 
 This is the one genuine counter-example to the section below: a model whose published language list understates what it can do. It is worth remembering as a caveat in both directions — **a language list is evidence, not proof, in either direction.** Fish Audio S2 lists Khmer and cannot speak it; Higgs TTS 3 does not list Khmer and can. The only reliable test is to run the model and listen.
 
-Higgs TTS 3 is covered in full in [Document 10](10-higgs-tts-3-architecture-and-training.md), including the licensing constraint (research/non-commercial) that limits what can be done with that finding.
+Higgs TTS 3 is covered in full in [Document 10](../deep-dives/10-higgs-tts-3-architecture-and-training.md), including the licensing constraint (research/non-commercial) that limits what can be done with that finding.
 
 ## Why this list matters
 

@@ -1,6 +1,6 @@
 # 9 — VoxCPM2: How It Works, and How to Train It
 
-Companion to [Model 6](06-model-voxcpm2.md), which covers what VoxCPM2 *is* and what it claims. This document covers the two questions that matter once you have decided to use it: **how the model actually works**, and **what it takes to fine-tune it for Khmer** — the data, the hardware, the config, and the failure modes.
+Companion to [Model 6](../research/06-model-voxcpm2.md), which covers what VoxCPM2 *is* and what it claims. This document covers the two questions that matter once you have decided to use it: **how the model actually works**, and **what it takes to fine-tune it for Khmer** — the data, the hardware, the config, and the failure modes.
 
 VoxCPM2 is one of the two models left standing after the listening evaluation (see `evaluation/results_report.html`, §5). Of the two, it is the one you can actually ship: **Apache-2.0**, commercial use included, no attribution requirement. Its counterpart, [Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md), is research/non-commercial only.
 
@@ -277,4 +277,4 @@ That last row is a genuine advantage of LoRA for this project: because the adapt
 - `voxcpm` 2.0.3 package source: `training/validate.py`, `training/data.py`, `modules/layers/lora.py`, `cli.py`
 - `config.json` from the `openbmb/VoxCPM2` checkpoint — every architecture figure in §9.2
 - [OpenSLR SLR42](https://www.openslr.org/42/) — Khmer TTS corpus
-- Companion documents: [06 — Model: VoxCPM2](06-model-voxcpm2.md), [02 — What Data TTS Needs](02-training-data-requirements.md), [10 — Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md)
+- Companion documents: [06 — Model: VoxCPM2](../research/06-model-voxcpm2.md), [02 — What Data TTS Needs](../research/02-training-data-requirements.md), [10 — Higgs TTS 3](10-higgs-tts-3-architecture-and-training.md)

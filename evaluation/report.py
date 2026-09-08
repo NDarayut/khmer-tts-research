@@ -345,7 +345,7 @@ def build_report(results):
     lines.append("## Reading these numbers")
     lines.append("")
     lines.append(
-        "- **The CER floor is not zero.** Per `docs/03-evaluation-benchmarking.md` "
+        "- **The CER floor is not zero.** Per `docs/research/03-evaluation-benchmarking.md` "
         "section 3.4, ASR-based CER is only as good as the scoring ASR, and "
         "Whisper-large-v3's own Khmer accuracy is limited. Differences between "
         "the 3 models are meaningful (same ASR, same sentences); the absolute "
