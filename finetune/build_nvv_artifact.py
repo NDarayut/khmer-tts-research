@@ -109,6 +109,7 @@ p{max-width:64ch}
 }
 .badge.novel{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber)}
 .badge.doc{background:var(--teal-soft);color:var(--teal);border:1px solid var(--teal)}
+.badge.held{background:transparent;color:var(--ink-soft);border:1px dashed var(--ink-soft)}
 .tagsub{font-size:13.5px;color:var(--ink-soft);margin:0 0 16px;max-width:64ch}
 .carrier{
   background:var(--card); border:1px solid var(--line); border-radius:3px;
@@ -170,7 +171,7 @@ p{max-width:64ch}
 .vbtn.no[aria-pressed="true"]{background:var(--ink-soft);border-color:var(--ink-soft)}
 .tally{
   font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-soft);
-  margin-top:10px; font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums; margin-left:auto;
 }
 .tally b{color:var(--teal);font-size:15px}
 footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
@@ -220,6 +221,49 @@ tally();
 """
 
 
+def render_tag(ap_, tag, cls, badge, carriers, seeds, by, has_lora):
+    """One tag: its heading, then a card per carrier sentence, then a column
+    per seed. Seeds sit side by side because the failure this experiment is
+    about is a tag that fires on one seed and not the next -- that is only
+    visible when the takes are adjacent."""
+    slug = tag.strip("[]")
+    ap_('<div class="taghead">')
+    ap_(f'<span class="tagname">{html.escape(tag)}</span>')
+    ap_(f'<span class="badge {cls}">{html.escape(badge)}</span>')
+    ap_(f'<span class="tally" data-tally="{html.escape(slug)}"></span>')
+    ap_('</div>')
+    for ci, carrier in enumerate(carriers):
+        shown = html.escape(carrier).replace(
+            "{tag}", f'<span class="slot">{html.escape(tag)}</span>')
+        ap_('<div class="carrier">')
+        ap_(f'<div class="carrier-text">{shown}</div><div class="seeds">')
+        for seed in seeds:
+            cell = by.get((tag, ci, seed), {})
+            ap_('<div class="seed">')
+            ap_(f'<div class="seedlabel">seed {seed}</div>')
+            ap_(f'<div class="pair" data-vid="{html.escape(slug)}-{ci}-{seed}" '
+                f'data-vtag="{html.escape(slug)}">')
+            rows = [("base_tagged", "with tag", ""),
+                    ("base_untagged", "control, no tag", " ctl")]
+            if has_lora:
+                rows = [("lora_tagged", "after training", ""),
+                        ("base_tagged", "before training", " ctl"),
+                        ("base_untagged", "control, no tag", " ctl")]
+            for k, label, bcls in rows:
+                c = cell.get(k)
+                if not c:
+                    continue
+                ap_(f'<button class="btn{bcls}" data-src="{c["uri"]}">'
+                    f'<span class="ico"></span>{html.escape(label)}'
+                    f'<span class="dur">{c["dur"]:.1f}s</span></button>')
+            ap_('<div class="verdict">'
+                '<button class="vbtn" data-val="yes">heard it</button>'
+                '<button class="vbtn no" data-val="no">nothing</button>'
+                '</div>')
+            ap_('</div></div>')
+        ap_('</div></div>')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -232,7 +276,12 @@ def main():
     base_man, base_dir = load(args.base)
     lora_man, lora_dir = (load(args.lora) if args.lora else (None, None))
 
-    doc_tags = set(base_man["documented_tags"])
+    # Grouping comes from the adapter's manifest when there is one: the base
+    # sweep predates the held-out arm and its lists are stale.
+    gm = lora_man or base_man
+    doc_tags = list(gm["documented_tags"])
+    novel_tags = list(gm["novel_tags"])
+    held_tags = list(gm.get("held_out_tags", []))
     carriers = base_man["carriers"]
     seeds = base_man["seeds"]
 
@@ -259,15 +308,15 @@ def main():
     ap_('<div class="wrap"><header>')
     ap_('<p class="eyebrow">VoxCPM2 &middot; tag expansion &middot; English</p>')
     ap_('<h1>Can VoxCPM2 learn to cough?</h1>')
-    n_novel = len([t for t in base_man["novel_tags"]])
-    ap_(f'<p class="lede">VoxCPM2 documents eight non-verbal tags, but nothing in '
-        f'the model treats them as a feature &mdash; they are ordinary text the model '
-        f'picked up by accident from its training data. If that is right, then a tag '
-        f'it has <em>never</em> seen should be no harder to teach than one it half '
-        f'knows. This page is the listening test for that claim: '
-        f'<strong>{n_novel} invented tags</strong> against '
-        f'<strong>{len(doc_tags)} documented ones</strong>, '
-        f'{"before and after fine-tuning" if has_lora else "on the untrained base model"}.</p>')
+    n_novel = len(novel_tags)
+    ap_(f'<p class="lede">VoxCPM2 ships eight non-verbal tags, but nothing in the '
+        f'model treats them as a feature &mdash; they are ordinary text it picked up '
+        f'by accident at pre-training scale. If that is right, a tag it has '
+        f'<em>never</em> seen should be no harder to teach than one it half knows. '
+        f'{"Here are both, before and after a 2,500-step LoRA on 3.5 hours of English: " if has_lora else "Here is the untrained model on both: "}'
+        f'<strong>{n_novel} invented tags</strong> it was taught, '
+        f'<strong>{len(doc_tags)} documented ones</strong> it was also taught, and '
+        f'<strong>{len(held_tags)} it was never taught at all</strong>.</p>')
     ap_('</header>')
 
     ap_('<div class="note"><b>How to listen.</b> Every take has a control: the same '
@@ -282,48 +331,30 @@ def main():
             'at least sometimes, and the invented ones do nothing at all. If an invented '
             'tag already works, that is worth knowing before spending a GPU on it.</div>')
 
-    order = list(doc_tags) + [t for t in base_man["novel_tags"]]
-    for tag in order:
-        novel = tag not in doc_tags
-        slug = tag.strip("[]")
-        ap_('<div class="taghead">')
-        ap_(f'<span class="tagname">{html.escape(tag)}</span>')
-        ap_(f'<span class="badge {"novel" if novel else "doc"}">'
-            f'{"invented" if novel else "documented"}</span>')
-        ap_('</div>')
-        ap_(f'<p class="tagsub">{"Never documented by OpenBMB. The model has no reason to know this string means anything." if novel else "Listed in the VoxCPM2 model card."}</p>')
-        ap_(f'<p class="tally" data-tally="{html.escape(slug)}"></p>')
-
-        for ci, carrier in enumerate(carriers):
-            shown = html.escape(carrier).replace(
-                "{tag}", f'<span class="slot">{html.escape(tag)}</span>')
-            ap_('<div class="carrier">')
-            ap_(f'<div class="carrier-text">{shown}</div><div class="seeds">')
-            for seed in seeds:
-                cell = by.get((tag, ci, seed), {})
-                ap_('<div class="seed">')
-                ap_(f'<div class="seedlabel">seed {seed}</div>')
-                ap_(f'<div class="pair" data-vid="{html.escape(slug)}-{ci}-{seed}" '
-                    f'data-vtag="{html.escape(slug)}">')
-                rows = [("base_tagged", "with tag", ""),
-                        ("base_untagged", "control, no tag", " ctl")]
-                if has_lora:
-                    rows = [("lora_tagged", "after training", ""),
-                            ("base_tagged", "before training", " ctl"),
-                            ("base_untagged", "control, no tag", " ctl")]
-                for k, label, cls in rows:
-                    c = cell.get(k)
-                    if not c:
-                        continue
-                    ap_(f'<button class="btn{cls}" data-src="{c["uri"]}">'
-                        f'<span class="ico"></span>{label}'
-                        f'<span class="dur">{c["dur"]:.1f}s</span></button>')
-                ap_('<div class="verdict">'
-                    '<button class="vbtn" data-val="yes">heard it</button>'
-                    '<button class="vbtn no" data-val="no">nothing</button>'
-                    '</div>')
-                ap_('</div></div>')
-            ap_('</div></div>')
+    GROUPS = [
+        ("Tags it was taught, and already documented", doc_tags, "doc",
+         "documented",
+         "Listed in the VoxCPM2 model card, and present in the training data. "
+         "The reference for what a working tag sounds like."),
+        ("Tags it was taught, and never documented", novel_tags, "novel",
+         "invented",
+         "OpenBMB never documented these strings. They were in the training "
+         "data, so if the claim holds they should now work as well as the "
+         "documented pair above."),
+        ("Tags it was never taught", held_tags, "held", "held out",
+         "Absent from VoxCPM2's inventory AND absent from the training corpus. "
+         "The model cannot have learned these, so they are the control: "
+         "whatever they do is what an adapter that merely got more expressive "
+         "would do to everything."),
+    ]
+    for heading, taglist, cls, badge, blurb in GROUPS:
+        if not taglist:
+            continue
+        ap_(f'<h2>{html.escape(heading)} <span class="n">'
+            f'{len(taglist)} tag{"s" if len(taglist) != 1 else ""}</span></h2>')
+        ap_(f'<p class="tagsub">{html.escape(blurb)}</p>')
+        for tag in taglist:
+            render_tag(ap_, tag, cls, badge, carriers, seeds, by, has_lora)
 
     ap_('<footer>')
     ap_(f'Generated by <code>finetune/build_nvv_artifact.py</code> from '
