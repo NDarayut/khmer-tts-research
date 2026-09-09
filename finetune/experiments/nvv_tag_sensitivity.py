@@ -194,7 +194,14 @@ def main():
     base = losses["true"]
     n = len(base)
     report = {"model": args.lora or "base", "n": n,
-              "true_mean": float(base.mean()), "conditions": {}}
+              "true_mean": float(base.mean()),
+              # Per-row reference losses, not just their mean. Without these a
+              # per-tag breakdown cannot be reconstructed afterwards: the delta
+              # for a clip is its condition loss minus its own reference loss,
+              # and averaging the references first throws that away.
+              "true_values": base.tolist(),
+              "texts": [r["text"] for r in rows],
+              "conditions": {}}
     print(f"\nmodel: {args.lora or 'BASE'}   n={n}")
     print(f"  correct text          {base.mean():.5f}")
     print(f"\n  {'condition':12}{'mean':>10}{'delta':>10}{'worse':>9}{'p':>10}")
