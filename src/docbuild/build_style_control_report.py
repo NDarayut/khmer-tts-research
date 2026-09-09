@@ -82,6 +82,8 @@ _DATA = ROOT / "finetune" / "data-nvv"
 OVF = json.loads((_NVV / "tag_sensitivity_overfit.json").read_text())
 NORM = json.loads((_NVV / "tag_sensitivity_n150.json").read_text())
 BASE = json.loads((_NVV / "tag_sensitivity_base_n150.json").read_text())
+HELD = json.loads((_NVV / "tag_sensitivity_heldout.json").read_text())
+BHELD = json.loads((_NVV / "tag_sensitivity_base_heldout.json").read_text())
 REPR = json.loads((_NVV / "tag_representation.json").read_text())
 OMETA = json.loads((_DATA / "overfit" / "overfit_meta.json").read_text())
 CMETA = json.loads((_DATA / "manifests" / "corpus_meta.json").read_text())
@@ -122,6 +124,7 @@ SECTIONS = [
     (2, "A.3", "Measurement"),
     (2, "A.4", "Results"),
     (2, "A.5", "Interpretation and Limits"),
+    (2, "A.6", "The Held-Out Test"),
 ]
 
 LOSS_MASK = """# voxcpm/training/packers.py, process_tts_data
@@ -141,7 +144,7 @@ TAG_INVENTORY = """[laughing]   [laughter]   [sigh]   [Uhm]   [Shh]
 
 TABLES = ["arch", "params", "prompts", "paren", "prosody", "nvv", "adjacent", "nvv_refs",
           # Appendix A
-          "ovf_conf", "ovf_cond", "ovf_res", "ovf_cmp", "ovf_tags"]
+          "ovf_conf", "ovf_cond", "ovf_res", "ovf_cmp", "ovf_tags", "ovf_held"]
 
 
 def T(key):
@@ -835,8 +838,8 @@ def build(pages):
 
     para(doc, f"A conventional fine-tune had already been performed on "
               f"{CORPUS_H:.2f} hours of tagged English speech derived from "
-              f"{CMETA['source']}, and evaluated on {NORM['n']} clips held out of "
-              f"training, using a low-rank adaptation of the backbone language model, the "
+              f"{CMETA['source']}, and evaluated on {NORM['n']} clips drawn from its own "
+              f"training set, using a low-rank adaptation of the backbone language model, the "
               f"local diffusion transformer and the projection layers. Its effect on the "
               f"inline tag was close to nothing. Deleting the tag from the transcript "
               f"raised the flow-matching loss on {NORM['conditions']['removed']['worse']} "
@@ -986,7 +989,9 @@ def build(pages):
     tbl(doc, "ovf_cmp",
         "Salience of the inline tag relative to the transcript, across the three "
         "states of the model. The ratio is the cost of deleting the tag divided by the "
-        "cost of scrambling the transcript, measured within each model.",
+        "cost of scrambling the transcript, measured within each model. All three rows "
+        "are measured on clips the model in question was trained on; the held-out "
+        "comparison is reported separately in A.6.",
         ["Model state", "n", "Deletion p", "Relocation p", "Tag / transcript"],
         [["Unmodified", f"{BASE['n']}", fp(BASE["conditions"]["removed"]["p"]),
           fp(BASE["conditions"]["moved"]["p"]),
@@ -1046,7 +1051,7 @@ def build(pages):
               f"point of the design, but it is also its entire limitation: the run "
               f"demonstrates capability and says nothing about whether the same tags "
               f"behave correctly on text the model has not seen. That is a separate "
-              f"experiment against a held-out set, and it has not been performed.")
+              f"experiment against a held-out set, reported in A.6.")
 
     para(doc, "Two consequences follow for the methodology. The first is that the loss "
               "should be weighted over the frames in which the event occurs, so that a "
@@ -1057,9 +1062,67 @@ def build(pages):
               "annotations used here do not. Khmer remains out of scope until tag "
               "expansion has been shown to generalize in English.")
 
+    heading(doc, "A.6   The Held-Out Test", 2)
+
+    para(doc, f"The generalization experiment which A.5 defers to has since been performed, "
+              f"and its result is negative. "
+              f"The validation split of the corpus was never shown to the model during "
+              f"training; {HELD['n']} of its clips carry an inline tag, and those "
+              f"{HELD['n']} constitute the entire available sample. The four-condition "
+              f"probe was applied to the fine-tuned model and to the unmodified model over "
+              f"those identical clips, so that the two are compared within one clip set "
+              f"rather than across sets. {T('ovf_held')} reports the outcome.")
+
+    tbl(doc, "ovf_held",
+        f"Tag sensitivity on {HELD['n']} clips held out of training, for the fine-tuned "
+        f"model and the unmodified model over the same clips. The two are "
+        f"indistinguishable.",
+        ["Model state", "Reference loss", "Deletion \u0394", "Clips worse", "p",
+         "Tag / transcript"],
+        [["Unmodified", f"{BHELD['true_mean']:.5f}",
+          f"{BHELD['conditions']['removed']['delta_mean']:+.5f}",
+          f"{BHELD['conditions']['removed']['worse']}/{BHELD['n']}",
+          fp(BHELD["conditions"]["removed"]["p"]),
+          f"{100 * BHELD['removed_over_scrambled']:.1f}%"],
+         ["Fine-tuned", f"{HELD['true_mean']:.5f}",
+          f"{HELD['conditions']['removed']['delta_mean']:+.5f}",
+          f"{HELD['conditions']['removed']['worse']}/{HELD['n']}",
+          fp(HELD["conditions"]["removed"]["p"]),
+          f"{100 * HELD['removed_over_scrambled']:.1f}%"]],
+        align_right=(1, 2, 3, 4, 5))
+
+    para(doc, f"The two rows describe the same behaviour. The cost of deleting the tag "
+              f"differs between them by "
+              f"{abs(HELD['conditions']['removed']['delta_mean'] - BHELD['conditions']['removed']['delta_mean']):.4f}, "
+              f"and the sign-test counts differ by a single clip in favour of the "
+              f"unmodified model. Whatever sensitivity to the tag these sentences elicit, "
+              f"the model possessed it before training; two thousand five hundred steps on "
+              f"{CORPUS_H:.2f} hours added nothing that reaches text the model has not seen.")
+
+    para(doc, f"Two qualifications are necessary. The first is statistical power: at "
+              f"n = {HELD['n']}, a two-sided sign test requires roughly twenty clips of "
+              f"twenty-eight to reach conventional significance, so a small true effect "
+              f"would not have been detected here. What the test excludes is a large one, "
+              f"and a large effect is what a working method would produce given the "
+              f"capability demonstrated in A.4. The second is that the ratio in the final "
+              f"column is not comparable with the corresponding column of {T('ovf_cmp')}. "
+              f"These are different sentences, and the unmodified model scores "
+              f"{100 * BHELD['removed_over_scrambled']:.0f}% on them against "
+              f"{100 * BASE['removed_over_scrambled']:.0f}% on the clips used there. The "
+              f"comparison is valid only within a clip set, which is the reason the "
+              f"unmodified model was re-measured on these particular clips.")
+
+    para(doc, "Read together with A.4, the two experiments give a consistent and "
+              "unflattering account of the present recipe. The mechanism exists: the "
+              "model can be made to bind an arbitrary bracketed string to a local event "
+              "and to its position. The fine-tune as configured does not install that "
+              "binding in any form which survives to unseen text. The two changes "
+              "proposed in A.5 are accordingly not refinements but prerequisites.")
+
     note(doc, "Provenance. The figures in this appendix are read at build time from "
-              "`finetune/results/nvv/tag_sensitivity_overfit.json` and its counterparts "
-              "for the two other model states. The trained adapter itself was deleted in "
+              "`finetune/results/nvv/tag_sensitivity_overfit.json`, its counterparts "
+              "for the two other model states, and the two held-out reports read by "
+              "A.6. The trained adapter itself was deleted in "
               "error after the run and has not been regenerated; the recorded measurements "
               "and the synthesized audio survive, but reproducing the audio would require "
               "repeating the training. The procedure is documented in "

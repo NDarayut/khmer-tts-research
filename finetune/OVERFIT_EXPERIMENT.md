@@ -15,11 +15,15 @@ Listening page (four undocumented tags, ground truth alongside):
 ## 1. The question this run exists to answer
 
 A normal fine-tune had already been run: 3.51 hours of tagged English, 2,500
-steps, LoRA on lm + dit + proj. It produced almost nothing. On 150 held-out
-clips, deleting the inline tag cost **5.8%** of what scrambling the transcript
-cost (p = 0.14, i.e. not distinguishable from zero), and moving the tag to the
-wrong end of the sentence cost **nothing** (p = 0.28). On the base model the
-same two figures are 2.3% (p = 0.23) and p = 0.98.
+steps, LoRA on lm + dit + proj. It produced almost nothing. On 150 clips
+*drawn from its own training set*, deleting the inline tag cost **5.8%** of what
+scrambling the transcript cost (p = 0.14, i.e. not distinguishable from zero),
+and moving the tag to the wrong end of the sentence cost **nothing** (p = 0.28).
+On the base model the same two figures are 2.3% (p = 0.23) and p = 0.98.
+
+Those 150 clips come from `train.jsonl`, not from the held-out split. This
+matters: the fine-tune failed to bind the tag on sentences it had been shown
+2,500 steps' worth of times. See §7 for the held-out measurement, run later.
 
 That null has two completely different explanations, and they lead to opposite
 decisions:
@@ -149,7 +153,7 @@ problem.
 sentences the model was trained on, hundreds of times over. That is what
 overfitting means, and it is the point — quoting this as evidence that the tags
 generalize would be dishonest. Generalization is a separate experiment with a
-held-out set, and it has not been run.
+held-out set; it is reported in §7, and its result is negative.
 
 Two supporting facts, verified separately:
 
@@ -177,9 +181,60 @@ model. The two changes that follow directly:
 
 Khmer stays out of this until tag expansion generalizes on English.
 
+## 7. The held-out test: no generalization
+
+§5 said generalization was a separate experiment that had not been run. It has
+now been run, and the fine-tune does not survive it.
+
+The held-out split (`val.jsonl`) was never shown to the model. Of its 87 clips,
+28 carry a tag, and those 28 are the whole available sample — small, but
+the only honest one. The same four-condition probe, on the fine-tuned model and
+on the base model, over the identical clips:
+
+| model | reference loss | tag-deletion Δ | worse | p | ratio |
+|---|---:|---:|---:|---:|---:|
+| base (untrained) | 0.87491 | +0.01603 | 19/28 | 0.044 | 0.519 |
+| fine-tuned | 0.85221 | +0.01639 | 18/28 | 0.092 | 0.619 |
+
+**The two rows are the same.** The tag-deletion cost differs by 0.0004 — well
+inside noise at n = 28 — and the sign-test counts differ by one clip in the
+*wrong* direction. Whatever tag sensitivity these clips show, the base model
+already had it; 2,500 steps of fine-tuning on 3.5 hours added nothing that
+transfers to unseen text.
+
+Two cautions on reading the numbers:
+
+* **n = 28 is underpowered.** A two-sided sign test needs about 20 of 28 to
+  reach p < 0.05. This test could not have detected a small true effect. What it
+  rules out is a large one — and after the overfitting run, a large effect is
+  exactly what a working method would have produced.
+* **The ratio is not comparable across clip sets.** The 0.5–0.6 figures here are
+  far above the 0.023 the base model scored on 150 training clips, because these
+  are different sentences, not because anything improved. That is precisely why
+  the base model was re-run on *these* clips: within one clip set, the comparison
+  is valid, and within this one the fine-tune is inert.
+
+Set against §4, the picture is consistent and unflattering to the current
+recipe: the mechanism exists (the overfit run proves it), and the fine-tune as
+configured does not install it in any form that reaches new sentences. The
+changes in §6 are not optional refinements — they are the difference between a
+method that works and one that does not.
+
+Reproducing:
+
+```bash
+.venv/bin/python finetune/experiments/nvv_tag_sensitivity.py \
+    --lora finetune/checkpoints/nvv/latest \
+    --manifest finetune/data-nvv/manifests/val.jsonl --rows 28 \
+    --out finetune/results/nvv/tag_sensitivity_heldout.json
+.venv/bin/python finetune/experiments/nvv_tag_sensitivity.py \
+    --manifest finetune/data-nvv/manifests/val.jsonl --rows 28 \
+    --out finetune/results/nvv/tag_sensitivity_base_heldout.json
+```
+
 ---
 
-## Reproducing
+## Reproducing the overfitting run
 
 ```bash
 .venv/bin/python finetune/build_overfit_set.py --per-tag 12
