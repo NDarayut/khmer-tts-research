@@ -1,0 +1,58 @@
+# Deliberate overfitting run: can VoxCPM2 bind an inline tag to a local event
+# AT ALL, when allowed to memorize the answer?
+#
+# This is a capability probe, not a product. nvv_tag_sensitivity.py measured the
+# inline tag as nearly inert after a normal 2,500-step run (removing it cost 2-6%
+# of what scrambling the transcript cost; moving it cost nothing, p=0.98 on the
+# base model). That leaves two possibilities -- the architecture cannot bind a
+# text tag to a local acoustic event, or 78 coughs over 3.5 h was too weak a
+# signal. Memorizing 60 clips separates them.
+#
+# EVERY CHOICE HERE IS THE OPPOSITE OF A NORMAL RUN, on purpose:
+#   * 60 clips, 5.4 minutes, 12 per tag.
+#   * No untagged mix. ELaTE's 50:50 protects against regression, which is a
+#     generalization concern; this run does not want regularization.
+#   * 5x the learning rate (5e-4 against 1e-4) and a short warmup.
+#   * val == train, so val loss reads memorization, not generalization.
+#   * 2,000 steps over 60 clips at effective batch 8 is ~265 epochs.
+#
+# Success here would prove capability and nothing else. The eval is on the same
+# sentences the model was trained on, and quoting that as evidence the tags
+# "work" would be dishonest.
+
+pretrained_path: /home/pc/.cache/huggingface/hub/models--openbmb--VoxCPM2/snapshots/32279effe8c19989596f05d353d1447f51d9e915
+train_manifest: /run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/train.jsonl
+val_manifest: /run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/val.jsonl
+
+sample_rate: 16000
+out_sample_rate: 48000
+
+batch_size: 1
+grad_accum_steps: 8
+num_workers: 4
+num_iters: 2000
+log_interval: 25
+valid_interval: 200
+save_interval: 250
+
+learning_rate: 0.0005       # 5x the documented LoRA rate; memorization is the goal
+weight_decay: 0.0           # no regularization, deliberately
+warmup_steps: 50
+max_steps: 2000
+max_batch_tokens: 896
+max_grad_norm: 1.0
+
+save_path: /run/media/pc/disk1/text-to-speech/finetune/checkpoints/nvv_overfit
+tensorboard: /run/media/pc/disk1/text-to-speech/finetune/logs/nvv_overfit
+
+lambdas:
+  loss/diff: 1.0
+  loss/stop: 1.0
+
+lora:
+  enable_lm: true
+  enable_dit: true
+  enable_proj: true         # mandatory; see results/diagnosis.md
+  r: 64
+  alpha: 64
+  dropout: 0.0

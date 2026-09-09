@@ -1,0 +1,495 @@
+{
+  "per_tag": 12,
+  "tags": [
+    "[cough]",
+    "[groan]",
+    "[throat-clear]",
+    "[sniff]",
+    "[laughing]"
+  ],
+  "n": 60,
+  "hours": 0.091,
+  "note": "val == train by design; this run measures memorization",
+  "clips": [
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07212_vtPOt4BwCA8_00197.wav",
+      "text": "[cough] We didn't seem to have much energy and they were much more energetic than we were.",
+      "duration": 4.416,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/000_cough.wav",
+      "overfit_index": 0
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id01772_Q0eT8CXZJ_I_00177.wav",
+      "text": "Um, [cough] but he, Jack had probably more than most characters.",
+      "duration": 4.672,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/001_cough.wav",
+      "overfit_index": 1
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10239_d8WzdUXTExk_00002.wav",
+      "text": "Pessimist and too lazy to be honest. [cough] I was not a real driven kid. So I think I would look at my life and say, how did you?",
+      "duration": 7.24,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/002_cough.wav",
+      "overfit_index": 2
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10203_ITOzfL1nSD8_00007.wav",
+      "text": "I mean, I've never experienced anything like it and I will never experience it again. [cough] And the reason is,",
+      "duration": 6.28,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/003_cough.wav",
+      "overfit_index": 3
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10210_gi6S4LymP5o_00005.wav",
+      "text": "Michael [cough] has a dark sense of humor. It's evident in the scr.",
+      "duration": 4.56,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/004_cough.wav",
+      "overfit_index": 4
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id01040_Np9EszrmCiE_00147.wav",
+      "text": "It owned a PBM that was undervalued. It had a big opportunity to expand margins. [cough]",
+      "duration": 6.208,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/005_cough.wav",
+      "overfit_index": 5
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_005_ex04_disgusted_css013.wav",
+      "text": "I can't hold it in, I'm sorry. [cough]",
+      "duration": 4.87,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/006_cough.wav",
+      "overfit_index": 6
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id08928_beS1JcR8ExI_00255.wav",
+      "text": "She made it clear to me that she saw her function in a special way, [cough] where she will not be just performing.",
+      "duration": 6.208,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/007_cough.wav",
+      "overfit_index": 7
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_nonverbal_006_ex03_nonverbal_css002.wav",
+      "text": "[cough] Oh my god, it's rough.",
+      "duration": 5.68,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/008_cough.wav",
+      "overfit_index": 8
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10990_BLGM8qAV9mk_00001.wav",
+      "text": "[cough] All the cast are older. Danny Boyles is twenty years older. So I think the way we approach it is kind.",
+      "duration": 5.48,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/009_cough.wav",
+      "overfit_index": 9
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10175_U9Bm6qcL5mU_00004.wav",
+      "text": "about family and about the family in this movie [cough] that everybody can relate to is how.",
+      "duration": 6.76,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/010_cough.wav",
+      "overfit_index": 10
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_happy_003_ex01_happy_css004.wav",
+      "text": "Yeah, I'm ready. [cough] Did you upgrade your TV?",
+      "duration": 3.18,
+      "tag": "[cough]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/011_cough.wav",
+      "overfit_index": 11
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_fearful_002_ex04_fearful_css018.wav",
+      "text": "[groan] Okay, okay, I guess I have to go first, but maybe... I don't... Okay...",
+      "duration": 6.22,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/012_groan.wav",
+      "overfit_index": 12
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_007_ex04_disgusted_css017.wav",
+      "text": "I don't think it's ever gonna end. [groan] Here's the urine corner. [sigh]",
+      "duration": 5.65,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/013_groan.wav",
+      "overfit_index": 13
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex03_fast_001_ex03_fast_css011.wav",
+      "text": "[groan] ll right. All right. You got to think about the whales, you know, the oka whales.",
+      "duration": 4.78,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/014_groan.wav",
+      "overfit_index": 14
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_003_ex04_disgusted_css000.wav",
+      "text": "Ugh, let's just go back to the hostel and take a shower. Ugh. [groan]",
+      "duration": 4.04,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/015_groan.wav",
+      "overfit_index": 15
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css006.wav",
+      "text": "else or something that got in there. [groan]",
+      "duration": 3.09,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/016_groan.wav",
+      "overfit_index": 16
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_007_ex03_disgusted_css027.wav",
+      "text": "[groan] This is so disgusting.",
+      "duration": 3.34,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/017_groan.wav",
+      "overfit_index": 17
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_laughing_002_ex01_laughing_css005.wav",
+      "text": "[groan] What was your favorite part? What was your favorite, favorite part?",
+      "duration": 3.93,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/018_groan.wav",
+      "overfit_index": 18
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_nonverbal_013_ex01_nonverbal_css000.wav",
+      "text": "Mm hmm. And so. And so. And so. And so. And so. And so. And so. Mm [groan] hmm.",
+      "duration": 7.62,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/019_groan.wav",
+      "overfit_index": 19
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_004_ex04_disgusted_css015.wav",
+      "text": "Oh [groan] no, oh oh it's all over his shirt now, that's...",
+      "duration": 7.71,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/020_groan.wav",
+      "overfit_index": 20
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css029.wav",
+      "text": "I don't think I can do it. [groan]",
+      "duration": 4.18,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/021_groan.wav",
+      "overfit_index": 21
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_007_ex04_disgusted_css003.wav",
+      "text": "Yeah, they definitely connect because we did not eat mac and cheese. [groan]",
+      "duration": 5.25,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/022_groan.wav",
+      "overfit_index": 22
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_004_ex01_disgusted_css018.wav",
+      "text": "Oh god, his shit is crawling up his ass crack and getting under the sea. Ugh. [groan]",
+      "duration": 6.76,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/023_groan.wav",
+      "overfit_index": 23
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id08241_QDnPKXkSIPs_00210.wav",
+      "text": "And he was a popular player, really, really popular [throat-clear] amongst the squad.",
+      "duration": 3.968,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/024_throat-clear.wav",
+      "overfit_index": 24
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id05684_pW7m_kqgIzo_00143.wav",
+      "text": "And give him opportunities there. Chris Fry is a guy that's a football player. He's demonstrated that. [throat-clear]",
+      "duration": 5.888,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/025_throat-clear.wav",
+      "overfit_index": 25
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00047_RKXS9TJfg_k_00188.wav",
+      "text": "Three, four hundred million dollars budget cuts [throat-clear] was.",
+      "duration": 3.968,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/026_throat-clear.wav",
+      "overfit_index": 26
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id04144_IJNaKpwvz04_00018.wav",
+      "text": "overseas filming. So every day every [throat-clear] everybody was like calling",
+      "duration": 4.288,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/027_throat-clear.wav",
+      "overfit_index": 27
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00358_zy2BKJDPSIg_00233.wav",
+      "text": "The world have been staggered by the numbers that turn up, particularly at home and away, where Film Stadium is still home and away. [throat-clear]",
+      "duration": 8.0,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/028_throat-clear.wav",
+      "overfit_index": 28
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07988_tMycZOp_yyA_00126.wav",
+      "text": "[throat-clear] You guys did real well. Two titles, then Richwoods, then Central. Two titles. McDonald's.",
+      "duration": 7.488,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/029_throat-clear.wav",
+      "overfit_index": 29
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id08703_lipkRCk_u_A_00231.wav",
+      "text": "Very, very [throat-clear] happy to be part of CSAIL season four. And",
+      "duration": 3.968,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/030_throat-clear.wav",
+      "overfit_index": 30
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id11095_HthR4x6tDUs_00006.wav",
+      "text": "[throat-clear] But we had, the day before, been doing the Scottish dancing.",
+      "duration": 4.52,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/031_throat-clear.wav",
+      "overfit_index": 31
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10919_TCTm9AZF_Xs_00007.wav",
+      "text": "You know, in the [throat-clear] during the course of the movie, we sort of end up.",
+      "duration": 5.8,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/032_throat-clear.wav",
+      "overfit_index": 32
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10425_4HMR_DEO8WE_00006.wav",
+      "text": "[throat-clear] A country that is very much, you know, I mean, New Zealand is amazing and it makes perfect sense to me that Peter Jackson's made a.",
+      "duration": 7.72,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/033_throat-clear.wav",
+      "overfit_index": 33
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex01_ex02_whisper_004_ex01_whisper_css006.wav",
+      "text": "But basically what you want to do is with a lot of these [throat-clear]",
+      "duration": 7.31,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/034_throat-clear.wav",
+      "overfit_index": 34
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id11077_XsJZ_SuFgR4_00018.wav",
+      "text": "[throat-clear] There's a time in hopefully everyone's, at least most people's lives, hopefully where an epiphany happens.",
+      "duration": 6.48,
+      "tag": "[throat-clear]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/035_throat-clear.wav",
+      "overfit_index": 35
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10639_wCyoPJtfte8_00002.wav",
+      "text": "And [sniff] actor nd I think it's hard. I think it's a weird, I think it's a weird life.",
+      "duration": 4.6,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/036_sniff.wav",
+      "overfit_index": 36
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex04_sad_css008.wav",
+      "text": "Yeah. [sniff]",
+      "duration": 2.43,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/037_sniff.wav",
+      "overfit_index": 37
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07567_CxosdaNTuyk_00075.wav",
+      "text": "[sniff] But just to say that I'm just going to move to New York and live there, it was shocking and my father was devastated because I didn't fit.",
+      "duration": 6.016,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/038_sniff.wav",
+      "overfit_index": 38
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07588_dOZqZu7VSyU_00098.wav",
+      "text": "The reason they're here is because we think they're good players. Again, we haven't got the biggest pool of players. We've picked up injuries like you've said. So these lads who are here. [sniff]",
+      "duration": 7.104,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/039_sniff.wav",
+      "overfit_index": 39
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10986_sOlWHKGy_SY_00036.wav",
+      "text": "[sniff] that obtained the rights and decided this is something they should make into an American show. But he didn't have all that much to.",
+      "duration": 7.48,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/040_sniff.wav",
+      "overfit_index": 40
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id06963_WLruVY_ssco_00092.wav",
+      "text": "It's been very special for me and it's been fun for me to continue to [sniff] to be in the mix, I gue",
+      "duration": 7.168,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/041_sniff.wav",
+      "overfit_index": 41
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_010_ex01_sad_css033.wav",
+      "text": "I mean, I'm in that sad mood, so if you got [sniff] a song you want to throw on, let me know.",
+      "duration": 6.94,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/042_sniff.wav",
+      "overfit_index": 42
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_laughing_004_ex02_laughing_css016.wav",
+      "text": "Stage and she was just like panicking like you could hear her backstage going no no no no [sniff] no",
+      "duration": 5.85,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/043_sniff.wav",
+      "overfit_index": 43
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex01_sympathetic_css002.wav",
+      "text": "I'm gonna start crying too. Why hy do you do this to me? [sniff]",
+      "duration": 6.28,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/044_sniff.wav",
+      "overfit_index": 44
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_008_ex01_sad_css017.wav",
+      "text": "Um, so, Marley, [sniff] I would say, um,",
+      "duration": 5.44,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/045_sniff.wav",
+      "overfit_index": 45
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10850_tzHipovxZXU_00003.wav",
+      "text": "[sniff] Um, they wanted me to read for Lisa Simpson, but I kind of, I really would like to do Bart. Does you mind, can I do Bart?",
+      "duration": 6.16,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/046_sniff.wav",
+      "overfit_index": 46
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex04_sad_css012.wav",
+      "text": "You're going to be in California, aren't you? [sniff]",
+      "duration": 2.83,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/047_sniff.wav",
+      "overfit_index": 47
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex02_sympathetic_sad_009_ex02_sad_css019.wav",
+      "text": "I just feel like such a buffoon for saying anything about it. [laughing]",
+      "duration": 4.2,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/048_laughing.wav",
+      "overfit_index": 48
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_002_ex01_disgusted_css027.wav",
+      "text": "Thank you. Oh, I'm so glad your body is like a napkin. Okay, good. [laughing]",
+      "duration": 6.02,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/049_laughing.wav",
+      "overfit_index": 49
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_sarcastic_005_ex02_sarcastic_css019.wav",
+      "text": "Yeah. Is a farm ever really even clean? Like, [laughing] it's so weird.",
+      "duration": 7.25,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/050_laughing.wav",
+      "overfit_index": 50
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id03651_Z_dtJ49_XA8_00191.wav",
+      "text": "It's the fight with xenophobia. [laughing] And sometimes I do not think we can.",
+      "duration": 7.04,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/051_laughing.wav",
+      "overfit_index": 51
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_laughing_001_ex04_laughing_css009.wav",
+      "text": "Wow, [laughing] I didn't know you could like soup that much.",
+      "duration": 4.26,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/052_laughing.wav",
+      "overfit_index": 52
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex01_laughing_00305.wav",
+      "text": "[laughing] It must be tough to live with.",
+      "duration": 4.698,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/053_laughing.wav",
+      "overfit_index": 53
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_laughing_00288.wav",
+      "text": "[laughing] Oh, aren't you the sweetest?",
+      "duration": 3.016,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/054_laughing.wav",
+      "overfit_index": 54
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10744_JPgm7gLCYSU_00007.wav",
+      "text": "[laughing] And he was so funny. We had such a great time doing that show.",
+      "duration": 4.68,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/055_laughing.wav",
+      "overfit_index": 55
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10801_ZeJbbFWoQDE_00011.wav",
+      "text": "I'm too pale to live in Miami. [laughing] I burst into fla",
+      "duration": 4.36,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/056_laughing.wav",
+      "overfit_index": 56
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id06551_l8JOXDtqJQw_00300.wav",
+      "text": "You know, Bernan is down. So I just one day got dressed. [laughing] I didn't want to show up in jeans.",
+      "duration": 5.44,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/057_laughing.wav",
+      "overfit_index": 57
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex02_laughing_00064.wav",
+      "text": "That's a lot [laughing] of RSVPs for the party!",
+      "duration": 4.15,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/058_laughing.wav",
+      "overfit_index": 58
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id05454_Rz0dQynDAo_00208.wav",
+      "text": "Well, many politicians say, oh, we don't, we don't look at the opinion polls. Nobody looks at opinion polls. [laughing]",
+      "duration": 5.504,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/059_laughing.wav",
+      "overfit_index": 59
+    }
+  ]
+}
