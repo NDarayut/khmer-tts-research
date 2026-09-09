@@ -6,18 +6,15 @@
 # of what scrambling the transcript cost; moving it cost nothing, p=0.98 on the
 # base model). That leaves two possibilities -- the architecture cannot bind a
 # text tag to a local acoustic event, or 78 coughs over 3.5 h was too weak a
-# signal. Memorizing 48 clips separates them.
+# signal. Memorizing 60 clips separates them.
 #
 # EVERY CHOICE HERE IS THE OPPOSITE OF A NORMAL RUN, on purpose:
-#   * 48 clips, 4.4 minutes, 12 per tag across four UNDOCUMENTED tags.
-#     [laughing] was dropped after the first run: it is in VoxCPM2's own
-#     inventory and the base model already produces it, so it could only
-#     flatter the result. Every tag left is one the model was never given.
+#   * 60 clips, 5.4 minutes, 12 per tag.
 #   * No untagged mix. ELaTE's 50:50 protects against regression, which is a
 #     generalization concern; this run does not want regularization.
 #   * 5x the learning rate (5e-4 against 1e-4) and a short warmup.
 #   * val == train, so val loss reads memorization, not generalization.
-#   * 2,000 steps over 48 clips at effective batch 8 is ~333 epochs.
+#   * 2,000 steps over 60 clips at effective batch 8 is ~265 epochs.
 #
 # Success here would prove capability and nothing else. The eval is on the same
 # sentences the model was trained on, and quoting that as evidence the tags

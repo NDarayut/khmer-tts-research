@@ -6,6 +6,12 @@ This file is the operational sequence.
 
 Nothing here writes to `eval-set/eval.json`. `verify_control.py` reads it.
 
+The non-verbal-vocalization (layer 2) work has its own documents:
+[`NVV_PLAN.md`](NVV_PLAN.md) is the plan, and
+[`OVERFIT_EXPERIMENT.md`](OVERFIT_EXPERIMENT.md) is the capability result that
+justifies continuing it — VoxCPM2 *can* be conditioned on tags it was never
+given, including on where in the sentence they sit.
+
 ## Scope: read this before running anything here
 
 "Expressive control" is several capabilities, not one, and they differ in how hard

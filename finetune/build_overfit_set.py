@@ -49,11 +49,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# [laughing] was dropped after the first overfitting run. It is in VoxCPM2's
-# documented inventory and the base model already produces it, so including it
-# only weakens the claim -- the interesting question is entirely about tags the
-# model was never given. What remains is four strings OpenBMB never documented.
-TAGS = ["[cough]", "[groan]", "[throat-clear]", "[sniff]"]
+TAGS = ["[cough]", "[groan]", "[throat-clear]", "[sniff]", "[laughing]"]
 
 
 def main():

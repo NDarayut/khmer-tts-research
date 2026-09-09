@@ -4,10 +4,11 @@
     "[cough]",
     "[groan]",
     "[throat-clear]",
-    "[sniff]"
+    "[sniff]",
+    "[laughing]"
   ],
-  "n": 48,
-  "hours": 0.074,
+  "n": 60,
+  "hours": 0.091,
   "note": "val == train by design; this run measures memorization",
   "clips": [
     {
@@ -107,97 +108,97 @@
       "overfit_index": 11
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex03_fast_001_ex03_fast_css011.wav",
-      "text": "[groan] ll right. All right. You got to think about the whales, you know, the oka whales.",
-      "duration": 4.78,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_fearful_002_ex04_fearful_css018.wav",
+      "text": "[groan] Okay, okay, I guess I have to go first, but maybe... I don't... Okay...",
+      "duration": 6.22,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/012_groan.wav",
       "overfit_index": 12
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_fearful_002_ex04_fearful_css018.wav",
-      "text": "[groan] Okay, okay, I guess I have to go first, but maybe... I don't... Okay...",
-      "duration": 6.22,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_007_ex04_disgusted_css017.wav",
+      "text": "I don't think it's ever gonna end. [groan] Here's the urine corner. [sigh]",
+      "duration": 5.65,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/013_groan.wav",
       "overfit_index": 13
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_007_ex03_disgusted_css027.wav",
-      "text": "[groan] This is so disgusting.",
-      "duration": 3.34,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex03_fast_001_ex03_fast_css011.wav",
+      "text": "[groan] ll right. All right. You got to think about the whales, you know, the oka whales.",
+      "duration": 4.78,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/014_groan.wav",
       "overfit_index": 14
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_004_ex01_disgusted_css018.wav",
-      "text": "Oh god, his shit is crawling up his ass crack and getting under the sea. Ugh. [groan]",
-      "duration": 6.76,
-      "tag": "[groan]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/015_groan.wav",
-      "overfit_index": 15
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_003_ex04_disgusted_css002.wav",
-      "text": "[groan] I don't know where we can go with with this all over us.",
-      "duration": 5.29,
-      "tag": "[groan]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/016_groan.wav",
-      "overfit_index": 16
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_nonverbal_001_ex04_nonverbal_css004.wav",
-      "text": "Fire, very hot, [groan] too hot.",
-      "duration": 5.46,
-      "tag": "[groan]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/017_groan.wav",
-      "overfit_index": 17
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css006.wav",
-      "text": "else or something that got in there. [groan]",
-      "duration": 3.09,
-      "tag": "[groan]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/018_groan.wav",
-      "overfit_index": 18
     },
     {
       "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_003_ex04_disgusted_css000.wav",
       "text": "Ugh, let's just go back to the hostel and take a shower. Ugh. [groan]",
       "duration": 4.04,
       "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/015_groan.wav",
+      "overfit_index": 15
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css006.wav",
+      "text": "else or something that got in there. [groan]",
+      "duration": 3.09,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/016_groan.wav",
+      "overfit_index": 16
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_007_ex03_disgusted_css027.wav",
+      "text": "[groan] This is so disgusting.",
+      "duration": 3.34,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/017_groan.wav",
+      "overfit_index": 17
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_laughing_002_ex01_laughing_css005.wav",
+      "text": "[groan] What was your favorite part? What was your favorite, favorite part?",
+      "duration": 3.93,
+      "tag": "[groan]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/018_groan.wav",
+      "overfit_index": 18
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_nonverbal_013_ex01_nonverbal_css000.wav",
+      "text": "Mm hmm. And so. And so. And so. And so. And so. And so. And so. Mm [groan] hmm.",
+      "duration": 7.62,
+      "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/019_groan.wav",
       "overfit_index": 19
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_013_ex01_sad_css022.wav",
-      "text": "It tastes even better who needs salt when you have my salty tears. [groan]",
-      "duration": 6.27,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_004_ex04_disgusted_css015.wav",
+      "text": "Oh [groan] no, oh oh it's all over his shirt now, that's...",
+      "duration": 7.71,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/020_groan.wav",
       "overfit_index": 20
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_laughing_005_ex03_laughing_css011.wav",
-      "text": "[groan] You're killing me. You're killing me here. [laughing]",
-      "duration": 4.08,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css029.wav",
+      "text": "I don't think I can do it. [groan]",
+      "duration": 4.18,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/021_groan.wav",
       "overfit_index": 21
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_006_ex04_disgusted_css015.wav",
-      "text": "I wish I had just used the broom in the first place because then I would have had to touch it. Now it's all over my fingers. [groan]",
-      "duration": 7.76,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_007_ex04_disgusted_css003.wav",
+      "text": "Yeah, they definitely connect because we did not eat mac and cheese. [groan]",
+      "duration": 5.25,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/022_groan.wav",
       "overfit_index": 22
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css029.wav",
-      "text": "I don't think I can do it. [groan]",
-      "duration": 4.18,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_004_ex01_disgusted_css018.wav",
+      "text": "Oh god, his shit is crawling up his ass crack and getting under the sea. Ugh. [groan]",
+      "duration": 6.76,
       "tag": "[groan]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/023_groan.wav",
       "overfit_index": 23
@@ -259,9 +260,9 @@
       "overfit_index": 30
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id11127_fIXU5ExruI0_00022.wav",
-      "text": "And I did. I was in LA. It was just a shock. And the same day [throat-clear] Dinah Rawson just said",
-      "duration": 7.0,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id11095_HthR4x6tDUs_00006.wav",
+      "text": "[throat-clear] But we had, the day before, been doing the Scottish dancing.",
+      "duration": 4.52,
       "tag": "[throat-clear]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/031_throat-clear.wav",
       "overfit_index": 31
@@ -299,100 +300,196 @@
       "overfit_index": 35
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_006_ex04_sad_css012.wav",
-      "text": "I can't help it. I'm sorry. I don't want to dismear. She did such a good job. [sniff]",
-      "duration": 5.34,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10639_wCyoPJtfte8_00002.wav",
+      "text": "And [sniff] actor nd I think it's hard. I think it's a weird, I think it's a weird life.",
+      "duration": 4.6,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/036_sniff.wav",
       "overfit_index": 36
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10570_IsTnF_10vLE_00008.wav",
-      "text": "They're not the right stuff. And I bet you, if you went into any place in the world, [sniff]",
-      "duration": 6.92,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex04_sad_css008.wav",
+      "text": "Yeah. [sniff]",
+      "duration": 2.43,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/037_sniff.wav",
       "overfit_index": 37
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex01_sympathetic_css006.wav",
-      "text": "[laughing] [sniff] No, I'm going to be in... I'm going to be in hell. [laughing] It's...",
-      "duration": 7.48,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07567_CxosdaNTuyk_00075.wav",
+      "text": "[sniff] But just to say that I'm just going to move to New York and live there, it was shocking and my father was devastated because I didn't fit.",
+      "duration": 6.016,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/038_sniff.wav",
       "overfit_index": 38
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_010_ex01_sad_css044.wav",
-      "text": "Too It's okay to cry. [sniff] And it's okay to be sad.",
-      "duration": 4.7,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07588_dOZqZu7VSyU_00098.wav",
+      "text": "The reason they're here is because we think they're good players. Again, we haven't got the biggest pool of players. We've picked up injuries like you've said. So these lads who are here. [sniff]",
+      "duration": 7.104,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/039_sniff.wav",
       "overfit_index": 39
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id02021_jbD_4XUtfFg_00363.wav",
-      "text": "well, [sniff] you know, Andrea's forty percent from the line. And",
-      "duration": 5.824,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10986_sOlWHKGy_SY_00036.wav",
+      "text": "[sniff] that obtained the rights and decided this is something they should make into an American show. But he didn't have all that much to.",
+      "duration": 7.48,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/040_sniff.wav",
       "overfit_index": 40
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_015_ex01_sad_css013.wav",
-      "text": "Yeah, that feels... [sniff] That's fair. I",
-      "duration": 4.0,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id06963_WLruVY_ssco_00092.wav",
+      "text": "It's been very special for me and it's been fun for me to continue to [sniff] to be in the mix, I gue",
+      "duration": 7.168,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/041_sniff.wav",
       "overfit_index": 41
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00097_D0XSPek4I_Y_00052.wav",
-      "text": "And just what I love about music. I grew up singing in church. [sniff] I sing every day. Nobody knows it, but.",
-      "duration": 5.568,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_010_ex01_sad_css033.wav",
+      "text": "I mean, I'm in that sad mood, so if you got [sniff] a song you want to throw on, let me know.",
+      "duration": 6.94,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/042_sniff.wav",
       "overfit_index": 42
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10659_VS2cCb2IqxI_00002.wav",
-      "text": "Of course, there are a thousand things that occur to me, but [sniff] just with everyone, I definitely can look around and.",
-      "duration": 6.36,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_laughing_004_ex02_laughing_css016.wav",
+      "text": "Stage and she was just like panicking like you could hear her backstage going no no no no [sniff] no",
+      "duration": 5.85,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/043_sniff.wav",
       "overfit_index": 43
     },
     {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10209_uwaFo2HeD4w_00001.wav",
-      "text": "He finished singing. We go to his dressing room and we start talking to him. [sniff]",
-      "duration": 5.36,
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex01_sympathetic_css002.wav",
+      "text": "I'm gonna start crying too. Why hy do you do this to me? [sniff]",
+      "duration": 6.28,
       "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/044_sniff.wav",
       "overfit_index": 44
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sympathetic_sad_008_ex01_sad_css017.wav",
+      "text": "Um, so, Marley, [sniff] I would say, um,",
+      "duration": 5.44,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/045_sniff.wav",
+      "overfit_index": 45
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10850_tzHipovxZXU_00003.wav",
+      "text": "[sniff] Um, they wanted me to read for Lisa Simpson, but I kind of, I really would like to do Bart. Does you mind, can I do Bart?",
+      "duration": 6.16,
+      "tag": "[sniff]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/046_sniff.wav",
+      "overfit_index": 46
     },
     {
       "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_sad_sympathetic_003_ex04_sad_css012.wav",
       "text": "You're going to be in California, aren't you? [sniff]",
       "duration": 2.83,
       "tag": "[sniff]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/045_sniff.wav",
-      "overfit_index": 45
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10142_qEzpu4H9gGg_00005.wav",
-      "text": "I have. Now, you see, I didn't [sniff] to my shame, I didn't know anything about this.",
-      "duration": 4.72,
-      "tag": "[sniff]",
-      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/046_sniff.wav",
-      "overfit_index": 46
-    },
-    {
-      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id02141_N9M3wX6ilQY_00113.wav",
-      "text": "know, [sniff] be in a top position in this contest. And yeah, the last couple of years I was able to do that.",
-      "duration": 7.424,
-      "tag": "[sniff]",
       "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/047_sniff.wav",
       "overfit_index": 47
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex02_sympathetic_sad_009_ex02_sad_css019.wav",
+      "text": "I just feel like such a buffoon for saying anything about it. [laughing]",
+      "duration": 4.2,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/048_laughing.wav",
+      "overfit_index": 48
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_002_ex01_disgusted_css027.wav",
+      "text": "Thank you. Oh, I'm so glad your body is like a napkin. Okay, good. [laughing]",
+      "duration": 6.02,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/049_laughing.wav",
+      "overfit_index": 49
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_sarcastic_005_ex02_sarcastic_css019.wav",
+      "text": "Yeah. Is a farm ever really even clean? Like, [laughing] it's so weird.",
+      "duration": 7.25,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/050_laughing.wav",
+      "overfit_index": 50
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id03651_Z_dtJ49_XA8_00191.wav",
+      "text": "It's the fight with xenophobia. [laughing] And sometimes I do not think we can.",
+      "duration": 7.04,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/051_laughing.wav",
+      "overfit_index": 51
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_laughing_001_ex04_laughing_css009.wav",
+      "text": "Wow, [laughing] I didn't know you could like soup that much.",
+      "duration": 4.26,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/052_laughing.wav",
+      "overfit_index": 52
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex01_laughing_00305.wav",
+      "text": "[laughing] It must be tough to live with.",
+      "duration": 4.698,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/053_laughing.wav",
+      "overfit_index": 53
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_laughing_00288.wav",
+      "text": "[laughing] Oh, aren't you the sweetest?",
+      "duration": 3.016,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/054_laughing.wav",
+      "overfit_index": 54
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10744_JPgm7gLCYSU_00007.wav",
+      "text": "[laughing] And he was so funny. We had such a great time doing that show.",
+      "duration": 4.68,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/055_laughing.wav",
+      "overfit_index": 55
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10801_ZeJbbFWoQDE_00011.wav",
+      "text": "I'm too pale to live in Miami. [laughing] I burst into fla",
+      "duration": 4.36,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/056_laughing.wav",
+      "overfit_index": 56
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id06551_l8JOXDtqJQw_00300.wav",
+      "text": "You know, Bernan is down. So I just one day got dressed. [laughing] I didn't want to show up in jeans.",
+      "duration": 5.44,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/057_laughing.wav",
+      "overfit_index": 57
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex02_laughing_00064.wav",
+      "text": "That's a lot [laughing] of RSVPs for the party!",
+      "duration": 4.15,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/058_laughing.wav",
+      "overfit_index": 58
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id05454_Rz0dQynDAo_00208.wav",
+      "text": "Well, many politicians say, oh, we don't, we don't look at the opinion polls. Nobody looks at opinion polls. [laughing]",
+      "duration": 5.504,
+      "tag": "[laughing]",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/overfit/originals/059_laughing.wav",
+      "overfit_index": 59
     }
   ]
 }
