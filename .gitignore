@@ -85,3 +85,4 @@ finetune/results/prompt_sweep/audio/
 # the generated sweeps. heldout_meta.json is tracked; the wavs are not.
 finetune/data-nvv/heldout/originals/
 finetune/results/nvv/heldout_*/
+finetune/results/prompt_sweep/*.html

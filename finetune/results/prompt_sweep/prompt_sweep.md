@@ -171,3 +171,35 @@ What else each wording moved. A prompt that changes pitch variation by selecting
 | `storyteller` | up | +76.62 | -0.65 | +1.43 |
 | `wide_pitch` | up | +24.35 | +0.19 | +0.72 |
 
+## `rate` -> char_rate *(primary)*
+
+| prompt | wording | asks | delta | hit rate | p | sd | snr |
+|---|---|---|---|---|---|---|---|
+| `quick` | (speaking quickly) | up | +1.78 | 18/24 (75%) | 0.0227 | 1.47 | 1.21 |
+| `very_quick` | (speaking very quickly, rushed) | up | +1.19 | 17/24 (71%) | 0.0639 | 1.52 | 0.78 |
+| `slight_quick` | (speaking slightly quickly) | up | +0.18 | 15/24 (62%) | 0.3075 | 1.13 | 0.16 |
+| `normal_pace` | (speaking at a normal pace) | -- | +0.07 | -- | -- | 1.59 | 0.05 |
+| `slight_slow` | (speaking slightly slowly) | down | -0.49 | 15/24 (62%) | 0.3075 | 1.66 | 0.29 |
+| `slow` | (speaking slowly) | down | -1.50 | 18/24 (75%) | 0.0227 | 1.67 | 0.90 |
+| `very_slow` | (speaking very slowly and deliberately) | down | -2.32 | 22/24 (92%) | <1e-4 | 1.60 | 1.45 |
+
+## `pitch` -> f0_median_hz *(primary)*
+
+| prompt | wording | asks | delta | hit rate | p | sd | snr |
+|---|---|---|---|---|---|---|---|
+| `high` | (a high-pitched voice) | up | +39.76 | 21/24 (88%) | 0.0003 | 26.82 | 1.48 |
+| `very_high` | (a very high-pitched voice) | up | +31.74 | 18/24 (75%) | 0.0227 | 30.10 | 1.05 |
+| `normal_pitch` | (a normal-pitched voice) | -- | +1.07 | -- | -- | 38.20 | 0.03 |
+| `deep` | (a deep, low male voice) | down | -28.99 | 18/24 (75%) | 0.0227 | 15.96 | 1.82 |
+| `low` | (a low-pitched voice) | down | -39.74 | 18/24 (75%) | 0.0227 | 21.33 | 1.86 |
+
+## `energy` -> rms_dbfs *(primary)*
+
+| prompt | wording | asks | delta | hit rate | p | sd | snr |
+|---|---|---|---|---|---|---|---|
+| `loud` | (speaking loudly) | up | +1.36 | 19/24 (79%) | 0.0066 | 5.20 | 0.26 |
+| `normal_vol` | (speaking at a normal volume) | -- | +0.49 | -- | -- | 5.37 | 0.09 |
+| `shout` | (shouting, projecting the voice) | up | +0.36 | 15/24 (62%) | 0.3075 | 6.15 | 0.06 |
+| `whisper` | (whispering) | down | -1.07 | 14/24 (58%) | 0.5413 | 5.34 | 0.20 |
+| `soft` | (speaking softly, quietly) | down | -2.91 | 21/24 (88%) | 0.0003 | 6.50 | 0.45 |
+
