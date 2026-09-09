@@ -71,3 +71,7 @@ finetune/data-nvv/wavs/
 finetune/data-nvv/manifests/*.jsonl
 finetune/results/nvv/*/audio/
 finetune/results/nvv/*.html
+
+# Scratch manifests written per-run by nvv_tag_sensitivity.py; the results json
+# next to them is the tracked output.
+finetune/results/nvv/_sens/
