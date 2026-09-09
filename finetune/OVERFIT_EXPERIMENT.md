@@ -255,9 +255,14 @@ Reproducing:
 ```
 
 **The trained adapter no longer exists.** It and the generated wavs were deleted
-by mistake after the run (see commit `5316bb7`); `finetune/checkpoints/
-nvv_overfit/` now holds only a 143-step fragment of an aborted restart, which is
-not a substitute. The numbers in §4 survive in
+by mistake after the run (see commit `5316bb7`). Nothing trained survives in
+`finetune/checkpoints/nvv_overfit/`: its `latest/` is a complete checkpoint at
+**step 0**, i.e. an untrained adapter, and `step_0000143/` is an empty
+directory. Note the trap — the `--lora` path above still exists and still
+loads, so running the probe against it produces base-model numbers rather than
+an error. The commands above must be run from `build_overfit_set.py` onward.
+
+The numbers in §4 survive in
 `finetune/results/nvv/tag_sensitivity_overfit.json` and the audio survives
 embedded in the published listening page. Regenerating new audio from this
 adapter requires rerunning the ~1 h training above.
