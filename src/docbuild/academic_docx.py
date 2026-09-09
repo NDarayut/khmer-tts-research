@@ -191,6 +191,8 @@ def table(doc, caption_text, headers, rows, widths=None, size=8.8,
     cap.paragraph_format.space_before = Pt(9)
     cap.paragraph_format.space_after = Pt(4)
     cap.paragraph_format.line_spacing = 1.18
+    # keep the caption with the table it names, so a page break cannot orphan it
+    cap.paragraph_format.keep_with_next = True
     set_font(cap.add_run(f"Table {_TABLE_N[0]}. "), BODY_FONT, size + 0.4, True, False, BLACK)
     inline(cap, caption_text, size + 0.4, BLACK)
 

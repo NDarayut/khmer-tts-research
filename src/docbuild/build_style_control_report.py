@@ -29,6 +29,40 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from academic_docx import *  # noqa: F401,F403
 import academic_docx as A
 
+def _yaml(path):
+    """Flat scalars and one nested block from the training config, so the
+    appendix reads its hyperparameters out of the file the run actually used."""
+    out, sect = {}, None
+    for line in path.read_text().splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        body = line.split("#")[0].rstrip()
+        key, _, val = body.partition(":")
+        val = val.strip()
+        if body.startswith(" "):
+            if sect is not None:
+                out[sect][key.strip()] = _scalar(val)
+            continue
+        sect = None
+        if not val:
+            sect = key.strip()
+            out[sect] = {}
+        else:
+            out[key.strip()] = _scalar(val)
+    return out
+
+
+def _scalar(v):
+    if v in ("true", "false"):
+        return v == "true"
+    for cast in (int, float):
+        try:
+            return cast(v)
+        except ValueError:
+            pass
+    return v
+
+
 HERE = Path(__file__).resolve().parent      # src/docbuild
 ROOT = HERE.parents[1]                      # repository root
 OUT = ROOT / "reports" / "Speech-Control-VoxCPM2.docx"
@@ -39,6 +73,28 @@ _PARJ = json.loads((ROOT / "finetune" / "results" / "parenthetical" /
 PAR, CEIL, PROMPTS = _PARJ["summary"], _PARJ["corpus_ceilings"], _PARJ["prompts"]
 N_GEN = len(_PARJ["rows"])
 N_SENT, N_SEED = _PARJ["n_sentences"], _PARJ["repeats"]
+
+# Appendix A. Every figure quoted in the appendix is read from the experiment's
+# own output, for the same reason Section 1.4 reads parenthetical.json: the
+# document cannot then drift from the run it reports.
+_NVV = ROOT / "finetune" / "results" / "nvv"
+_DATA = ROOT / "finetune" / "data-nvv"
+OVF = json.loads((_NVV / "tag_sensitivity_overfit.json").read_text())
+NORM = json.loads((_NVV / "tag_sensitivity_n150.json").read_text())
+BASE = json.loads((_NVV / "tag_sensitivity_base_n150.json").read_text())
+REPR = json.loads((_NVV / "tag_representation.json").read_text())
+OMETA = json.loads((_DATA / "overfit" / "overfit_meta.json").read_text())
+CMETA = json.loads((_DATA / "manifests" / "corpus_meta.json").read_text())
+OCFG = _yaml(ROOT / "finetune" / "conf" / "nvv_overfit.yaml")
+
+OVF_MIN = sum(c["duration"] for c in OMETA["clips"]) / 60
+OVF_EPOCHS = (OCFG["max_steps"] * OCFG["batch_size"] * OCFG["grad_accum_steps"]
+              / OMETA["n"])
+CORPUS_H = sum(
+    json.loads(l)["duration"]
+    for f in ("train.jsonl", "val.jsonl")
+    for l in (_DATA / "manifests" / f).read_text().splitlines() if l.strip()) / 3600
+DOCUMENTED = set(CMETA["documented_by_voxcpm2"])
 
 SECTIONS = [
     (1, "1", "Overview"),
@@ -60,6 +116,12 @@ SECTIONS = [
     (2, "3.5", "Research Focus"),
     (1, "4", "Methodology"),
     (1, "", "References"),
+    (1, "Appendix A", "Overfitting Test of Tag Conditioning"),
+    (2, "A.1", "Motivation"),
+    (2, "A.2", "Design"),
+    (2, "A.3", "Measurement"),
+    (2, "A.4", "Results"),
+    (2, "A.5", "Interpretation and Limits"),
 ]
 
 LOSS_MASK = """# voxcpm/training/packers.py, process_tts_data
@@ -77,7 +139,9 @@ TAG_INVENTORY = """[laughing]   [laughter]   [sigh]   [Uhm]   [Shh]
 [Surprise-wa] [Surprise-yo] [Dissatisfaction-hnn]"""
 
 
-TABLES = ["arch", "params", "prompts", "paren", "prosody", "nvv", "adjacent", "nvv_refs"]
+TABLES = ["arch", "params", "prompts", "paren", "prosody", "nvv", "adjacent", "nvv_refs",
+          # Appendix A
+          "ovf_conf", "ovf_cond", "ovf_res", "ovf_cmp", "ovf_tags"]
 
 
 def T(key):
@@ -97,6 +161,34 @@ WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "sev
 
 def word(n):
     return WORDS.get(n, f"{n:,}")
+
+
+def fp(p):
+    """A p-value for a table cell. Sign-test values here span 10^-38 to 0.98,
+    and the exponents carry no information a reader needs: what matters is
+    whether the condition moved the loss."""
+    return "< 0.0001" if p < 1e-4 else f"{p:.4f}"
+
+
+def sens(rep, cond):
+    """One condition of a tag-sensitivity report as a table row body."""
+    c = rep["conditions"][cond]
+    return [f"{c['mean']:.5f}", f"{c['delta_mean']:+.5f}",
+            f"{c['worse']}/{rep['n']}", fp(c["p"])]
+
+
+def _ovf_tag_rows():
+    """Mean deletion-condition loss per tag. The probe writes one value per clip
+    in manifest order, and the overfit manifest records the tag of each clip, so
+    the two are zipped rather than the split being restated here."""
+    vals = OVF["conditions"]["removed"]["values"]
+    per = {}
+    for clip, v in zip(OMETA["clips"], vals):
+        per.setdefault(clip["tag"], []).append(v)
+    rows = sorted(((t, sum(v) / len(v)) for t, v in per.items()),
+                  key=lambda r: -r[1])
+    return [[f"`{t}`", "yes" if t in DOCUMENTED else "no", f"{m:.4f}"]
+            for t, m in rows]
 
 
 def parrow(axis, label, unit):
@@ -723,6 +815,255 @@ def build(pages):
         "databases and ESD. *Speech Communication*, 137, 1–18. arXiv:2105.14762.",
     ]:
         reference(doc, r)
+
+    # -- appendix A -------------------------------------------------------
+    heading(doc, "Appendix A   Overfitting Test of Tag Conditioning", 1,
+            page_break=True)
+
+    para(doc, "This appendix reports a single experiment, carried out after Section 3.5 "
+              "selected non-verbal vocalization as the research focus. Its purpose is "
+              "diagnostic rather than demonstrative: it establishes that the model is "
+              "capable of the conditioning the methodology depends on, and it does so "
+              "before any effort is committed to building a corpus at scale. The "
+              "experiment is conducted in English. Section 1.4 records that Khmer text "
+              "reaches the model as byte fallback at roughly three tokens per character, "
+              "which makes a Latin tag a conspicuously low-entropy island in the "
+              "sequence; running the test in English removes that asymmetry from the "
+              "result and leaves the question of Khmer transfer to be settled separately.")
+
+    heading(doc, "A.1   Motivation", 2)
+
+    para(doc, f"A conventional fine-tune had already been performed on "
+              f"{CORPUS_H:.2f} hours of tagged English speech derived from "
+              f"{CMETA['source']}, and evaluated on {NORM['n']} clips held out of "
+              f"training, using a low-rank adaptation of the backbone language model, the "
+              f"local diffusion transformer and the projection layers. Its effect on the "
+              f"inline tag was close to nothing. Deleting the tag from the transcript "
+              f"raised the flow-matching loss on {NORM['conditions']['removed']['worse']} "
+              f"of {NORM['n']} clips, which a sign test cannot separate from chance "
+              f"(p = {NORM['conditions']['removed']['p']:.3f}), and relocating the tag to "
+              f"the far end of the sentence was similarly without effect "
+              f"(p = {NORM['conditions']['moved']['p']:.3f}). On the unmodified model the "
+              f"corresponding relocation test gives "
+              f"p = {BASE['conditions']['moved']['p']:.2f}, which is to say the model "
+              f"behaves as though the tag's position had not been changed at all.")
+
+    para(doc, "That null result admits two explanations which lead to opposite decisions, "
+              "and the audio cannot distinguish them, because a generated waveform "
+              "conflates a dependence that was never learned with one that was learned "
+              "and then removed by classifier-free guidance and the flow-matching solver. "
+              "The distinction has to be drawn at the training objective.")
+
+    numbered(doc, [
+        "**The mechanism is absent.** Text conditioning reaches the diffusion head as an "
+        "utterance-level vector, and nothing in the architecture carries the information "
+        "that an event belongs at one particular moment. If this is the case, inline tags "
+        "are not achievable in this model at any corpus size, and the work should fall "
+        "back to global descriptors of the kind Section 1.4 measures.",
+        f"**The signal is too weak.** The mechanism exists, but "
+        f"{CMETA['tag_counts']['[cough]']} instances of the most common non-laughter tag, "
+        f"distributed over {CORPUS_H:.2f} hours, is too sparse a gradient for the "
+        f"objective to locate. If this is the case the approach is sound and the corpus "
+        f"is the thing to change.",
+    ])
+
+    para(doc, "Deliberate overfitting separates the two, and is the least expensive "
+              "decisive experiment available. A small set of recordings is memorized, and "
+              "the tag's influence is then measured on those same recordings. A model that "
+              "fails to acquire the dependence when it has been given the answer several "
+              "hundred times has the first problem. A model that acquires it has the "
+              "second, and the second is tractable.")
+
+    heading(doc, "A.2   Design", 2)
+
+    para(doc, f"Every choice in {T('ovf_conf')} is the reverse of what a production "
+              f"fine-tune would use, deliberately. The mixture of untagged material that "
+              f"ELaTE prescribes at a one-to-one ratio, and that Section 3.5 adopts, is "
+              f"omitted: its function is to prevent the base model regressing, which is a "
+              f"concern about generalization that this run does not have. Weight decay is "
+              f"zero, the learning rate is five times the documented value, and the "
+              f"validation manifest is the training manifest, so that the validation loss "
+              f"reads memorization rather than generalization.")
+
+    tbl(doc, "ovf_conf",
+        "Configuration of the overfitting run. The full file is "
+        "`finetune/conf/nvv_overfit.yaml`.",
+        ["Quantity", "Value", "Rationale"],
+        [["Clips", f"{OMETA['n']} ({OVF_MIN:.1f} min)",
+          f"{OMETA['per_tag']} per tag; small enough to memorize in about an hour"],
+         ["Tags", f"{len(OMETA['tags'])}", "four undocumented, one documented as control"],
+         ["Untagged mixture", "none", "regularization is not wanted here"],
+         ["Learning rate", f"{OCFG['learning_rate']:g}",
+          "five times the documented rate for this adapter"],
+         ["Weight decay", f"{OCFG['weight_decay']:g}", "no regularization, deliberately"],
+         ["Warmup", f"{OCFG['warmup_steps']} steps", "short, for the same reason"],
+         ["Steps", f"{OCFG['max_steps']:,}",
+          f"about {OVF_EPOCHS:.0f} passes over the same clips"],
+         ["Adapter rank", f"{OCFG['lora']['r']} (alpha {OCFG['lora']['alpha']})",
+          "language model, diffusion head and projections all adapted"],
+         ["Validation set", "identical to training",
+          "validation loss reads memorization by design"]],
+        widths=[1.05, 0.95, 2.4], size=8.4)
+
+    para(doc, f"Clips were admitted only if they carried exactly one tag type, occurring "
+              f"exactly once, in a recording of two to eight seconds. A clip containing two "
+              f"events teaches less per gradient step, and the objective of this run is the "
+              f"cleanest available mapping from one string to one event. Four of the five "
+              f"tags used — {', '.join('`' + t + '`' for t in OMETA['tags'] if t not in DOCUMENTED)} "
+              f"— appear nowhere in the inventory OpenBMB publishes, reproduced in "
+              f"{T('nvv')}. The fifth, `[laughing]`, is documented and is retained as a "
+              f"control: the unmodified model already produces laughter, so a result in "
+              f"which the documented tag trains appreciably better than the undocumented "
+              f"ones would indicate that the model was retrieving prior knowledge of the "
+              f"word rather than acquiring a new binding.")
+
+    heading(doc, "A.3   Measurement", 2)
+
+    para(doc, f"The instrument is a teacher-forced forward pass, one per clip per "
+              f"condition, comparing the flow-matching loss across the four rewritings of "
+              f"the transcript in {T('ovf_cond')}. Generated audio is not used to decide "
+              f"the question, for the reason given in A.1.")
+
+    tbl(doc, "ovf_cond",
+        "The four conditions of the sensitivity probe.",
+        ["Condition", "Transcript", "What it tests"],
+        [["True", "tag inline, at the event", "reference"],
+         ["Removed", "tag deleted", "whether the tag carries information at all"],
+         ["Moved", "tag pushed to the end of the sentence",
+          "whether the tag's **position** carries information"],
+         ["Scrambled", "word order destroyed, tags left in place",
+          "positive control"]],
+        widths=[0.75, 1.6, 2.05], size=8.4)
+
+    para(doc, "Two features of the design determine what the numbers can be read to mean. "
+              "The **moved** condition is what distinguishes a local event from an "
+              "utterance-level flag: a model that has learned only that a clip contains a "
+              "cough scores identically when the tag is relocated, whereas a model that has "
+              "learned where the cough belongs does not. The **scrambled** condition is "
+              "what makes a null result interpretable; it must be expensive, and if a "
+              "destroyed transcript does not raise the loss then the probe is not "
+              "measuring the objective and no other row can be believed.")
+
+    para(doc, "The diffusion timestep and the noise are reseeded from the clip index "
+              "before every forward pass, so that all four conditions for a given clip are "
+              "evaluated under identical sampling. The flow-matching loss is stochastic, "
+              "and an unseeded comparison would report sampling variance.")
+
+    heading(doc, "A.4   Results", 2)
+
+    tbl(doc, "ovf_res",
+        f"Effect of each rewriting on the flow-matching loss after memorization "
+        f"(n = {OVF['n']}; reference loss {OVF['true_mean']:.5f}). *Worse* counts the "
+        f"clips on which the rewriting raised the loss; *p* is a two-sided sign test.",
+        ["Condition", "Mean loss", "Change", "Worse", "p"],
+        [["Removed"] + sens(OVF, "removed"),
+         ["Moved"] + sens(OVF, "moved"),
+         ["Scrambled"] + sens(OVF, "scrambled")],
+        widths=[1.0, 0.85, 0.8, 0.7, 0.75], size=8.6,
+        align_right=(1, 2, 3, 4))
+    note(doc, f"The positive control raised the loss by "
+              f"{OVF['conditions']['scrambled']['delta_mean']:+.5f} on "
+              f"{OVF['conditions']['scrambled']['worse']} of {OVF['n']} clips, so the probe "
+              f"is measuring the objective and the other two rows can be read.")
+
+    para(doc, f"**The tag now carries information.** Deleting it raises the loss on "
+              f"{OVF['conditions']['removed']['worse']} of {OVF['n']} clips. **Its position "
+              f"also carries information**, which is the more consequential of the two "
+              f"findings: relocating the tag without deleting it raises the loss on "
+              f"{OVF['conditions']['moved']['worse']} of {OVF['n']} clips, at "
+              f"{100 * OVF['conditions']['moved']['delta_mean'] / OVF['conditions']['removed']['delta_mean']:.0f}"
+              f" per cent of the cost of deleting it, where the same condition on the "
+              f"unmodified model returns p = {BASE['conditions']['moved']['p']:.2f}. The "
+              f"model is not classifying the utterance as one that contains a cough. It is "
+              f"reading where in the sentence the string sits and placing the event there.")
+
+    para(doc, f"Absolute losses are not comparable across the three models, which are "
+              f"evaluated on different clips at different stages of training. "
+              f"{T('ovf_cmp')} therefore compares the cost of deleting the tag as a "
+              f"proportion of the cost of destroying the whole transcript, which is "
+              f"dimensionless and internal to each model.")
+
+    tbl(doc, "ovf_cmp",
+        "Salience of the inline tag relative to the transcript, across the three "
+        "states of the model. The ratio is the cost of deleting the tag divided by the "
+        "cost of scrambling the transcript, measured within each model.",
+        ["Model state", "n", "Deletion p", "Relocation p", "Tag / transcript"],
+        [["Unmodified", f"{BASE['n']}", fp(BASE["conditions"]["removed"]["p"]),
+          fp(BASE["conditions"]["moved"]["p"]),
+          f"{100 * BASE['removed_over_scrambled']:.1f}%"],
+         [f"Fine-tuned, {CORPUS_H:.2f} h", f"{NORM['n']}",
+          fp(NORM["conditions"]["removed"]["p"]),
+          fp(NORM["conditions"]["moved"]["p"]),
+          f"{100 * NORM['removed_over_scrambled']:.1f}%"],
+         [f"Overfitted, {OVF_MIN:.1f} min", f"{OVF['n']}",
+          fp(OVF["conditions"]["removed"]["p"]),
+          fp(OVF["conditions"]["moved"]["p"]),
+          f"{100 * OVF['removed_over_scrambled']:.1f}%"]],
+        widths=[1.25, 0.4, 0.9, 0.9, 1.0], size=8.6,
+        align_right=(1, 2, 3, 4))
+    note(doc, f"The two p-value columns are sign tests on the deletion and relocation "
+              f"conditions respectively. The overfitted figure is "
+              f"{OVF['removed_over_scrambled'] / NORM['removed_over_scrambled']:.1f} times "
+              f"the fine-tuned one and "
+              f"{OVF['removed_over_scrambled'] / BASE['removed_over_scrambled']:.1f} times "
+              f"the unmodified one.")
+
+    tbl(doc, "ovf_tags",
+        "Loss under the deletion condition, by tag. The control tag is the only one "
+        "OpenBMB documents.",
+        ["Tag", "Documented", "Mean loss when deleted"],
+        _ovf_tag_rows(),
+        widths=[1.1, 0.9, 1.4], size=8.6, align_right=(2,))
+    note(doc, "The four undocumented tags are not weaker than the documented one, which "
+              f"argues that the effect in {T('ovf_res')} is an acquired binding rather than "
+              "retrieved knowledge of the English words inside the brackets.")
+
+    heading(doc, "A.5   Interpretation and Limits", 2)
+
+    para(doc, "The experiment establishes that VoxCPM2's architecture can bind an "
+              "arbitrary bracketed string to a specific non-verbal event at a specific "
+              "position in a sentence, and that a low-rank adaptation of the language "
+              "model, the diffusion head and the projections is sufficient to install that "
+              "binding. The first explanation offered in A.1 is therefore refused: the null "
+              "result of the conventional fine-tune was a property of the corpus, not of "
+              "the model. This is the finding the methodology of Section 3.5 requires, and "
+              "it was obtained for the cost of an hour of training.")
+
+    para(doc, "Two independent observations are consistent with it. Adding a tag imposes no "
+              f"architectural cost, because the model is tokenizer-free at the input: "
+              f"`[cough]` is already segmented into ordinary subword tokens with no unknown "
+              f"token produced, against a vocabulary of {REPR['vocab_size']:,}, so there is "
+              f"nothing to resize and no embedding to initialize. And the unmodified model "
+              f"emits a short interval of non-lexical audio for any bracketed string, "
+              f"including strings that are not words, while never pronouncing the bracketed "
+              f"text aloud, which suggests a general convention that brackets denote an "
+              f"instruction rather than knowledge of particular tag names.")
+
+    para(doc, f"The experiment establishes nothing about generalization, and must not be "
+              f"quoted as though it did. The evaluation is performed on the "
+              f"{OMETA['n']} sentences the model was trained on, approximately "
+              f"{OVF_EPOCHS:.0f} times each. That is what overfitting means and it is the "
+              f"point of the design, but it is also its entire limitation: the run "
+              f"demonstrates capability and says nothing about whether the same tags "
+              f"behave correctly on text the model has not seen. That is a separate "
+              f"experiment against a held-out set, and it has not been performed.")
+
+    para(doc, "Two consequences follow for the methodology. The first is that the loss "
+              "should be weighted over the frames in which the event occurs, so that a "
+              "cough of a few hundred milliseconds is not averaged away against several "
+              "seconds of speech; this is the effect the overfitting run obtained by "
+              "repetition alone. The second is that the corpus should supply event "
+              "timestamps precise enough for such a weighting to be applied, which the "
+              "annotations used here do not. Khmer remains out of scope until tag "
+              "expansion has been shown to generalize in English.")
+
+    note(doc, "Provenance. The figures in this appendix are read at build time from "
+              "`finetune/results/nvv/tag_sensitivity_overfit.json` and its counterparts "
+              "for the two other model states. The trained adapter itself was deleted in "
+              "error after the run and has not been regenerated; the recorded measurements "
+              "and the synthesized audio survive, but reproducing the audio would require "
+              "repeating the training. The procedure is documented in "
+              "`finetune/OVERFIT_EXPERIMENT.md`.")
 
     doc.save(OUT)
     return doc
