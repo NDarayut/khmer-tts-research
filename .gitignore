@@ -75,3 +75,13 @@ finetune/results/nvv/*.html
 # Scratch manifests written per-run by nvv_tag_sensitivity.py; the results json
 # next to them is the tracked output.
 finetune/results/nvv/_sens/
+
+# Prompt-bank sweep (sweep_prosody_prompts.py): 161 MB of clips, regenerable
+# from the base model in about two hours. rows.jsonl, the .md/.json summaries
+# and prompt_cer.json ARE tracked -- they are the measurement.
+finetune/results/prompt_sweep/audio/
+
+# Held-out listening set for the NVV run: copies of NonverbalTTS originals plus
+# the generated sweeps. heldout_meta.json is tracked; the wavs are not.
+finetune/data-nvv/heldout/originals/
+finetune/results/nvv/heldout_*/
