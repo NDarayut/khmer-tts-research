@@ -175,3 +175,14 @@ pitch against comparable speakers rather than the whole corpus.
 The onset-weighted loss of §5 has no such precedent — the literature's fix is to
 corrupt the shortcut, not to reweight around it. See docs/11 §2.1 for why the
 cheaper intervention was chosen and what the more principled experiment would be.
+
+---
+
+## Note on artefacts (2026-09-09)
+
+The checkpoints for the three ablation arms (`experiments/ckpt_end`,
+`ckpt_proj`, `ckpt_onset`) and for `checkpoints/khmer_style_run1_failed` were
+deleted in a disk cleanup. The measurements above are the record; the weights
+were only ever the means of obtaining them. Every surviving run keeps its
+`latest/lora_weights.safetensors`, with optimizer state stripped — the adapters
+load, but training cannot be resumed from them.
