@@ -1,0 +1,817 @@
+{
+  "model": "base",
+  "asr": "openai/whisper-large-v3",
+  "threshold_s": 0.3,
+  "takes": [
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.24,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.12,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.76,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.8,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": -0.48,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.64,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": 0.16,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.92,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.44,
+      "tagged_text": "Sorry. Could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.64,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 0.32,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[xyzzy]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.32,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 4.32,
+      "tagged_text": "I thought it was fine. But apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.28,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -1.12,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.96,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.96,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": -0.16,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.56,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.24,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 2.88,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 3.36,
+      "tagged_text": "It has been a very long day. Honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[blorp]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.24,
+      "tagged_text": "I thought it was fine. Apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 3.84,
+      "tagged_text": "I thought it was fine, but... Apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 1.12,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.4,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.48,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "Well, well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -1.12,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.8,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.72,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.8,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.8,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 4.96,
+      "tagged_text": "It has been a very long day. Honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[table]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.32,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 4.64,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.12,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 1.12,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.96,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.8,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.96,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.92,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.44,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 5.6,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 0.96,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[hiccup]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": 0.16,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.72,
+      "tagged_text": "I thought it was fine. Apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.72,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 1.76,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.92,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.8,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.64,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.96,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.4,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.72,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 1.92,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.28,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 4.96,
+      "tagged_text": "It has been a very long day. Honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[whistle]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 4.0,
+      "tagged_text": "It has been a very long day. Honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 0,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 0,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.24,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 0,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 1.28,
+      "tagged_text": "I thought it was fine, but apparently not.",
+      "untagged_text": "I thought it was fine, but apparently not."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 1,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.44,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 1,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.16,
+      "tagged_text": "Well, I suppose we should get started.",
+      "untagged_text": "well i suppose we should get started"
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 1,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.48,
+      "tagged_text": "I suppose we should get started.",
+      "untagged_text": "Well, I suppose we should get started."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 2,
+      "seed": 0,
+      "verdict": "inert",
+      "delta_duration": 0.0,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 2,
+      "seed": 1,
+      "verdict": "inert",
+      "delta_duration": -0.96,
+      "tagged_text": "She looked at the letter and put it down again.",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 2,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 3.52,
+      "tagged_text": "She looked at the letter and put it down again. Ha! Ha!",
+      "untagged_text": "She looked at the letter and put it down again."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 3,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 1.44,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 3,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 2.72,
+      "tagged_text": "Could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 3,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 2.08,
+      "tagged_text": "Sorry, could you say that one more time?",
+      "untagged_text": "Sorry, could you say that one more time?"
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 4,
+      "seed": 0,
+      "verdict": "performed",
+      "delta_duration": 0.32,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 4,
+      "seed": 1,
+      "verdict": "performed",
+      "delta_duration": 1.76,
+      "tagged_text": "It has been a very long day, honestly.",
+      "untagged_text": "It has been a very long day, honestly."
+    },
+    {
+      "tag": "[laughing]",
+      "carrier_index": 4,
+      "seed": 2,
+      "verdict": "performed",
+      "delta_duration": 0.96,
+      "tagged_text": "It has been a very long day, honestly. We...",
+      "untagged_text": "It has been a very long day, honestly."
+    }
+  ]
+}
