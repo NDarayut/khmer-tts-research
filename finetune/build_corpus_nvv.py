@@ -149,7 +149,16 @@ def main():
                          "the adapter noise as readily as it teaches events")
     ap.add_argument("--untagged-ratio", type=float, default=1.0,
                     help="untagged clips per tagged clip. 1.0 is ELaTE's 50:50")
-    ap.add_argument("--val-frac", type=float, default=0.05)
+    ap.add_argument("--splits", default="train,dev,test,other",
+                    help="which upstream splits to read; our own held-out split "
+                         "is cut below, so these are just sources of rows")
+    ap.add_argument("--val-frac", type=float, default=0.2,
+                    help="fraction of SPEAKERS held out. The first build used a "
+                         "0.05 random-row split and produced 28 tagged held-out "
+                         "clips, too few for the sign test to resolve anything")
+    ap.add_argument("--min-val-tagged", type=int, default=200,
+                    help="fail rather than emit a held-out split too small to "
+                         "serve as the evaluation instrument")
     ap.add_argument("--sample-rate", type=int, default=16000)
     ap.add_argument("--report-symbols", action="store_true",
                     help="scan and print the symbol inventory, write nothing")
@@ -159,10 +168,21 @@ def main():
     import soundfile as sf
 
     data_dir = Path(args.data_dir)
-    files = sorted(data_dir.glob("default/train/*.parquet"))
+    # Every split, not just train. The first build read only
+    # `default/train/*.parquet` and so silently missed an interrupted shard
+    # (`0000.parquet.parts` does not match the glob) along with dev, test and
+    # the `other` split -- 2,941 of the corpus's rows instead of all of them.
+    # We make our own held-out split below, so the upstream split boundaries
+    # carry no information we need to preserve.
+    files = sorted(p for sp in args.splits.split(",")
+                   for p in data_dir.glob(f"default/{sp.strip()}/*.parquet"))
     if not files:
-        sys.exit(f"no train parquets under {data_dir}/default/train/")
-    print(f"{len(files)} parquet shards")
+        sys.exit(f"no parquets under {data_dir}/default/{{{args.splits}}}/")
+    partial = sorted(data_dir.glob("default/*/*.parquet.parts"))
+    if partial:
+        print(f"WARNING: {len(partial)} incomplete shard(s) ignored: "
+              f"{[p.name for p in partial]}", file=sys.stderr)
+    print(f"{len(files)} parquet shards over splits: {args.splits}")
 
     if args.report_symbols:
         counts = Counter()
@@ -263,8 +283,45 @@ def main():
 
     rows = tagged + untagged_kept
     rng.shuffle(rows)
-    n_val = max(1, int(len(rows) * args.val_frac))
-    val, train = rows[:n_val], rows[n_val:]
+
+    # Held out by SPEAKER, not by row.
+    #
+    # The first build cut 5% of rows at random. Two consequences, both bad. It
+    # left 28 tagged clips in val, which a two-sided sign test cannot resolve --
+    # it needs about 20 of 28 to reach p < 0.05, so only an enormous effect
+    # would have shown. And a random row split leaves the same speakers on both
+    # sides, so a model that has memorized a speaker's breathing scores as
+    # though it had generalized. Holding out whole speakers costs nothing and
+    # removes both problems.
+    by_spk = {}
+    for r in rows:
+        by_spk.setdefault(r.get("speaker_id") or f"_anon_{id(r)}", []).append(r)
+    spk = sorted(by_spk)
+    rng.shuffle(spk)
+
+    n_tagged = sum(1 for r in rows if r["tags"])
+    target = n_tagged * args.val_frac
+    val_spk, got = set(), 0
+    for sp in spk:
+        if got >= target:
+            break
+        val_spk.add(sp)
+        got += sum(1 for r in by_spk[sp] if r["tags"])
+
+    val = [r for sp in val_spk for r in by_spk[sp]]
+    train = [r for sp in by_spk if sp not in val_spk for r in by_spk[sp]]
+    rng.shuffle(val)
+    rng.shuffle(train)
+
+    v_tagged = sum(1 for r in val if r["tags"])
+    print(f"\n  held out {len(val_spk)} of {len(spk)} speakers: "
+          f"{len(val)} clips, {v_tagged} of them tagged")
+    if v_tagged < args.min_val_tagged:
+        sys.exit(f"held-out split has only {v_tagged} tagged clips, below "
+                 f"--min-val-tagged {args.min_val_tagged}. It would not be a "
+                 f"usable evaluation instrument; raise --val-frac or add data.")
+    overlap = {r.get("speaker_id") for r in val} & {r.get("speaker_id") for r in train}
+    assert not overlap - {None}, f"speaker leak across the split: {overlap}"
 
     for split, items in (("train", train), ("val", val)):
         p = out_dir / f"{split}.jsonl"
