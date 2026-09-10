@@ -6,7 +6,7 @@ else in the repository is the working material behind them.
 | Document | Formats | Source |
 |---|---|---|
 | **Smean TTS Literature Review** — the model survey and the 4-way Khmer benchmark, written up for a general reader | [`.docx`](Smean-TTS-Literature-Review.docx) · [`.pdf`](Smean-TTS-Literature-Review.pdf) | `src/docbuild/build_literature_review.py` |
-| **Speech Control — VoxCPM2** — the style-control investigation: what the model already does via parenthetical prompting, and what a fine-tune would add, with the overfitting capability test as Appendix A | [`.docx`](Speech-Control-VoxCPM2.docx) · [`.pdf`](Speech-Control-VoxCPM2.pdf) | `src/docbuild/build_style_control_report.py` |
+| **Speech Control for Smean's TTS on VoxCPM2** — internal engineering memo, updated as experiments continue: what the model already does for Khmer via parenthetical prompting, and the tag-conditioning capability and generalization experiments. Findings only — no recommendation or next-steps section, by design | [`.docx`](Speech-Control-VoxCPM2.docx) · [`.pdf`](Speech-Control-VoxCPM2.pdf) | `src/docbuild/build_style_control_report.py` |
 
 ## These files are generated
 

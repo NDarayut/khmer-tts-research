@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 """
-Build the technical report on speech control in VoxCPM2.
+Build the internal engineering report on speech control in VoxCPM2.
 
-An unbranded academic report: title page, contents with resolved page numbers,
-four numbered sections and a bibliography. Layout primitives are in
+An internal ML engineering memo: title page, contents with resolved page
+numbers, numbered sections (background, framework, experiments, findings)
+and a references list. It is a living document, updated as further
+experiments are run, so it deliberately stops at findings and does not
+carry a recommendation or next-steps section. Layout primitives are in
 src/docbuild/academic_docx.py.
 
-Measurement figures are read from finetune/results/parenthetical/*.json rather
-than retyped, so the document cannot drift from the experiment it reports.
+Measurement figures are read from finetune/results/parenthetical/*.json and
+finetune/results/nvv/*.json rather than retyped, so the document cannot drift
+from the experiments it reports.
 
 Page numbers in the contents are resolved by building the document, converting
 it with LibreOffice, reading back which page each heading landed on, and
@@ -31,9 +35,10 @@ import academic_docx as A
 
 def _yaml(path):
     """Flat scalars and one nested block from the training config, so the
-    appendix reads its hyperparameters out of the file the run actually used."""
+    experiment section reads its hyperparameters out of the file the run
+    actually used."""
     out, sect = {}, None
-    for line in path.read_text().splitlines():
+    for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip() or line.lstrip().startswith("#"):
             continue
         body = line.split("#")[0].rstrip()
@@ -69,67 +74,57 @@ OUT = ROOT / "reports" / "Speech-Control-VoxCPM2.docx"
 OUT.parent.mkdir(parents=True, exist_ok=True)
 
 _PARJ = json.loads((ROOT / "finetune" / "results" / "parenthetical" /
-                    "parenthetical.json").read_text())
+                    "parenthetical.json").read_text(encoding="utf-8"))
 PAR, CEIL, PROMPTS = _PARJ["summary"], _PARJ["corpus_ceilings"], _PARJ["prompts"]
 N_GEN = len(_PARJ["rows"])
 N_SENT, N_SEED = _PARJ["n_sentences"], _PARJ["repeats"]
 
-# Appendix A. Every figure quoted in the appendix is read from the experiment's
-# own output, for the same reason Section 1.4 reads parenthetical.json: the
-# document cannot then drift from the run it reports.
+# Model-selection evidence (Section 2.2). Read from the same CER scoring
+# results the project's 4-model comparison uses, so the two documents cannot
+# disagree about the numbers.
+_CER = {m: json.loads((ROOT / "evaluation" / "results" / m / "cer_khmer_asr.json")
+                       .read_text(encoding="utf-8"))["summary"]
+         for m in ("voxcpm2", "higgs3", "mms", "fish-s2")}
+
+# Tag-conditioning experiments (Section 4.2, 4.3). Every figure quoted there is
+# read from the experiment's own output, for the same reason Section 2.2 reads
+# the CER results and Section 4.1 reads parenthetical.json: the document
+# cannot then drift from the run it reports.
 _NVV = ROOT / "finetune" / "results" / "nvv"
 _DATA = ROOT / "finetune" / "data-nvv"
-OVF = json.loads((_NVV / "tag_sensitivity_overfit.json").read_text())
-NORM = json.loads((_NVV / "tag_sensitivity_n150.json").read_text())
-BASE = json.loads((_NVV / "tag_sensitivity_base_n150.json").read_text())
-HELD = json.loads((_NVV / "tag_sensitivity_heldout.json").read_text())
-BHELD = json.loads((_NVV / "tag_sensitivity_base_heldout.json").read_text())
-REPR = json.loads((_NVV / "tag_representation.json").read_text())
-OMETA = json.loads((_DATA / "overfit" / "overfit_meta.json").read_text())
-CMETA = json.loads((_DATA / "manifests" / "corpus_meta.json").read_text())
+OVF = json.loads((_NVV / "tag_sensitivity_overfit.json").read_text(encoding="utf-8"))
+NORM = json.loads((_NVV / "tag_sensitivity_n150.json").read_text(encoding="utf-8"))
+BASE = json.loads((_NVV / "tag_sensitivity_base_n150.json").read_text(encoding="utf-8"))
+HELD = json.loads((_NVV / "tag_sensitivity_heldout.json").read_text(encoding="utf-8"))
+BHELD = json.loads((_NVV / "tag_sensitivity_base_heldout.json").read_text(encoding="utf-8"))
+REPR = json.loads((_NVV / "tag_representation.json").read_text(encoding="utf-8"))
+OMETA = json.loads((_DATA / "overfit" / "overfit_meta.json").read_text(encoding="utf-8"))
+CMETA = json.loads((_DATA / "manifests" / "corpus_meta.json").read_text(encoding="utf-8"))
 OCFG = _yaml(ROOT / "finetune" / "conf" / "nvv_overfit.yaml")
 
 OVF_MIN = sum(c["duration"] for c in OMETA["clips"]) / 60
 OVF_EPOCHS = (OCFG["max_steps"] * OCFG["batch_size"] * OCFG["grad_accum_steps"]
               / OMETA["n"])
-CORPUS_H = sum(
-    json.loads(l)["duration"]
-    for f in ("train.jsonl", "val.jsonl")
-    for l in (_DATA / "manifests" / f).read_text().splitlines() if l.strip()) / 3600
+CORPUS_H = CMETA["hours"]
 DOCUMENTED = set(CMETA["documented_by_voxcpm2"])
 
 SECTIONS = [
-    (1, "1", "Overview"),
-    (2, "1.1", "Model Description"),
-    (2, "1.2", "System Architecture"),
-    (2, "1.3", "Built-in Control Mechanisms"),
-    (2, "1.4", "Measurement of Parenthetical Prosodic Control on Khmer"),
-    (1, "2", "Speech Control"),
-    (2, "2.1", "Definition and Scope"),
-    (2, "2.2", "Prosody"),
-    (2, "2.3", "Emotion"),
-    (2, "2.4", "Non-Verbal Vocalization"),
-    (2, "2.5", "Related Categories"),
-    (1, "3", "Literature Review"),
-    (2, "3.1", "Natural Language Style Control"),
-    (2, "3.2", "Emotional Speech Synthesis"),
-    (2, "3.3", "Non-Verbal Vocalization"),
-    (2, "3.4", "Evaluation of Controlled Speech"),
-    (2, "3.5", "Research Focus"),
-    (1, "4", "Methodology"),
+    (1, "1", "Executive Summary"),
+    (1, "2", "Background"),
+    (2, "2.1", "Problem"),
+    (2, "2.2", "Model Selection: Why VoxCPM2"),
+    (1, "3", "Speech Control Framework"),
+    (2, "3.1", "Scope and Definitions"),
+    (2, "3.2", "Prosody"),
+    (2, "3.3", "Emotion"),
+    (2, "3.4", "Non-Verbal Vocalization"),
+    (1, "4", "Experiments"),
+    (2, "4.1", "Baseline Prosodic Control on Khmer"),
+    (2, "4.2", "Tag Conditioning: Capability Test"),
+    (2, "4.3", "Tag Conditioning: Generalization Test"),
+    (1, "5", "Findings"),
     (1, "", "References"),
-    (1, "Appendix A", "Overfitting Test of Tag Conditioning"),
-    (2, "A.1", "Motivation"),
-    (2, "A.2", "Design"),
-    (2, "A.3", "Measurement"),
-    (2, "A.4", "Results"),
-    (2, "A.5", "Interpretation and Limits"),
-    (2, "A.6", "The Held-Out Test"),
 ]
-
-LOSS_MASK = """# voxcpm/training/packers.py, process_tts_data
-loss_mask = cat([zeros(text_length), ones(audio_length), zeros(1)])
-#                ^^^^^^^^^^^^^^^^^^ zero at every text position"""
 
 PAREN_CODE = '''model.generate(
     text="(speaking quickly, a high-pitched voice)"
@@ -142,8 +137,8 @@ TAG_INVENTORY = """[laughing]   [laughter]   [sigh]   [Uhm]   [Shh]
 [Surprise-wa] [Surprise-yo] [Dissatisfaction-hnn]"""
 
 
-TABLES = ["arch", "params", "prompts", "paren", "prosody", "nvv", "adjacent", "nvv_refs",
-          # Appendix A
+TABLES = ["cer", "prosody", "nvv", "prompts", "paren",
+          # Section 4.2 / 4.3
           "ovf_conf", "ovf_cond", "ovf_res", "ovf_cmp", "ovf_tags", "ovf_held"]
 
 
@@ -206,6 +201,11 @@ def parrow(axis, label, unit):
             f"{a['p']:.4f}"]
 
 
+def cerrow(model, label):
+    s = _CER[model]
+    return [label, f"{100 * s['cer_median']:.2f}%", f"{100 * s['cer_mean']:.2f}%"]
+
+
 # =========================================================================
 def build(pages):
     """Render the document. `pages` maps '1.2' -> page number, or is empty on
@@ -216,144 +216,208 @@ def build(pages):
 
     title_page(
         doc,
-        title="Finetuning VoxCPM\n"
-              "for Speech Control: Integrating Non-Verbal Vocalization",
+        title="Speech Control for Smean’s TTS on VoxCPM2:\n"
+              "Experiments, Findings, and Results",
         prepared_by="R&D Department",
         date="8 September 2026")
 
     contents(doc, [(lvl, num, txt, pages.get(num or txt, "—"))
                    for lvl, num, txt in SECTIONS])
 
-    # -- 1 ----------------------------------------------------------------
-    heading(doc, "1   Overview", 1, page_break=True)
+    # -- 1 Executive Summary -----------------------------------------------
+    heading(doc, "1   Executive Summary", 1, page_break=True)
 
-    para(doc, "This report concerns the control of delivery in synthetic speech: the ability "
-              "to specify how an utterance is spoken rather than only what is said. It has "
-              "three purposes. Section 1 describes VoxCPM2, the model this project has "
-              "adopted for Khmer, and reports a measurement of the control it already "
-              "provides. Section 2 defines the categories of speech control and distinguishes "
-              "them from one another. Section 3 reviews the published work addressing each "
-              "category and identifies the one this project will pursue. Section 4, the "
-              "methodology, is reserved.")
+    para(doc, "This report covers speech control for Khmer text-to-speech on VoxCPM2, the "
+              "model this project has adopted for Khmer (Section 2.2): the ability to "
+              "specify how an utterance is spoken, not just what is said. It is a living "
+              "document — it records what has been measured so far and will be updated as "
+              "further experiments are run, rather than fixing a conclusion up front.")
 
-    heading(doc, "1.1   Model Description", 2)
+    para(doc, "Three results stand out so far.")
+
+    numbered(doc, [
+        f"**Prosody (pitch, energy, speaking rate) already works on Khmer, out of the box.** "
+        f"A prompt describing a high pitch moves Khmer pitch by "
+        f"{PAR['pitch']['low_to_high']:.0f} Hz, about four times what this project's own "
+        f"labelled corpus could teach (Section 4.1).",
+
+        "**Emotion is blocked on data, not on the model.** Reliable emotional TTS work "
+        "depends on acted, labelled emotional speech corpora, and no such corpus exists for "
+        "Khmer (Section 3.3).",
+
+        "**Non-verbal vocalization's tag mechanism can be taught, but the first training "
+        "recipe tried does not generalize.** A cheap overfitting test shows the model *can* "
+        "learn to place a tag like `[cough]` at a specific point in a sentence (Section "
+        "4.2). A held-out test on the same recipe shows that capability does not transfer "
+        "to sentences the model was not trained on (Section 4.3).",
+    ])
+
+    # -- 2 Background -------------------------------------------------------
+    heading(doc, "2   Background", 1, page_break=True)
+
+    heading(doc, "2.1   Problem", 2)
+
+    para(doc, "Getting Khmer text read aloud intelligibly is not enough for most production "
+              "use cases — audiobooks, assistants, dubbing, and similar applications need "
+              "control over delivery: pacing, pitch, emotional coloring, and non-verbal "
+              "sounds like laughs or sighs inserted at the right place. This report answers "
+              "two questions so far: what does VoxCPM2 already give us on Khmer for free "
+              "(Section 4.1), and can it be taught more (Sections 4.2–4.3).")
+
+    heading(doc, "2.2   Model Selection: Why VoxCPM2", 2)
 
     para(doc, "VoxCPM2 is an open-weight text-to-speech model released by OpenBMB under the "
-              "Apache 2.0 licence. It has 2.29 billion parameters and is tokenizer-free: "
-              "rather than mapping speech onto a discrete codebook, it predicts continuous "
-              "latent vectors, one for every four-frame patch of audio.")
+              "Apache 2.0 licence, and it is the model this project has adopted for Khmer. "
+              "Two practical properties motivated that choice.")
 
-    para(doc, "This property has a direct bearing on low-resource languages. Systems built on "
-              "discrete audio codebooks depend on the codebook having been fitted to the "
-              "target language during pre-training, and where it has not, synthesis degrades "
-              "in a way that fine-tuning does not readily repair. In the four-model "
-              "comparison conducted for this project, Fish Audio S2-Pro failed in exactly "
-              "that manner, returning a median character error rate of 78.01 per cent on "
-              "Khmer. Over the same fixed set of one hundred sentences VoxCPM2 returned 2.47 "
-              "per cent, against 8.28 per cent for Higgs TTS 3 and 25.12 per cent for Meta "
-              "MMS. VoxCPM2 was selected on that evidence.")
+    para(doc, "First, it holds up on Khmer where alternatives fail outright. In the project's "
+              "four-model comparison, each model was scored for character error rate (CER) "
+              f"on the same fixed set of {word(N_SENT)} Khmer sentences ({T('cer')}). Fish "
+              "Audio S2-Pro and Meta MMS both degrade badly on Khmer; VoxCPM2 does not.")
 
-    para(doc, "A second property follows from the input side. The model reads raw UTF-8 bytes "
-              "through a 73,448-entry tokenizer and is given no language identifier, "
-              "inferring the language from the script. Khmer consequently requires no "
-              "grapheme-to-phoneme conversion, no pronunciation lexicon and no word "
-              "segmenter. None of these components exists for Khmer in a form suitable for "
-              "production use, and assembling them ordinarily accounts for the largest share "
-              "of effort in a low-resource text-to-speech project.")
+    tbl(doc, "cer",
+          "Khmer character error rate across the four models this project evaluated, on "
+          "the same fixed 100-sentence set.",
+          ["Model", "Median CER", "Mean CER"],
+          [cerrow("voxcpm2", "VoxCPM2"),
+           cerrow("higgs3", "Higgs TTS 3"),
+           cerrow("mms", "Meta MMS"),
+           cerrow("fish-s2", "Fish Audio S2-Pro")],
+          widths=[1.7, 1.3, 1.3])
+    note(doc, "Lower is better. Full methodology and caveats (including a known scorer bias "
+              "toward VoxCPM2) are in the project's evaluation report, not repeated here.")
 
-    heading(doc, "1.2   System Architecture", 2)
+    para(doc, "Second, it needs no Khmer-specific preprocessing. VoxCPM2 reads raw text "
+              "directly and infers the language from the script, so Khmer requires no "
+              "pronunciation lexicon and no word segmenter — components that do not exist "
+              "for Khmer in a production-ready form, and that ordinarily consume most of the "
+              "effort in a low-resource TTS project.")
 
-    figure(doc, ROOT / "reports" / "assets" / "voxcpm-architecture.png",
-           "Overview of VoxCPM's Architecture")
+    para(doc, "One more property matters for everything that follows: VoxCPM2 never trains "
+              "on the input text as a prediction target — text is purely a conditioning "
+              "signal. Practically, this means new markup can be added to the input (a "
+              "parenthetical style description, an inline event tag) without disturbing how "
+              "the model was originally trained. Both control mechanisms described next rely "
+              "on this.")
 
-    para(doc, f"The generation path comprises the stages set out in {T('arch')}. A backbone language "
-              "model emits one latent vector per audio patch; a residual language model "
-              "refines it; a local diffusion transformer converts the refined latent into "
-              "acoustic features under a conditional flow-matching objective; and a "
-              "variational autoencoder decodes those features to a waveform, accepting "
-              "features derived at 16 kHz and emitting audio at 48 kHz. A separate local "
-              "encoder, not shown, maps a reference recording into the same latent space and "
-              "is the mechanism by which zero-shot voice cloning is performed.")
-
-    tbl(doc, "arch",
-          "The VoxCPM2 generation path. Dimensions and layer counts are taken from "
-          "`config.json` in the `openbmb/VoxCPM2` release.",
-          ["Stage", "Configuration", "Output"],
-          [["Byte-level tokenizer", "vocabulary 73,448; no grapheme-to-phoneme stage, no "
-            "language identifier", "token sequence"],
-           ["MiniCPM4 backbone LM", "2048 dimensions, 28 layers; grouped-query attention, "
-            "16 query and 2 key-value heads; LongRoPE to 32k", "one latent vector per audio patch"],
-           ["Residual LM", "8 layers, no positional encoding", "refined latent"],
-           ["Local DiT", "1024 dimensions, 12 layers; conditional flow matching; Euler "
-            "solver, guidance scale 2.0, 10 steps at inference",
-            "64-dimensional acoustic features, 4 frames per patch"],
-           ["AudioVAE V2", "encoder at 16 kHz, decoder at 48 kHz", "waveform"]],
-          widths=[1.25, 3.15, 1.7])
-
-    tbl(doc, "params",
-          "Architecture parameters bearing on training and control.",
-          ["Parameter", "Value", "Consequence"],
-          [["`patch_size`", "4", "One language-model step spans four autoencoder frames."],
-           ["`feat_dim`", "64", "Width of the latent the diffusion transformer predicts."],
-           ["Frame rate", "25 fps", "One second of audio occupies 6.25 language-model positions."],
-           ["Encoder rate", "16 kHz", "Training audio must be supplied at 16 kHz; the validator rejects other rates."],
-           ["Decoder rate", "48 kHz", "Bandwidth extension is internal; 48 kHz training data is not required."],
-           ["`inference_cfg_rate`", "2.0", "Default classifier-free guidance scale, exposed as `--cfg-value`."]],
-          widths=[1.35, 0.75, 4.3])
-
-    para(doc, "Two of these properties bear on the remainder of the report.")
-
-    para(doc, "The first is the identity of the acoustic decoder. The local diffusion "
-              "transformer is a conditional flow-matching model. The methods reviewed in "
-              "Section 3.3 for controlling non-verbal vocalization were developed for, and "
-              "evaluated on, models of this class. They are therefore applicable to VoxCPM2 "
-              "without alteration of the underlying training objective, which is not true of "
-              "methods developed for discrete-codec systems.")
-
-    para(doc, "The second concerns the treatment of the text field during training. The loss "
-              "mask constructed in the data packer is zero at every text position:")
-
-    code(doc, LOSS_MASK)
-
-    para(doc, "No token in the text field is ever a prediction target. The field operates "
-              "purely as a conditioning channel, and its contents may therefore be extended "
-              "with tags, markers or descriptive text without perturbing the objective the "
-              "model is trained under. Both control mechanisms described below exploit this, "
-              "and any mechanism added later would do the same.")
-
-    heading(doc, "1.3   Built-in Control Mechanisms", 2)
-
-    para(doc, "VoxCPM2 provides two mechanisms for influencing delivery. They differ in the "
-              "interval over which they apply, and that difference is developed in Section 2.")
-
-    para(doc, "The first is a parenthetical description placed before the text, which "
-              "characterises the utterance as a whole:")
+    para(doc, "VoxCPM2 exposes two ways to influence delivery. A parenthetical description "
+              "placed before the sentence characterises the whole utterance:")
     code(doc, PAREN_CODE)
-
-    para(doc, "The second is a bracketed tag placed inline, which marks a single event at one "
-              "position in the text:")
+    para(doc, "and a bracketed tag placed inline marks a single event at one position in the "
+              "text:")
     code(doc, TAG_CODE)
-
     para(doc, "The documented tag inventory is:")
     code(doc, TAG_INVENTORY)
+    para(doc, "OpenBMB's documentation covers both mechanisms only for Chinese and English; "
+              "it says nothing about Khmer. Their behaviour on Khmer is therefore something "
+              "this project has to measure rather than assume, which Sections 4.1–4.3 do.")
 
-    para(doc, "The model documentation describes both mechanisms with reference to Chinese "
-              "and English. It makes no statement about their behaviour in other languages, "
-              "and the training corpus composition is not published in sufficient detail to "
-              "infer one. Their efficacy on Khmer is therefore an empirical question, which "
-              "the next section addresses for the first mechanism.")
+    # -- 3 Speech Control Framework -----------------------------------------
+    heading(doc, "3   Speech Control Framework", 1, page_break=True)
 
-    heading(doc, "1.4   Measurement of Parenthetical Prosodic Control on Khmer", 2)
+    heading(doc, "3.1   Scope and Definitions", 2)
+
+    para(doc, "\"Speech control\" covers several distinct capabilities. This report separates "
+              "three that matter for this project — prosody, emotion, and non-verbal "
+              "vocalization — using one distinction that recurs throughout: whether the "
+              "thing being controlled is a **global attribute** or a **local event**.")
+
+    para(doc, "A global attribute is a property of the whole utterance (or a long span of "
+              "one) — pitch register, speaking rate, emotional tone. A local event is "
+              "bounded: it starts, occupies a short interval, and ends, tied to one specific "
+              "position in the text — a laugh, a sigh, a filled pause. The distinction is "
+              "not just about duration: a global attribute has to compete for influence over "
+              "frames the surrounding speech already mostly determines, whereas a local "
+              "event is the only thing that determines the frames it occupies. That "
+              "difference is why the two are harder or easier to train, and it comes back in "
+              "Section 5.")
+
+    para(doc, "Three further categories — voice quality, emphasis, and pause timing — are "
+              "adjacent to the three above but out of scope for this report: VoxCPM2 "
+              "provides no syntax for them today, and adding one is a larger undertaking than "
+              "extending an existing tag.")
+
+    heading(doc, "3.2   Prosody", 2)
+
+    para(doc, "Prosody covers rate, pitch, loudness, pitch variation and pause placement — "
+              "everything about delivery once the words themselves are set aside.")
+
+    tbl(doc, "prosody",
+          "Prosodic dimensions and how this project measures them.",
+          ["Dimension", "What it means", "Measurement used here"],
+          [["Speaking rate", "how fast the sentence is spoken", "Khmer characters per second"],
+           ["Pitch register", "how high or low the voice is set", "median F0, hertz"],
+           ["Pitch variation", "how much the pitch moves", "F0 standard deviation, semitones"],
+           ["Loudness", "signal level", "root-mean-square level, dBFS"],
+           ["Phrasing", "pause placement and duration", "inter-pausal unit statistics"]],
+          widths=[1.4, 2.4, 2.6])
+
+    para(doc, "Prosody is a global attribute, and — as Section 4.1 shows — it is the "
+              "capability VoxCPM2 already handles on Khmer without any further work.")
+
+    heading(doc, "3.3   Emotion", 2)
+
+    para(doc, "Emotion is the affective state conveyed by delivery — typically a small closed "
+              "set such as neutral, happy, angry, sad, surprised. It overlaps with prosody "
+              "(anger and excitement share elevated pitch and energy) but does not reduce to "
+              "it: the same rate/pitch/energy setting can read as sarcastic, pleased, or "
+              "resigned depending on voice quality and timing that a prosody knob does not "
+              "capture.")
+
+    para(doc, "In practice, work on emotional TTS depends almost entirely on acted, parallel, "
+              "utterance-labelled emotional speech corpora, and building one for Khmer is not "
+              "proportionate to the value it would return right now. VoxCPM2's parenthetical "
+              "channel would plausibly accept a description like *(sounding angry)*, since "
+              "it is the same free-text field that already carries *(speaking quickly)*, but "
+              "this has not been tested. Emotion is therefore out of scope for this phase of "
+              "work — see Section 5.")
+
+    heading(doc, "3.4   Non-Verbal Vocalization", 2)
+
+    para(doc, "A non-verbal vocalization is a sound a speaker makes that is not a word: "
+              "laughter, a sigh, an audible breath, a filled pause, a cough, a gasp, a sob, a "
+              "hesitation particle. These carry stance, regulate turn-taking, and convey "
+              "affect, and their presence is a big part of what makes conversational speech "
+              "sound conversational rather than read aloud.")
+
+    tbl(doc, "nvv",
+          "Non-verbal vocalization types. Tags in the first five rows are documented in "
+          "VoxCPM2; the sixth row is not.",
+          ["Type", "Tag", "What it communicates"],
+          [["Laughter", "`[laughing]`", "amusement, affiliation, mitigation"],
+           ["Sigh", "`[sigh]`", "resignation, fatigue, relief"],
+           ["Filled pause", "`[Uhm]`", "planning, hesitation, floor-holding"],
+           ["Attention marker", "`[Shh]`", "silencing, conspiratorial framing"],
+           ["Discourse particle", "`[Question-ah]`, `[Surprise-wa]`, `[Dissatisfaction-hnn]`",
+            "stance, back-channelling, question marking"],
+           ["Breath, gasp, cough, sob", "—", "phrasing, surprise, distress, physical state"]],
+          widths=[1.3, 2.5, 2.6])
+
+    para(doc, "Unlike prosody, non-verbal vocalization is a **local event**: it happens at "
+              "one place and leaves the speech before and after it unaffected. That makes it "
+              "an easier training target than a global attribute, because the tagged event "
+              "has no competing explanation for the frames it occupies — the tag is the only "
+              "signal available for them. Whether the tags actually fire on Khmer text is "
+              "untested, and Sections 4.2–4.3 measure whether the underlying mechanism can be "
+              "taught to work at all, in English first.")
+
+    # -- 4 Experiments --------------------------------------------------------
+    heading(doc, "4   Experiments", 1, page_break=True)
+
+    para(doc, "Three experiments were run. The first measures a capability VoxCPM2 already "
+              "has, on Khmer. The other two test whether a new capability — inline "
+              "non-verbal vocalization tags — can be taught at all, and whether a first "
+              "attempt at teaching it generalizes.")
+
+    heading(doc, "4.1   Baseline Prosodic Control on Khmer", 2)
 
     para(doc, f"The parenthetical mechanism was evaluated on the unmodified model, using "
               f"{word(N_SENT)} sentences drawn from the project's fixed Khmer evaluation "
               f"set. For each of four prosodic axes, three prompts were written to span the "
               f"axis ({T('prompts')}). Every sentence was synthesised under every prompt at "
               f"{word(N_SEED)} random seeds, giving {N_GEN} generations, and the median taken "
-              f"within each cell of the design. Acoustic measurement follows the definitions "
-              f"used elsewhere in the project: median fundamental frequency for pitch, its "
-              f"standard deviation in semitones for variation, root-mean-square level for "
-              f"energy, and Khmer characters per second for rate.")
+              f"within each cell of the design. Pitch, its variation, loudness, and speaking "
+              f"rate were measured directly from the audio.")
 
     tbl(doc, "prompts",
           "Prompts used to span each prosodic axis.",
@@ -387,11 +451,11 @@ def build(pages):
               f"{PAR['pitch']['low_to_high']:.2f} Hz with a rank correlation of "
               f"{PAR['pitch']['spearman_rho']:+.3f} (p = {PAR['pitch']['p']:.4f}). This "
               f"exceeds the corpus bound of {CEIL['pitch']['spread']:.2f} Hz by a factor of "
-              f"approximately four. The capability a fine-tune on the project's own labelled "
-              f"data could add to this axis is therefore negative.")
+              f"approximately four — a fine-tune on this project's own labelled data could "
+              f"not improve on this axis.")
 
-    para(doc, f"**Energy** and **Speaking Rate** are controlled in aggregate but not per generation. "
-              f"Both show significant rank correlations "
+    para(doc, f"**Energy** and **Speaking Rate** are controlled in aggregate but not per "
+              f"generation. Both show significant rank correlations "
               f"({PAR['energy']['spearman_rho']:+.3f} and "
               f"{PAR['rate']['spearman_rho']:+.3f}), but the energy effect of "
               f"{PAR['energy']['low_to_high']:.2f} dB is smaller than the "
@@ -402,366 +466,283 @@ def build(pages):
     para(doc, f"**Pitch Variation** is not controlled. The correlation is negative "
               f"({PAR['var']['spearman_rho']:+.3f}) and not significant "
               f"(p = {PAR['var']['p']:.2f}). Prompts requesting a lively delivery produced "
-              f"marginally less pitch movement than prompts requesting a monotone one, which "
-              f"is consistent with the axis being unaddressed rather than inverted.")
+              f"marginally less pitch movement than prompts requesting a monotone one, "
+              f"consistent with the axis being unaddressed rather than inverted.")
 
-    para(doc, "The behaviour of the inline tags on Khmer was not measured, and no claim is "
-              "made about it here. Establishing whether they fire at all on Khmer text is a "
-              "prerequisite for the work Section 3.5 selects.")
+    para(doc, "Inline tag behaviour on Khmer was not measured here; Sections 4.2–4.3 test the "
+              "underlying tagging mechanism in English first, as a prerequisite.")
 
-    # -- 2 ----------------------------------------------------------------
-    heading(doc, "2   Speech Control", 1, page_break=True)
+    heading(doc, "4.2   Tag Conditioning: Capability Test", 2)
 
-    heading(doc, "2.1   Definition and Scope", 2)
+    para(doc, f"A conventional fine-tune had already been performed on "
+              f"{CORPUS_H:.2f} hours of tagged English speech derived from "
+              f"{CMETA['source']}, evaluated on {NORM['n']} clips drawn from its own "
+              f"training set, and its effect on the inline tag was close to nothing. Deleting "
+              f"the tag from the transcript raised the loss on only "
+              f"{NORM['conditions']['removed']['worse']} of {NORM['n']} clips — no better "
+              f"than chance (p = {NORM['conditions']['removed']['p']:.3f}) — and moving the "
+              f"tag to the end of the sentence made no difference either "
+              f"(p = {NORM['conditions']['moved']['p']:.3f}).")
 
-    para(doc, "The term expressive control is used loosely in the literature to denote any "
-              "influence over delivery not exercised through the choice of words. It "
-              "subsumes several capabilities that differ in what they describe, over what "
-              "interval they apply, and in the effort each requires to implement. This "
-              "section separates the three that concern this project, and names three "
-              "further categories that are adjacent to them.")
-
-    para(doc, "One distinction cuts across all of them and is used throughout what follows. "
-              "A global attribute is a property of a whole utterance, or of a long span of "
-              "one: it has no onset and no offset, and it is realised in every frame. A "
-              "local event is bounded: it begins, occupies a short interval, and ends, and "
-              "it is associated with a specific position in the text. The two are not merely "
-              "different in duration. A global attribute must influence frames whose "
-              "acoustic content is already largely determined by the surrounding speech, "
-              "whereas a local event is the only thing that determines the frames it "
-              "occupies. The consequences for training are taken up in Section 3.5.")
-
-    heading(doc, "2.2   Prosody", 2)
-
-    para(doc, "Prosody comprises the suprasegmental properties of speech, that is, those "
-              "carried above the level of the individual sound. It is what remains when the "
-              "identity of the words is set aside: the rate at which they are spoken, the "
-              "pitch at which they are set, the loudness with which they are projected, the "
-              "degree of pitch movement, and the placement of pauses.")
-
-    tbl(doc, "prosody",
-          "Prosodic dimensions and their acoustic correlates.",
-          ["Dimension", "Acoustic correlate", "Measurement used here"],
-          [["Speaking rate", "phones or syllables per unit time", "Khmer characters per second"],
-           ["Pitch register", "fundamental frequency", "median F0, hertz"],
-           ["Pitch variation", "F0 range and contour movement", "F0 standard deviation, semitones"],
-           ["Loudness", "signal energy", "root-mean-square level, dBFS"],
-           ["Phrasing", "pause placement and duration", "inter-pausal unit statistics"]],
-          widths=[1.4, 2.4, 2.6])
-
-    para(doc, "The sentence *I never said she stole my money* spoken at three syllables per "
-              "second and at six differs in rate alone. Spoken with a median fundamental "
-              "frequency of 120 hertz and of 240 hertz, it differs in register. Spoken with "
-              "an F0 standard deviation near zero it is heard as mechanical, and with a "
-              "range of six semitones as engaged; that is variation. In each case the words, "
-              "and the meaning they carry, are unchanged.")
-
-    para(doc, "Prosody is a global attribute. It is the category most extensively treated in "
-              "the literature, and, as Section 1.4 established, the one VoxCPM2 already "
-              "addresses on Khmer.")
-
-    heading(doc, "2.3   Emotion", 2)
-
-    para(doc, "Emotion denotes the affective state conveyed by the delivery. The standard "
-              "corpora encode it as a small closed set of categories, most commonly neutral, "
-              "happy, angry, sad and surprised.")
-
-    para(doc, "Emotion is realised through prosody together with voice quality, but it does "
-              "not reduce to a prosodic setting. Anger and excitement share elevated pitch "
-              "and elevated energy and are not perceptually similar; the distinction resides "
-              "in phonation, articulatory precision and fine timing, none of which a "
-              "rate-pitch-energy specification captures. The sentence *Oh, that's great* "
-              "spoken flatly and slowly is heard as sarcastic, spoken quickly and brightly "
-              "as pleased, and spoken slowly with creaky phonation as resigned. The three "
-              "readings differ in affect, not in prosodic setting alone.")
-
-    para(doc, "Emotion is treated as a global attribute in essentially all of the literature: "
-              "one label per utterance is the near-universal convention. Its status in "
-              "VoxCPM2 on Khmer is unmeasured. The parenthetical channel would plausibly "
-              "accept a description such as *(sounding angry)*, since it is the same "
-              "free-text field that already carries *(speaking quickly)*, but this has not "
-              "been tested.")
-
-    heading(doc, "2.4   Non-Verbal Vocalization", 2)
-
-    para(doc, "A non-verbal vocalization is a sound produced by a speaker that is not a word: "
-              "laughter, a sigh, an audible breath, a filled pause, a cough, a gasp, a sob, "
-              "a hesitation particle. Such sounds carry stance, regulate turn-taking and "
-              "convey affect, and their presence is a substantial part of what distinguishes "
-              "conversational speech from read speech.")
-
-    tbl(doc, "nvv",
-          "Non-verbal vocalization types. Tags in the first five rows are documented in "
-          "VoxCPM2; the sixth row is not.",
-          ["Type", "Tag", "Communicative function"],
-          [["Laughter", "`[laughing]`", "amusement, affiliation, mitigation"],
-           ["Sigh", "`[sigh]`", "resignation, fatigue, relief"],
-           ["Filled pause", "`[Uhm]`", "planning, hesitation, floor-holding"],
-           ["Attention marker", "`[Shh]`", "silencing, conspiratorial framing"],
-           ["Discourse particle", "`[Question-ah]`, `[Surprise-wa]`, `[Dissatisfaction-hnn]`",
-            "stance, back-channelling, question marking"],
-           ["Breath, gasp, cough, sob", "—", "phrasing, surprise, distress, physical state"]],
-          widths=[1.3, 2.5, 2.6])
-
-    para(doc, "In the utterance *I thought it was fine* `[laughing]` *but apparently not*, "
-              "the laugh occurs at one place, occupies a few hundred milliseconds, and "
-              "leaves the speech before and after it unaffected. In *So we should* `[Uhm]` "
-              "*probably wait*, a filled pause is inserted mid-clause and has the same "
-              "bounded character.")
-
-    para(doc, "Non-verbal vocalization is therefore a local event, and this is its "
-              "significant property for present purposes. A global attribute competes for "
-              "influence over frames that the surrounding acoustic context already predicts. "
-              "A tagged event has no such competitor: the frames it occupies are predicted "
-              "by nothing else, and the conditioning signal is the only available "
-              "explanation for them. The engineering problem is correspondingly different, "
-              "and, as Section 3.5 argues, easier.")
-
-    para(doc, "VoxCPM2 supplies the tag inventory. Whether the tags are realised on Khmer "
-              "text is unmeasured.")
-
-    heading(doc, "2.5   Related Categories", 2)
-
-    para(doc, "Three further categories are named here so that they are not conflated with "
-              "the preceding three.")
-
-    tbl(doc, "adjacent",
-          "Categories adjacent to prosody, emotion and non-verbal vocalization.",
-          ["Category", "Definition", "Scope", "Example"],
-          [["Voice quality", "mode of phonation", "global",
-            "whispered, breathy, creaky, tense"],
-           ["Emphasis", "placement of contrastive stress", "local span",
-            "*I* never said that; I never said *that*"],
-           ["Timing", "insertion and duration of pauses", "local",
-            "a deliberate pause before a resolution"]],
-          widths=[1.15, 2.15, 0.85, 2.25])
-
-    para(doc, "Voice quality behaves as emotion does: it is global, and in principle "
-              "addressable through the same descriptive channel. Emphasis and timing are "
-              "local, as non-verbal vocalization is, but they require a syntax that "
-              "delimits a span rather than marking a point. VoxCPM2 provides no such syntax, "
-              "and adding one is a larger undertaking than adding a tag.")
-
-    # -- 3 ----------------------------------------------------------------
-    heading(doc, "3   Literature Review", 1, page_break=True)
-
-    para(doc, "Four bodies of work bear on the categories set out above: natural language "
-              "control of prosody and style, emotional speech synthesis, non-verbal "
-              "vocalization, and the evaluation of controlled speech. Each is reviewed in "
-              "turn, and Section 3.5 states which category this project will pursue and on "
-              "what grounds.")
-
-    heading(doc, "3.1   Natural Language Style Control", 2)
-
-    para(doc, "The organising idea of this literature is to replace the reference recording "
-              "with a description, and to obtain the descriptions by automatic means rather "
-              "than by annotation.")
-
-    para(doc, "Guo et al. (2023) established the format with PromptTTS, which takes a style "
-              "prompt and a content prompt, encodes them separately, and conditions an "
-              "acoustic model on both. The approach was constrained by its data: the "
-              "style-annotated corpus had to be constructed manually, which limited its "
-              "scale. Yang et al. (2023) relaxed the input format in InstructTTS, accepting "
-              "free-form instructions rather than attribute lists and learning a cross-modal "
-              "representation that aligns instruction text with speech style, decoded in a "
-              "discrete latent space.")
-
-    para(doc, "Leng et al. (2024) addressed the two limitations that constrain the family as "
-              "a whole. The first is that a description underdetermines a voice: many "
-              "distinct voices satisfy *a young woman speaking quickly*, and a model trained "
-              "to map descriptions to speech must resolve that ambiguity somehow. PromptTTS "
-              "2 introduces a variation network that predicts, from the prompt "
-              "representation, the reference-speech representation that would otherwise have "
-              "been supplied. The second is annotation cost, addressed by a pipeline in "
-              "which a speech understanding model recognises attributes and a large language "
-              "model writes the corresponding prompt sentence. The system was trained on 44,000 "
-              "hours.")
-
-    para(doc, "Lyth and King (2024) give the clearest statement of the annotation argument "
-              "and the one released without restriction, as Parler-TTS. Gender, accent, "
-              "pitch, speaking rate and recording conditions are labelled computationally "
-              "across a 45,000-hour corpus of found data using classifiers and signal "
-              "measurements, and the resulting attributes are rendered as descriptive "
-              "sentences on which the model is conditioned. The system outperforms prior work "
-              "on fidelity while using no manually annotated data. The transferable result "
-              "is that the labels required for prosodic control can be measured rather than "
-              "annotated, which is the property this project relied upon when it labelled a "
-              "Khmer corpus by measuring fundamental frequency, character rate and "
-              "root-mean-square level per clip. Ji et al. (2024) supply the corpus "
-              "counterpart in TextrolSpeech: 236 hours and 33,000 utterances with style "
-              "descriptions generated by a language-model pipeline over five attribute "
-              "dimensions.")
-
-    para(doc, "This literature accounts for the parenthetical mechanism in VoxCPM2, which "
-              "uses the same conditioning format and was presumably trained in the same "
-              "manner. It also sets the expectation against which Section 1.4 should be "
-              "read: these systems control pitch, rate and energy from description, and "
-              "those are precisely the axes the measurement finds already functioning on "
-              "Khmer.")
-
-    heading(doc, "3.2   Emotional Speech Synthesis", 2)
-
-    para(doc, "Work on emotion is organised around acted, parallel corpora. Zhou et al. "
-              "(2022) survey the field and introduce the Emotional Speech Dataset, which "
-              "remains the standard reference: 350 parallel utterances from ten English and "
-              "ten Mandarin speakers across five emotion categories, exceeding 29 hours "
-              "recorded under controlled acoustic conditions, and designed to support "
-              "multi-speaker and cross-lingual conversion.")
-
-    para(doc, "Hsu et al. (2024) are the bridge between this section and the next. Their "
-              "system controls speaker emotion and laughter within a single flow-matching "
-              "zero-shot model, and in doing so treats a laugh as a controllable event "
-              "rather than as an emotional label. The separation between emotion and "
-              "non-verbal vocalization, clear enough as a definition, is not clean in "
-              "practice.")
-
-    para(doc, "The obstacle in this category is the shape of the data rather than the "
-              "adequacy of the method. Every result rests on parallel, acted, "
-              "utterance-labelled emotional speech. No Khmer corpus of that description "
-              "exists, and commissioning one is not proportionate to the value it would "
-              "return.")
-
-    heading(doc, "3.3   Non-Verbal Vocalization", 2)
-
-    para(doc, "This is the most active of the four areas and the one whose methods transfer "
-              "most directly to VoxCPM2.")
-
-    para(doc, "NVSpeech (2025) is the closest match to the problem stated in Section 2.4. It "
-              "treats recognition and synthesis as one pipeline. A manually annotated set of "
-              "48,430 utterances covering eighteen word-level paralinguistic categories is "
-              "used to train a paralinguistic-aware speech recogniser that emits the cues as "
-              "inline decodable tokens, so that a transcript reads *You're so funny "
-              "[Laughter]*. That recogniser then labels a corpus of 174,179 Chinese "
-              "utterances, 573 hours, with word-level alignment. A zero-shot synthesiser is "
-              "finally fine-tuned on the combined human- and machine-labelled data, yielding "
-              "explicit control over vocalizations inserted at arbitrary token positions. "
-              "Three elements transfer: the tag is placed inline at the position of the "
-              "event rather than in a header; a recogniser-shaped detector can bootstrap a "
-              "corpus from found audio; and a modest human-validated seed set suffices to "
-              "bootstrap the automatic labeller.")
-
-    para(doc, "Kanda et al. (2024) provide the closest methodological reference. ELaTE "
-              "fine-tunes a conditional flow-matching zero-shot synthesiser using "
-              "frame-level conditioning derived from a laughter detector, obtaining control "
-              "over both the timing of a laugh and its acoustic character. Two of its "
-              "results constrain any plan built on it. A comparatively small conditioned "
-              "dataset is sufficient; and mixing the conditioned data with general training "
-              "data preserves the quality of the base model, so the fine-tune need not be "
-              "paid for in intelligibility. The relevance is direct: the decoder ELaTE "
-              "modifies belongs to the same class as the VoxCPM2 local diffusion "
-              "transformer.")
-
-    para(doc, "NonverbalTTS (2025) is the reference for corpus construction at a tractable "
-              "scale. Seventeen hours covering ten non-verbal types were assembled from open "
-              "sources by automatic detection followed by human validation, and the "
-              "resulting system is reported at parity with proprietary alternatives. The "
-              "detectors on which such pipelines depend are themselves available: Gillick et "
-              "al. (2021) release robust frame-level laughter detection and segmentation "
-              "trained on found audio, and Gong et al. (2022) release VocalSound, 21,000 "
-              "crowdsourced recordings of laughter, sighs, coughs, throat-clearing, sneezes "
-              "and sniffs from 3,365 speakers, together with a classifier baseline. Between "
-              "them the automatic detection stage requires no model training. Where found "
-              "audio is too thin to support detection, deliberate recording remains viable; "
-              "MNV-17 (2025) demonstrates this for Mandarin.")
-
-    tbl(doc, "nvv_refs",
-          "Principal references for non-verbal vocalization, by pipeline stage.",
-          ["Stage", "Reference", "Contribution"],
-          [["Detection", "Gillick et al. (2021); Gong et al. (2022)",
-            "Released frame-level laughter detector; released classifier over six vocalization types."],
-           ["Corpus construction", "NVSpeech (2025); NonverbalTTS (2025)",
-            "Recogniser-driven auto-labelling at 573 hours; detection plus human validation at 17 hours."],
-           ["Synthesis", "Kanda et al. (2024); Hsu et al. (2024)",
-            "Flow-matching fine-tuning with detector conditioning; joint emotion and laughter control."],
-           ["Deliberate recording", "MNV-17 (2025)",
-            "Performative corpus where found audio is insufficient."]],
-          widths=[1.15, 1.95, 3.3])
-
-    para(doc, "Taken together these constitute a complete and published procedure: detection, "
-              "alignment, human validation, an inline-tagged manifest, and a flow-matching "
-              "fine-tune with general data mixed in. Every stage has either a reference "
-              "implementation or a released model.")
-
-    heading(doc, "3.4   Evaluation of Controlled Speech", 2)
-
-    para(doc, "A control claim requires an instrument, and this project has already "
-              "established that the usual instruments are unsuitable for Khmer. Across 400 "
-              "clips the rank correlation between UTMOS, a learned mean-opinion-score "
-              "predictor, and Khmer character error rate is +0.55: the recordings the "
-              "predictor scores highest are those that render the Khmer least correctly. The "
-              "inversion is between models rather than within any one model's output, which "
-              "is precisely the comparison the predictor was being used to make. Naturalness "
-              "predictors trained without Khmer in view cannot be relied upon here.")
-
-    para(doc, "Two recent contributions address the evaluation of non-verbal vocalization "
-              "specifically. NVV-SuperBench (2026) pairs a unified taxonomy of 45 "
-              "vocalization types with a bilingual English and Chinese dataset and, more "
-              "usefully, defines a protocol that separates general speech naturalness from "
-              "vocalization-specific controllability, placement and salience; fifteen "
-              "systems are evaluated under it. Those four axes are the appropriate ones to "
-              "report against, since they decompose the question into whether the event "
-              "occurred, whether it was of the requested type, whether it occurred in the "
-              "requested place, and whether it was acoustically convincing.")
-
-    para(doc, "NVMOS (2026) supplies the last of these as a model rather than as a listening "
-              "panel. It predicts a mean-opinion-score-like value between zero and five for "
-              "a specific marked non-verbal event, taking as input the audio together with "
-              "text containing an explicit tag such as `[laugh]`. The authors additionally "
-              "report that general-purpose audio-capable multimodal models disagree "
-              "measurably with expert raters on this task, so a multimodal model is not an "
-              "acceptable substitute. Its input format, tagged text paired with audio, is the "
-              "format in which a training manifest for this work would already exist.")
-
-    para(doc, "An evaluation plan that avoids the inverted predictors therefore exists: "
-              "controllability and placement measured automatically with a detector, "
-              "acoustic quality of the event measured with NVMOS, and intelligibility "
-              "regression measured with the project's existing Khmer connectionist temporal "
-              "classification scorer against the frozen evaluation set.")
-
-    heading(doc, "3.5   Research Focus", 2)
-
-    para(doc, "This project will pursue non-verbal vocalization. The reasoning proceeds by "
-              "elimination and is then stated positively.")
-
-    para(doc, f"Prosody is already provided. The parenthetical mechanism moves Khmer pitch "
-              f"across {PAR['pitch']['low_to_high']:.2f} hertz at a rank correlation of "
-              f"{PAR['pitch']['spearman_rho']:+.3f}, roughly four times the "
-              f"{CEIL['pitch']['spread']:.2f} hertz separation the project's own labelled "
-              f"corpus is able to express (Section 1.4). A prosodic controller trained on "
-              f"that corpus would reproduce a capability the base model possesses, in a "
-              f"conditioning channel that is already occupied. The residue, principally "
-              f"pitch variation and reproducibility across random seeds, is genuine but "
-              f"small.")
-
-    para(doc, "Emotion is blocked on data rather than on method. The results reviewed in "
-              "Section 3.2 depend without exception on acted, parallel, utterance-labelled "
-              "emotional speech, and no Khmer corpus of that description exists.")
-
-    para(doc, "Non-verbal vocalization is the remaining category, and four considerations "
-              "recommend it.")
+    para(doc, "That null result has two possible explanations, and generated audio alone "
+              "cannot tell them apart: a dependency that was never learned sounds the same as "
+              "one that was learned and then washed out at generation time.")
 
     numbered(doc, [
-        "It is a local event. A tagged vocalization is the only predictor of the frames it "
-        "occupies, whereas a global attribute must compete for influence over frames the "
-        "surrounding context already determines. The conditioning difficulty that attends "
-        "global-attribute training is therefore not expected to arise.",
-        "The interface exists. The tags `[laughing]`, `[sigh]` and `[Uhm]` are documented in "
-        "the unmodified model. The work is to make them operate on Khmer, not to design a "
-        "syntax and persuade the model to read it.",
-        "The acoustics are substantially language-independent. Laughter and sighing are not "
-        "language-specific gestures; what is language-specific is where they are placed and "
-        "what they signal in context, and placement is supplied by the tag position. This is "
-        "why a small Khmer corpus may be sufficient, and it is the assumption that any "
-        "methodology must test before committing resources.",
-        "Every stage has a published reference: NVSpeech for the pipeline and the "
-        "inline-token format, ELaTE for the flow-matching fine-tune and the data-mixing "
-        "ratio, NonverbalTTS for the human-validation loop, Gillick et al. and VocalSound "
-        "for detection, and NVV-SuperBench and NVMOS for evaluation.",
+        "**The mechanism is absent.** The model has no way to bind an event to a specific "
+        "position in the text. If true, inline tags are not achievable at any corpus size, "
+        "and the project should fall back to global descriptors of the kind Section 4.1 "
+        "measures.",
+        f"**The signal is too weak.** The mechanism exists, but "
+        f"{CMETA['tag_counts']['[cough]']} examples of the most common non-laughter tag, "
+        f"spread over {CORPUS_H:.2f} hours, is too sparse for the model to pick up on. If "
+        f"true, the approach is sound and the fix is more/better data.",
     ])
 
-    # -- 4 ----------------------------------------------------------------
-    heading(doc, "4   Methodology", 1, page_break=True)
-    para(doc, "Reserved.", align=None)
+    para(doc, "Deliberate overfitting is the cheapest way to tell these apart: memorize a "
+              "small set of recordings, then check whether the tag's influence shows up on "
+              "those same recordings. A model that still ignores the tag after seeing the "
+              "answer hundreds of times has problem (1). A model that picks it up has "
+              "problem (2), which is fixable.")
+
+    para(doc, f"{T('ovf_conf')} summarises the run. It deliberately does everything a "
+              f"production fine-tune would not: no mix of untagged data (its only job is "
+              f"preventing regression, which this run isn't worried about), no weight decay, "
+              f"a 5x learning rate, and validation on the training clips themselves, so "
+              f"validation loss reads memorization rather than generalization.")
+
+    tbl(doc, "ovf_conf",
+        "Configuration of the overfitting run. The full file is "
+        "`finetune/conf/nvv_overfit.yaml`.",
+        ["Quantity", "Value", "Rationale"],
+        [["Clips", f"{OMETA['n']} ({OVF_MIN:.1f} min)",
+          f"{OMETA['per_tag']} per tag; small enough to memorize in about an hour"],
+         ["Tags", f"{len(OMETA['tags'])}", "four undocumented, one documented as control"],
+         ["Untagged mixture", "none", "regularization is not wanted here"],
+         ["Learning rate", f"{OCFG['learning_rate']:g}",
+          "five times the documented rate for this adapter"],
+         ["Weight decay", f"{OCFG['weight_decay']:g}", "no regularization, deliberately"],
+         ["Warmup", f"{OCFG['warmup_steps']} steps", "short, for the same reason"],
+         ["Steps", f"{OCFG['max_steps']:,}",
+          f"about {OVF_EPOCHS:.0f} passes over the same clips"],
+         ["Fine-tune scope", f"rank {OCFG['lora']['r']} (alpha {OCFG['lora']['alpha']})",
+          "a lightweight adapter covering the relevant model components"],
+         ["Validation set", "identical to training",
+          "validation loss reads memorization by design"]],
+        widths=[1.05, 0.95, 2.4], size=8.4)
+
+    para(doc, f"Clips were admitted only if they carried exactly one tag, occurring exactly "
+              f"once, in a 2–8 second recording — the cleanest possible mapping from one "
+              f"string to one event. Four of the five tags used — "
+              f"{', '.join('`' + t + '`' for t in OMETA['tags'] if t not in DOCUMENTED)} "
+              f"— appear nowhere in the inventory OpenBMB publishes ({T('nvv')}). The fifth, "
+              f"`[laughing]`, is documented and kept as a control: the unmodified model "
+              f"already produces laughter, so if it trained appreciably better than the "
+              f"undocumented tags, that would suggest the model was retrieving prior "
+              f"knowledge of the word rather than learning a new binding.")
+
+    para(doc, "This test was run in English rather than Khmer, on purpose: it asks only "
+              "whether the tagging mechanism itself can be taught to work at all, not "
+              "whether it works specifically in Khmer. That second question is deferred "
+              "until this one is settled.")
+
+    para(doc, f"The instrument is a forward pass, one per clip per condition, comparing the "
+              f"loss across four rewritings of the transcript ({T('ovf_cond')}). Generated "
+              f"audio is not used to decide the question, for the reason given above.")
+
+    tbl(doc, "ovf_cond",
+        "The four conditions of the sensitivity probe.",
+        ["Condition", "Transcript", "What it tests"],
+        [["True", "tag inline, at the event", "reference"],
+         ["Removed", "tag deleted", "whether the tag carries information at all"],
+         ["Moved", "tag pushed to the end of the sentence",
+          "whether the tag's **position** carries information"],
+         ["Scrambled", "word order destroyed, tags left in place",
+          "positive control"]],
+        widths=[0.75, 1.6, 2.05], size=8.4)
+
+    para(doc, "The **moved** condition is what distinguishes a local event from an "
+              "utterance-level flag: a model that only learned \"this clip contains a "
+              "cough\" scores the same when the tag is relocated, whereas a model that "
+              "learned *where* the cough belongs does not. The **scrambled** condition is "
+              "the sanity check: it must raise the loss, or the probe isn't measuring "
+              "anything and no other row can be trusted.")
+
+    heading(doc, "Results", 3)
+
+    tbl(doc, "ovf_res",
+        f"Effect of each rewriting on the loss after memorization "
+        f"(n = {OVF['n']}; reference loss {OVF['true_mean']:.5f}). *Worse* counts the "
+        f"clips on which the rewriting raised the loss; *p* is a two-sided sign test.",
+        ["Condition", "Mean loss", "Change", "Worse", "p"],
+        [["Removed"] + sens(OVF, "removed"),
+         ["Moved"] + sens(OVF, "moved"),
+         ["Scrambled"] + sens(OVF, "scrambled")],
+        widths=[1.0, 0.85, 0.8, 0.7, 0.75], size=8.6,
+        align_right=(1, 2, 3, 4))
+    note(doc, f"The positive control raised the loss by "
+              f"{OVF['conditions']['scrambled']['delta_mean']:+.5f} on "
+              f"{OVF['conditions']['scrambled']['worse']} of {OVF['n']} clips, so the probe "
+              f"is measuring the objective and the other two rows can be read.")
+
+    para(doc, f"**The tag now carries information.** Deleting it raises the loss on "
+              f"{OVF['conditions']['removed']['worse']} of {OVF['n']} clips. **Its position "
+              f"matters too** — the more important finding: moving the tag without deleting "
+              f"it raises the loss on {OVF['conditions']['moved']['worse']} of {OVF['n']} "
+              f"clips, at "
+              f"{100 * OVF['conditions']['moved']['delta_mean'] / OVF['conditions']['removed']['delta_mean']:.0f}"
+              f"% of the cost of deleting it — whereas the same test on the unmodified model "
+              f"gives p = {BASE['conditions']['moved']['p']:.2f}. The model isn't just "
+              f"flagging \"this utterance contains a cough\"; it's reading where in the "
+              f"sentence the tag sits and placing the event there.")
+
+    para(doc, f"Absolute losses aren't comparable across model states, evaluated on "
+              f"different clips at different points in training. {T('ovf_cmp')} instead "
+              f"compares the cost of deleting the tag as a fraction of the cost of "
+              f"destroying the whole transcript — a ratio internal to each model.")
+
+    tbl(doc, "ovf_cmp",
+        "Salience of the inline tag relative to the transcript, across the three "
+        "states of the model. The ratio is the cost of deleting the tag divided by the "
+        "cost of scrambling the transcript, measured within each model. All three rows "
+        "are measured on clips the model in question was trained on; the held-out "
+        "comparison is reported separately in Section 4.3.",
+        ["Model state", "n", "Deletion p", "Relocation p", "Tag / transcript"],
+        [["Unmodified", f"{BASE['n']}", fp(BASE["conditions"]["removed"]["p"]),
+          fp(BASE["conditions"]["moved"]["p"]),
+          f"{100 * BASE['removed_over_scrambled']:.1f}%"],
+         [f"Fine-tuned, {CORPUS_H:.2f} h", f"{NORM['n']}",
+          fp(NORM["conditions"]["removed"]["p"]),
+          fp(NORM["conditions"]["moved"]["p"]),
+          f"{100 * NORM['removed_over_scrambled']:.1f}%"],
+         [f"Overfitted, {OVF_MIN:.1f} min", f"{OVF['n']}",
+          fp(OVF["conditions"]["removed"]["p"]),
+          fp(OVF["conditions"]["moved"]["p"]),
+          f"{100 * OVF['removed_over_scrambled']:.1f}%"]],
+        widths=[1.25, 0.4, 0.9, 0.9, 1.0], size=8.6,
+        align_right=(1, 2, 3, 4))
+    note(doc, f"The two p-value columns are sign tests on the deletion and relocation "
+              f"conditions respectively. The overfitted figure is "
+              f"{OVF['removed_over_scrambled'] / NORM['removed_over_scrambled']:.1f} times "
+              f"the fine-tuned one and "
+              f"{OVF['removed_over_scrambled'] / BASE['removed_over_scrambled']:.1f} times "
+              f"the unmodified one.")
+
+    tbl(doc, "ovf_tags",
+        "Loss under the deletion condition, by tag. The control tag is the only one "
+        "OpenBMB documents.",
+        ["Tag", "Documented", "Mean loss when deleted"],
+        _ovf_tag_rows(),
+        widths=[1.1, 0.9, 1.4], size=8.6, align_right=(2,))
+    note(doc, "The four undocumented tags are not weaker than the documented one, which "
+              f"argues that the effect in {T('ovf_res')} is a newly learned binding rather "
+              "than the model retrieving prior knowledge of the English words in brackets.")
+
+    heading(doc, "Interpretation and limits", 3)
+
+    para(doc, "This experiment shows VoxCPM2 *can* bind an arbitrary bracketed tag to a "
+              "specific non-verbal event at a specific position in a sentence, and that a "
+              "lightweight fine-tune is enough to install that binding. The \"mechanism is "
+              "absent\" explanation from above is ruled out: the earlier null result was a "
+              "problem with the training data, not the model. That's the finding the project "
+              "needed, obtained for the cost of an hour of training.")
+
+    para(doc, f"It proves nothing about generalization, and should not be quoted as though it "
+              f"did. The evaluation runs on the same {OMETA['n']} sentences the model was "
+              f"trained on, roughly {OVF_EPOCHS:.0f} times each — that's what overfitting "
+              f"means. Whether the same tags work on text the model hasn't seen is a "
+              f"separate question, addressed next.")
+
+    heading(doc, "4.3   Tag Conditioning: Generalization Test", 2)
+
+    para(doc, f"The generalization test Section 4.2 deferred to has since been run, and the "
+              f"result is negative. The validation split of the corpus was never shown to "
+              f"the model during training; {HELD['n']} of its clips carry an inline tag, and "
+              f"those {HELD['n']} are the entire available sample. The same four-condition "
+              f"probe was applied to the fine-tuned model and to the unmodified model on "
+              f"those identical clips, so the two are compared within one clip set rather "
+              f"than across sets. {T('ovf_held')} reports the outcome.")
+
+    tbl(doc, "ovf_held",
+        f"Tag sensitivity on {HELD['n']} clips held out of training, for the fine-tuned "
+        f"model and the unmodified model over the same clips. The two are "
+        f"indistinguishable.",
+        ["Model state", "Reference loss", "Deletion Δ", "Clips worse", "p",
+         "Tag / transcript"],
+        [["Unmodified", f"{BHELD['true_mean']:.5f}",
+          f"{BHELD['conditions']['removed']['delta_mean']:+.5f}",
+          f"{BHELD['conditions']['removed']['worse']}/{BHELD['n']}",
+          fp(BHELD["conditions"]["removed"]["p"]),
+          f"{100 * BHELD['removed_over_scrambled']:.1f}%"],
+         ["Fine-tuned", f"{HELD['true_mean']:.5f}",
+          f"{HELD['conditions']['removed']['delta_mean']:+.5f}",
+          f"{HELD['conditions']['removed']['worse']}/{HELD['n']}",
+          fp(HELD["conditions"]["removed"]["p"]),
+          f"{100 * HELD['removed_over_scrambled']:.1f}%"]],
+        align_right=(1, 2, 3, 4, 5))
+
+    para(doc, f"The two rows describe the same behaviour. The cost of deleting the tag "
+              f"differs between them by only "
+              f"{abs(HELD['conditions']['removed']['delta_mean'] - BHELD['conditions']['removed']['delta_mean']):.4f}, "
+              f"and the sign-test counts differ by a single clip in the unmodified model's "
+              f"favour. Whatever sensitivity to the tag these sentences show, the model had "
+              f"it before training — {OCFG['max_steps']:,} steps on {CORPUS_H:.2f} hours "
+              f"added nothing that reaches text the model hasn't seen.")
+
+    para(doc, f"Two caveats. First, statistical power: at n = {HELD['n']}, a sign test needs "
+              f"roughly twenty clips of twenty-eight to reach significance, so a small true "
+              f"effect could be hiding here — what this rules out is a large one, which is "
+              f"what a working method should produce given the capability shown in Section "
+              f"4.2. Second, the final column isn't comparable to the same column in "
+              f"{T('ovf_cmp')}: these are different sentences, and the unmodified model "
+              f"scores {100 * BHELD['removed_over_scrambled']:.0f}% here against "
+              f"{100 * BASE['removed_over_scrambled']:.0f}% on the clips used there — which "
+              f"is why the unmodified model was re-measured on this specific held-out set "
+              f"rather than reusing the earlier number.")
+
+    para(doc, "Together, Sections 4.2 and 4.3 tell a consistent story: the mechanism exists "
+              "— VoxCPM2 can bind a bracketed tag to a local event and to its position — but "
+              "the fine-tune as configured does not install that binding in a form that "
+              "survives to unseen text. The fixes below are prerequisites, not refinements.")
+
+    note(doc, "Provenance. The figures in Sections 4.2–4.3 are read at build time from "
+              "`finetune/results/nvv/tag_sensitivity_overfit.json` and its counterparts "
+              "for the other model states and the held-out set. The trained adapter itself "
+              "was deleted in error after the run and has not been regenerated; the recorded "
+              "measurements and the synthesized audio survive, but reproducing the audio "
+              "would require repeating the training. The procedure is documented in "
+              "`finetune/OVERFIT_EXPERIMENT.md`.")
+
+    # -- 5 Findings ----------------------------------------------------------
+    heading(doc, "5   Findings", 1, page_break=True)
+
+    para(doc, "Of the three speech-control categories in Section 3, one is already handled by "
+              "the base model, one is blocked on data, and one has a working mechanism whose "
+              "training recipe does not yet generalize. This section restates what each "
+              "experiment established; it will be extended as further experiments are run.")
+
+    para(doc, f"**Prosody is already handled.** The parenthetical mechanism moves Khmer pitch "
+              f"by {PAR['pitch']['low_to_high']:.2f} Hz at a rank correlation of "
+              f"{PAR['pitch']['spearman_rho']:+.3f}, roughly four times the "
+              f"{CEIL['pitch']['spread']:.2f} Hz this project's own labelled corpus could "
+              f"express (Section 4.1). A prosody fine-tune trained on that corpus would "
+              f"reproduce a capability the base model already has, in a conditioning "
+              f"channel that's already in use. What remains — pitch variation and "
+              f"seed-to-seed consistency — is real but small.")
+
+    para(doc, "**Emotion is blocked on data, not method.** Every reliable result in this "
+              "space depends on acted, parallel, labelled emotional speech, and no Khmer "
+              "corpus of that kind exists (Section 3.3).")
+
+    para(doc, "**Non-verbal vocalization has a mechanism that works but a recipe that "
+              "doesn't yet generalize.** It is a local event, not a global attribute "
+              "(Section 3.1) — the tagged event has no competing explanation for the frames "
+              "it occupies, unlike prosody or emotion. The interface already exists: "
+              "`[laughing]`, `[sigh]` and `[Uhm]` are documented in the unmodified model. "
+              "Section 4.2 shows the underlying binding can be taught; Section 4.3 shows "
+              "the specific recipe tried does not carry that binding to text the model "
+              "hasn't seen. Whether a different recipe closes that gap is open, and is the "
+              "next thing this document will report on.")
 
     # -- refs -------------------------------------------------------------
     heading(doc, "References", 1, page_break=True)
@@ -807,9 +788,7 @@ def build(pages):
         "NVV-SuperBench: beyond words, beyond quality — benchmarking nonverbal vocalizations "
         "in speech generation (2026). arXiv:2604.16211.",
 
-        "OpenBMB (2025). VoxCPM2 model card. huggingface.co/openbmb/VoxCPM2. Source "
-        "referenced in Section 1.2: `voxcpm/training/packers.py` and "
-        "`voxcpm/model/voxcpm2.py`.",
+        "OpenBMB (2025). VoxCPM2 model card. huggingface.co/openbmb/VoxCPM2.",
 
         "Yang, D., Liu, S., Huang, R. et al. (2023). InstructTTS: modelling expressive TTS in "
         "discrete latent space with natural language style prompt. arXiv:2301.13662.",
@@ -819,315 +798,6 @@ def build(pages):
     ]:
         reference(doc, r)
 
-    # -- appendix A -------------------------------------------------------
-    heading(doc, "Appendix A   Overfitting Test of Tag Conditioning", 1,
-            page_break=True)
-
-    para(doc, "This appendix reports a single experiment, carried out after Section 3.5 "
-              "selected non-verbal vocalization as the research focus. Its purpose is "
-              "diagnostic rather than demonstrative: it establishes that the model is "
-              "capable of the conditioning the methodology depends on, and it does so "
-              "before any effort is committed to building a corpus at scale. The "
-              "experiment is conducted in English. Section 1.4 records that Khmer text "
-              "reaches the model as byte fallback at roughly three tokens per character, "
-              "which makes a Latin tag a conspicuously low-entropy island in the "
-              "sequence; running the test in English removes that asymmetry from the "
-              "result and leaves the question of Khmer transfer to be settled separately.")
-
-    heading(doc, "A.1   Motivation", 2)
-
-    para(doc, f"A conventional fine-tune had already been performed on "
-              f"{CORPUS_H:.2f} hours of tagged English speech derived from "
-              f"{CMETA['source']}, and evaluated on {NORM['n']} clips drawn from its own "
-              f"training set, using a low-rank adaptation of the backbone language model, the "
-              f"local diffusion transformer and the projection layers. Its effect on the "
-              f"inline tag was close to nothing. Deleting the tag from the transcript "
-              f"raised the flow-matching loss on {NORM['conditions']['removed']['worse']} "
-              f"of {NORM['n']} clips, which a sign test cannot separate from chance "
-              f"(p = {NORM['conditions']['removed']['p']:.3f}), and relocating the tag to "
-              f"the far end of the sentence was similarly without effect "
-              f"(p = {NORM['conditions']['moved']['p']:.3f}). On the unmodified model the "
-              f"corresponding relocation test gives "
-              f"p = {BASE['conditions']['moved']['p']:.2f}, which is to say the model "
-              f"behaves as though the tag's position had not been changed at all.")
-
-    para(doc, "That null result admits two explanations which lead to opposite decisions, "
-              "and the audio cannot distinguish them, because a generated waveform "
-              "conflates a dependence that was never learned with one that was learned "
-              "and then removed by classifier-free guidance and the flow-matching solver. "
-              "The distinction has to be drawn at the training objective.")
-
-    numbered(doc, [
-        "**The mechanism is absent.** Text conditioning reaches the diffusion head as an "
-        "utterance-level vector, and nothing in the architecture carries the information "
-        "that an event belongs at one particular moment. If this is the case, inline tags "
-        "are not achievable in this model at any corpus size, and the work should fall "
-        "back to global descriptors of the kind Section 1.4 measures.",
-        f"**The signal is too weak.** The mechanism exists, but "
-        f"{CMETA['tag_counts']['[cough]']} instances of the most common non-laughter tag, "
-        f"distributed over {CORPUS_H:.2f} hours, is too sparse a gradient for the "
-        f"objective to locate. If this is the case the approach is sound and the corpus "
-        f"is the thing to change.",
-    ])
-
-    para(doc, "Deliberate overfitting separates the two, and is the least expensive "
-              "decisive experiment available. A small set of recordings is memorized, and "
-              "the tag's influence is then measured on those same recordings. A model that "
-              "fails to acquire the dependence when it has been given the answer several "
-              "hundred times has the first problem. A model that acquires it has the "
-              "second, and the second is tractable.")
-
-    heading(doc, "A.2   Design", 2)
-
-    para(doc, f"Every choice in {T('ovf_conf')} is the reverse of what a production "
-              f"fine-tune would use, deliberately. The mixture of untagged material that "
-              f"ELaTE prescribes at a one-to-one ratio, and that Section 3.5 adopts, is "
-              f"omitted: its function is to prevent the base model regressing, which is a "
-              f"concern about generalization that this run does not have. Weight decay is "
-              f"zero, the learning rate is five times the documented value, and the "
-              f"validation manifest is the training manifest, so that the validation loss "
-              f"reads memorization rather than generalization.")
-
-    tbl(doc, "ovf_conf",
-        "Configuration of the overfitting run. The full file is "
-        "`finetune/conf/nvv_overfit.yaml`.",
-        ["Quantity", "Value", "Rationale"],
-        [["Clips", f"{OMETA['n']} ({OVF_MIN:.1f} min)",
-          f"{OMETA['per_tag']} per tag; small enough to memorize in about an hour"],
-         ["Tags", f"{len(OMETA['tags'])}", "four undocumented, one documented as control"],
-         ["Untagged mixture", "none", "regularization is not wanted here"],
-         ["Learning rate", f"{OCFG['learning_rate']:g}",
-          "five times the documented rate for this adapter"],
-         ["Weight decay", f"{OCFG['weight_decay']:g}", "no regularization, deliberately"],
-         ["Warmup", f"{OCFG['warmup_steps']} steps", "short, for the same reason"],
-         ["Steps", f"{OCFG['max_steps']:,}",
-          f"about {OVF_EPOCHS:.0f} passes over the same clips"],
-         ["Adapter rank", f"{OCFG['lora']['r']} (alpha {OCFG['lora']['alpha']})",
-          "language model, diffusion head and projections all adapted"],
-         ["Validation set", "identical to training",
-          "validation loss reads memorization by design"]],
-        widths=[1.05, 0.95, 2.4], size=8.4)
-
-    para(doc, f"Clips were admitted only if they carried exactly one tag type, occurring "
-              f"exactly once, in a recording of two to eight seconds. A clip containing two "
-              f"events teaches less per gradient step, and the objective of this run is the "
-              f"cleanest available mapping from one string to one event. Four of the five "
-              f"tags used — {', '.join('`' + t + '`' for t in OMETA['tags'] if t not in DOCUMENTED)} "
-              f"— appear nowhere in the inventory OpenBMB publishes, reproduced in "
-              f"{T('nvv')}. The fifth, `[laughing]`, is documented and is retained as a "
-              f"control: the unmodified model already produces laughter, so a result in "
-              f"which the documented tag trains appreciably better than the undocumented "
-              f"ones would indicate that the model was retrieving prior knowledge of the "
-              f"word rather than acquiring a new binding.")
-
-    heading(doc, "A.3   Measurement", 2)
-
-    para(doc, f"The instrument is a teacher-forced forward pass, one per clip per "
-              f"condition, comparing the flow-matching loss across the four rewritings of "
-              f"the transcript in {T('ovf_cond')}. Generated audio is not used to decide "
-              f"the question, for the reason given in A.1.")
-
-    tbl(doc, "ovf_cond",
-        "The four conditions of the sensitivity probe.",
-        ["Condition", "Transcript", "What it tests"],
-        [["True", "tag inline, at the event", "reference"],
-         ["Removed", "tag deleted", "whether the tag carries information at all"],
-         ["Moved", "tag pushed to the end of the sentence",
-          "whether the tag's **position** carries information"],
-         ["Scrambled", "word order destroyed, tags left in place",
-          "positive control"]],
-        widths=[0.75, 1.6, 2.05], size=8.4)
-
-    para(doc, "Two features of the design determine what the numbers can be read to mean. "
-              "The **moved** condition is what distinguishes a local event from an "
-              "utterance-level flag: a model that has learned only that a clip contains a "
-              "cough scores identically when the tag is relocated, whereas a model that has "
-              "learned where the cough belongs does not. The **scrambled** condition is "
-              "what makes a null result interpretable; it must be expensive, and if a "
-              "destroyed transcript does not raise the loss then the probe is not "
-              "measuring the objective and no other row can be believed.")
-
-    para(doc, "The diffusion timestep and the noise are reseeded from the clip index "
-              "before every forward pass, so that all four conditions for a given clip are "
-              "evaluated under identical sampling. The flow-matching loss is stochastic, "
-              "and an unseeded comparison would report sampling variance.")
-
-    heading(doc, "A.4   Results", 2)
-
-    tbl(doc, "ovf_res",
-        f"Effect of each rewriting on the flow-matching loss after memorization "
-        f"(n = {OVF['n']}; reference loss {OVF['true_mean']:.5f}). *Worse* counts the "
-        f"clips on which the rewriting raised the loss; *p* is a two-sided sign test.",
-        ["Condition", "Mean loss", "Change", "Worse", "p"],
-        [["Removed"] + sens(OVF, "removed"),
-         ["Moved"] + sens(OVF, "moved"),
-         ["Scrambled"] + sens(OVF, "scrambled")],
-        widths=[1.0, 0.85, 0.8, 0.7, 0.75], size=8.6,
-        align_right=(1, 2, 3, 4))
-    note(doc, f"The positive control raised the loss by "
-              f"{OVF['conditions']['scrambled']['delta_mean']:+.5f} on "
-              f"{OVF['conditions']['scrambled']['worse']} of {OVF['n']} clips, so the probe "
-              f"is measuring the objective and the other two rows can be read.")
-
-    para(doc, f"**The tag now carries information.** Deleting it raises the loss on "
-              f"{OVF['conditions']['removed']['worse']} of {OVF['n']} clips. **Its position "
-              f"also carries information**, which is the more consequential of the two "
-              f"findings: relocating the tag without deleting it raises the loss on "
-              f"{OVF['conditions']['moved']['worse']} of {OVF['n']} clips, at "
-              f"{100 * OVF['conditions']['moved']['delta_mean'] / OVF['conditions']['removed']['delta_mean']:.0f}"
-              f" per cent of the cost of deleting it, where the same condition on the "
-              f"unmodified model returns p = {BASE['conditions']['moved']['p']:.2f}. The "
-              f"model is not classifying the utterance as one that contains a cough. It is "
-              f"reading where in the sentence the string sits and placing the event there.")
-
-    para(doc, f"Absolute losses are not comparable across the three models, which are "
-              f"evaluated on different clips at different stages of training. "
-              f"{T('ovf_cmp')} therefore compares the cost of deleting the tag as a "
-              f"proportion of the cost of destroying the whole transcript, which is "
-              f"dimensionless and internal to each model.")
-
-    tbl(doc, "ovf_cmp",
-        "Salience of the inline tag relative to the transcript, across the three "
-        "states of the model. The ratio is the cost of deleting the tag divided by the "
-        "cost of scrambling the transcript, measured within each model. All three rows "
-        "are measured on clips the model in question was trained on; the held-out "
-        "comparison is reported separately in A.6.",
-        ["Model state", "n", "Deletion p", "Relocation p", "Tag / transcript"],
-        [["Unmodified", f"{BASE['n']}", fp(BASE["conditions"]["removed"]["p"]),
-          fp(BASE["conditions"]["moved"]["p"]),
-          f"{100 * BASE['removed_over_scrambled']:.1f}%"],
-         [f"Fine-tuned, {CORPUS_H:.2f} h", f"{NORM['n']}",
-          fp(NORM["conditions"]["removed"]["p"]),
-          fp(NORM["conditions"]["moved"]["p"]),
-          f"{100 * NORM['removed_over_scrambled']:.1f}%"],
-         [f"Overfitted, {OVF_MIN:.1f} min", f"{OVF['n']}",
-          fp(OVF["conditions"]["removed"]["p"]),
-          fp(OVF["conditions"]["moved"]["p"]),
-          f"{100 * OVF['removed_over_scrambled']:.1f}%"]],
-        widths=[1.25, 0.4, 0.9, 0.9, 1.0], size=8.6,
-        align_right=(1, 2, 3, 4))
-    note(doc, f"The two p-value columns are sign tests on the deletion and relocation "
-              f"conditions respectively. The overfitted figure is "
-              f"{OVF['removed_over_scrambled'] / NORM['removed_over_scrambled']:.1f} times "
-              f"the fine-tuned one and "
-              f"{OVF['removed_over_scrambled'] / BASE['removed_over_scrambled']:.1f} times "
-              f"the unmodified one.")
-
-    tbl(doc, "ovf_tags",
-        "Loss under the deletion condition, by tag. The control tag is the only one "
-        "OpenBMB documents.",
-        ["Tag", "Documented", "Mean loss when deleted"],
-        _ovf_tag_rows(),
-        widths=[1.1, 0.9, 1.4], size=8.6, align_right=(2,))
-    note(doc, "The four undocumented tags are not weaker than the documented one, which "
-              f"argues that the effect in {T('ovf_res')} is an acquired binding rather than "
-              "retrieved knowledge of the English words inside the brackets.")
-
-    heading(doc, "A.5   Interpretation and Limits", 2)
-
-    para(doc, "The experiment establishes that VoxCPM2's architecture can bind an "
-              "arbitrary bracketed string to a specific non-verbal event at a specific "
-              "position in a sentence, and that a low-rank adaptation of the language "
-              "model, the diffusion head and the projections is sufficient to install that "
-              "binding. The first explanation offered in A.1 is therefore refused: the null "
-              "result of the conventional fine-tune was a property of the corpus, not of "
-              "the model. This is the finding the methodology of Section 3.5 requires, and "
-              "it was obtained for the cost of an hour of training.")
-
-    para(doc, "Two independent observations are consistent with it. Adding a tag imposes no "
-              f"architectural cost, because the model is tokenizer-free at the input: "
-              f"`[cough]` is already segmented into ordinary subword tokens with no unknown "
-              f"token produced, against a vocabulary of {REPR['vocab_size']:,}, so there is "
-              f"nothing to resize and no embedding to initialize. And the unmodified model "
-              f"emits a short interval of non-lexical audio for any bracketed string, "
-              f"including strings that are not words, while never pronouncing the bracketed "
-              f"text aloud, which suggests a general convention that brackets denote an "
-              f"instruction rather than knowledge of particular tag names.")
-
-    para(doc, f"The experiment establishes nothing about generalization, and must not be "
-              f"quoted as though it did. The evaluation is performed on the "
-              f"{OMETA['n']} sentences the model was trained on, approximately "
-              f"{OVF_EPOCHS:.0f} times each. That is what overfitting means and it is the "
-              f"point of the design, but it is also its entire limitation: the run "
-              f"demonstrates capability and says nothing about whether the same tags "
-              f"behave correctly on text the model has not seen. That is a separate "
-              f"experiment against a held-out set, reported in A.6.")
-
-    para(doc, "Two consequences follow for the methodology. The first is that the loss "
-              "should be weighted over the frames in which the event occurs, so that a "
-              "cough of a few hundred milliseconds is not averaged away against several "
-              "seconds of speech; this is the effect the overfitting run obtained by "
-              "repetition alone. The second is that the corpus should supply event "
-              "timestamps precise enough for such a weighting to be applied, which the "
-              "annotations used here do not. Khmer remains out of scope until tag "
-              "expansion has been shown to generalize in English.")
-
-    heading(doc, "A.6   The Held-Out Test", 2)
-
-    para(doc, f"The generalization experiment which A.5 defers to has since been performed, "
-              f"and its result is negative. "
-              f"The validation split of the corpus was never shown to the model during "
-              f"training; {HELD['n']} of its clips carry an inline tag, and those "
-              f"{HELD['n']} constitute the entire available sample. The four-condition "
-              f"probe was applied to the fine-tuned model and to the unmodified model over "
-              f"those identical clips, so that the two are compared within one clip set "
-              f"rather than across sets. {T('ovf_held')} reports the outcome.")
-
-    tbl(doc, "ovf_held",
-        f"Tag sensitivity on {HELD['n']} clips held out of training, for the fine-tuned "
-        f"model and the unmodified model over the same clips. The two are "
-        f"indistinguishable.",
-        ["Model state", "Reference loss", "Deletion \u0394", "Clips worse", "p",
-         "Tag / transcript"],
-        [["Unmodified", f"{BHELD['true_mean']:.5f}",
-          f"{BHELD['conditions']['removed']['delta_mean']:+.5f}",
-          f"{BHELD['conditions']['removed']['worse']}/{BHELD['n']}",
-          fp(BHELD["conditions"]["removed"]["p"]),
-          f"{100 * BHELD['removed_over_scrambled']:.1f}%"],
-         ["Fine-tuned", f"{HELD['true_mean']:.5f}",
-          f"{HELD['conditions']['removed']['delta_mean']:+.5f}",
-          f"{HELD['conditions']['removed']['worse']}/{HELD['n']}",
-          fp(HELD["conditions"]["removed"]["p"]),
-          f"{100 * HELD['removed_over_scrambled']:.1f}%"]],
-        align_right=(1, 2, 3, 4, 5))
-
-    para(doc, f"The two rows describe the same behaviour. The cost of deleting the tag "
-              f"differs between them by "
-              f"{abs(HELD['conditions']['removed']['delta_mean'] - BHELD['conditions']['removed']['delta_mean']):.4f}, "
-              f"and the sign-test counts differ by a single clip in favour of the "
-              f"unmodified model. Whatever sensitivity to the tag these sentences elicit, "
-              f"the model possessed it before training; two thousand five hundred steps on "
-              f"{CORPUS_H:.2f} hours added nothing that reaches text the model has not seen.")
-
-    para(doc, f"Two qualifications are necessary. The first is statistical power: at "
-              f"n = {HELD['n']}, a two-sided sign test requires roughly twenty clips of "
-              f"twenty-eight to reach conventional significance, so a small true effect "
-              f"would not have been detected here. What the test excludes is a large one, "
-              f"and a large effect is what a working method would produce given the "
-              f"capability demonstrated in A.4. The second is that the ratio in the final "
-              f"column is not comparable with the corresponding column of {T('ovf_cmp')}. "
-              f"These are different sentences, and the unmodified model scores "
-              f"{100 * BHELD['removed_over_scrambled']:.0f}% on them against "
-              f"{100 * BASE['removed_over_scrambled']:.0f}% on the clips used there. The "
-              f"comparison is valid only within a clip set, which is the reason the "
-              f"unmodified model was re-measured on these particular clips.")
-
-    para(doc, "Read together with A.4, the two experiments give a consistent and "
-              "unflattering account of the present recipe. The mechanism exists: the "
-              "model can be made to bind an arbitrary bracketed string to a local event "
-              "and to its position. The fine-tune as configured does not install that "
-              "binding in any form which survives to unseen text. The two changes "
-              "proposed in A.5 are accordingly not refinements but prerequisites.")
-
-    note(doc, "Provenance. The figures in this appendix are read at build time from "
-              "`finetune/results/nvv/tag_sensitivity_overfit.json`, its counterparts "
-              "for the two other model states, and the two held-out reports read by "
-              "A.6. The trained adapter itself was deleted in "
-              "error after the run and has not been regenerated; the recorded measurements "
-              "and the synthesized audio survive, but reproducing the audio would require "
-              "repeating the training. The procedure is documented in "
-              "`finetune/OVERFIT_EXPERIMENT.md`.")
-
     doc.save(OUT)
     return doc
 
@@ -1136,9 +806,14 @@ def build(pages):
 def measure_pages():
     """Convert with LibreOffice and read back the page each heading landed on."""
     with tempfile.TemporaryDirectory() as td:
-        r = subprocess.run(["soffice", "--headless", "--convert-to", "pdf",
-                            "--outdir", td, str(OUT)],
-                           capture_output=True, text=True, timeout=300)
+        try:
+            r = subprocess.run(["soffice", "--headless", "--convert-to", "pdf",
+                                "--outdir", td, str(OUT)],
+                               capture_output=True, text=True, timeout=300)
+        except FileNotFoundError:
+            print("  soffice not found on PATH; leaving contents page numbers "
+                  "as placeholders", file=sys.stderr)
+            return {}
         pdf = Path(td) / (OUT.stem + ".pdf")
         if not pdf.exists():
             print("  pdf conversion failed:", r.stdout.strip(), r.stderr.strip(),
