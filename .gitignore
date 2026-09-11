@@ -86,3 +86,8 @@ finetune/results/prompt_sweep/audio/
 finetune/data-nvv/heldout/originals/
 finetune/results/nvv/heldout_*/
 finetune/results/prompt_sweep/*.html
+
+# Style-reference sweep (sweep_style_reference.py): generated clips and the
+# built page. rows.jsonl, references.json and the summaries ARE tracked.
+finetune/results/style_reference/audio/
+finetune/results/style_reference/*.html

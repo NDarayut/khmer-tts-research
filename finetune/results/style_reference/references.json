@@ -1,0 +1,252 @@
+{
+ "speakers": [
+  "f-adt1-0004",
+  "m-adt3-0001",
+  "f-adt1-0005",
+  "m-adt4-0002",
+  "m-adt1-0005",
+  "f-adt1-0003"
+ ],
+ "refs": [
+  {
+   "speaker_id": "f-adt1-0004",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0004_folklore _08_0001_0047.wav",
+   "text": "នេះ​ឆ្លុះបញ្ចាំង​ពី​គុណធម៌​សំខាន់​ក្នុង​សង្គម​ខ្មែរ​គឺ​ការ​ជួយ​គ្នា​ទៅវិញ​ទៅមក។",
+   "ref_f0_std_st": 2.5243401058143853,
+   "ref_f0_median_hz": 340.8990095591304,
+   "ref_duration": 5.08725
+  },
+  {
+   "speaker_id": "f-adt1-0004",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0004_folklore _12_0001_0018.wav",
+   "text": "ក្នុងចំណោមដំរីទាំងនោះ មានដំរីមួយក្បាលនេះទឹកមុខគួរឱ្យស្រឡាញ់ជាងគេ ។",
+   "ref_f0_std_st": 2.6936885673184787,
+   "ref_f0_median_hz": 318.49182138406485,
+   "ref_duration": 5.0
+  },
+  {
+   "speaker_id": "f-adt1-0004",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0004_jewelry_15_0001_0007.wav",
+   "text": "ក្បាច់រចនាម៉ូដសត្វ មានដូចជា ក្បាច់នាគ គ្រុឌ ហង្ស និងក្ងោកជាដើម។",
+   "ref_f0_std_st": 7.709091907952604,
+   "ref_f0_median_hz": 274.6543088531108,
+   "ref_duration": 5.13
+  },
+  {
+   "speaker_id": "f-adt1-0004",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0004_beauty_standards_and_grooming_practices_12_0001_0206.wav",
+   "text": "ការប្រើប្រាស់វត្ថុធាតុដើមដូចជា ស្ពាន់ ឈើ ឬកញ្ចក់ ធ្វើឱ្យតម្លៃផលិតផលកាន់តែ សមរម្យ ហើយអាចទៅដល់ដៃអ្នកប្រើប្រាស់គ្រប់ស្រទាប់វណ្ណៈ។",
+   "ref_f0_std_st": 7.748142580861566,
+   "ref_f0_median_hz": 285.7398986195747,
+   "ref_duration": 9.95
+  },
+  {
+   "speaker_id": "m-adt3-0001",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt3-0001_cambodia_10_years_ago_vs._now_50_0001_0107.wav",
+   "text": "យុវវ័យសម័យថ្មីកាន់តែច្រើនឡើងបានផ្លាស់ប្តូរផ្នត់គំនិតដោយងាកមកគាំទ្រការទិញសំបុត្រចូលទស្សនាការសម្តែងតន្ត្រីបុរាណនៅតាមមហោស្រពនានា។",
+   "ref_f0_std_st": 2.173623829149832,
+   "ref_f0_median_hz": 118.20211258382544,
+   "ref_duration": 8.82
+  },
+  {
+   "speaker_id": "m-adt3-0001",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt3-0001_cambodia_10_years_ago_vs._now_48_0001_0138.wav",
+   "text": "ការបង្កើតមជ្ឈមណ្ឌលស្រាវជ្រាវសិល្បៈរបាំនឹងជួយឱ្យយើងអាចរុករកនិងស្តារឡើងវិញនូវរបាំកម្រៗដែលបានបាត់បង់ក្នុងសម័យសង្គ្រាម។",
+   "ref_f0_std_st": 2.2886058639996762,
+   "ref_f0_median_hz": 115.13092565979389,
+   "ref_duration": 8.055125
+  },
+  {
+   "speaker_id": "m-adt3-0001",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt3-0001_cambodia_10_years_ago_vs._now_37_0001_0071.wav",
+   "text": "សម្រាប់គ្រឿងមាសខ្នាតធំជួយឱ្យការស្លៀកពាក់អាវ មើលទៅកាន់តែមានភាពប្រណីតនិងមិនមានភាពសាមញ្ញពេកឡើយ។",
+   "ref_f0_std_st": 4.352322321844793,
+   "ref_f0_median_hz": 132.26926830036504,
+   "ref_duration": 7.88
+  },
+  {
+   "speaker_id": "m-adt3-0001",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt3-0001_cambodia_10_years_ago_vs._now_37_0001_0084.wav",
+   "text": "ការខាត់គ្រឿងប្រាក់ឱ្យបានទៀងទាត់ជួយកម្ចាត់ភាពស្រអាប់ និងធ្វើឱ្យគ្រឿងលម្អត្រឡប់មកមានពន្លឺស្រស់ថ្លាឡើងវិញ។",
+   "ref_f0_std_st": 5.123463258706864,
+   "ref_f0_median_hz": 123.55796087463708,
+   "ref_duration": 7.61
+  },
+  {
+   "speaker_id": "f-adt1-0005",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0005_cambodia’s_social_and_economic_shift_08_0001_0102.wav",
+   "text": "ក្រៅពីជំនាញរឹងដែលបានរៀបរាប់ខាងលើ ជំនាញទន់ក៏ដើរតួនាទីយ៉ាងសំខាន់ក្នុងការរុញច្រានអាជីពឱ្យជោគជ័យ។",
+   "ref_f0_std_st": 2.7143794141097515,
+   "ref_f0_median_hz": 220.92874274088564,
+   "ref_duration": 6.7388125
+  },
+  {
+   "speaker_id": "f-adt1-0005",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0005_pursuing_hobbies_15_0001_0105.wav",
+   "text": "យល់ដឹងពីបច្ចេកទេសទាំងប្រាំចំណុចខាងលើគឺជាគ្រឹះដ៏រឹងមាំសម្រាប់អ្នកចាប់ផ្ដើមដំបូង។",
+   "ref_f0_std_st": 2.7453888340846238,
+   "ref_f0_median_hz": 236.31919064067424,
+   "ref_duration": 5.47925
+  },
+  {
+   "speaker_id": "f-adt1-0005",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0005_history_55_0001_0032.wav",
+   "text": "ប្រទេសជប៉ុន តាមរយៈសាកលវិទ្យាល័យ វ៉ាសេដា Waseda បានដើរតួនាទីយ៉ាងសំខាន់ក្នុងការជួសជុល។",
+   "ref_f0_std_st": 7.228477729897013,
+   "ref_f0_median_hz": 253.07820012823078,
+   "ref_duration": 6.86
+  },
+  {
+   "speaker_id": "f-adt1-0005",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0005_history_66_0001_0040.wav",
+   "text": "រចនាបថទាំងពីរនេះមានលក្ខណៈខុសប្លែកគ្នាបន្តិចបន្តួចប៉ុណ្ណោះ។",
+   "ref_f0_std_st": 7.580563334824571,
+   "ref_f0_median_hz": 228.96493055349092,
+   "ref_duration": 4.368625
+  },
+  {
+   "speaker_id": "m-adt4-0002",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt4-0002_cambodia_10_years_ago_vs._now_31_0001_0082.wav",
+   "text": "ការខ្វះការយកចិត្តទុកដាក់នេះ ធ្វើឱ្យកូនមានអារម្មណ៍ថាគ្មានសុវត្ថិភាពទាំងផ្លូវកាយ និងផ្លូវចិត្តនៅក្នុងគ្រួសារផ្ទាល់។",
+   "ref_f0_std_st": 2.5151647397226524,
+   "ref_f0_median_hz": 136.41567163001955,
+   "ref_duration": 9.490875
+  },
+  {
+   "speaker_id": "m-adt4-0002",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt4-0002_cambodia_10_years_ago_vs._now_38_0001_0082.wav",
+   "text": "ការជ្រើសរើសប្រើប្រាស់ស្បែកជើងដែលមានផាសុកភាព និងមានម៉ូដស្អាតគឺជាចំណុចដែលមនុស្សគ្រប់គ្នាត្រូវគិតគូរ។",
+   "ref_f0_std_st": 2.77182238869431,
+   "ref_f0_median_hz": 127.63626361289809,
+   "ref_duration": 9.33
+  },
+  {
+   "speaker_id": "m-adt4-0002",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt4-0002_cambodia_10_years_ago_vs._now_43_0001_0015.wav",
+   "text": "ភាគល្អិតទាំងនេះអាចជ្រាបចូលទៅក្នុងសួត និងចរន្តឈាមបានយ៉ាងងាយ។",
+   "ref_f0_std_st": 4.45705073209537,
+   "ref_f0_median_hz": 141.3443132636487,
+   "ref_duration": 6.517375
+  },
+  {
+   "speaker_id": "m-adt4-0002",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt4-0002_cambodia_10_years_ago_vs._now_42_0001_0079.wav",
+   "text": "សារធាតុបន្ថែមក្នុងប្លាស្ទិកធ្វើឱ្យការកែច្នៃឡើងវិញមានភាពស្មុគស្មាញ។",
+   "ref_f0_std_st": 4.596507941502888,
+   "ref_f0_median_hz": 141.0037978056844,
+   "ref_duration": 7.18
+  },
+  {
+   "speaker_id": "m-adt1-0005",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt1-0005_traveling_in_cambodia_19_0001_0027.wav",
+   "text": "នៅពេលរដូវវស្សា ជាពេលវេលាដ៏ល្អបំផុតដើម្បីទៅលេងនៅបឹងទន្លេសាប។",
+   "ref_f0_std_st": 1.921464621851931,
+   "ref_f0_median_hz": 98.30802138743041,
+   "ref_duration": 5.282625
+  },
+  {
+   "speaker_id": "m-adt1-0005",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt1-0005_dating_24_0001_0028.wav",
+   "text": "ការជូនផ្កាមួយទង ឬបាច់ផ្កាដែលដៃគូចូលចិត្ត បង្កើតបានជាបរិយាកាសរ៉ូមែនទិក និងភាពស្រស់ស្រាយដល់អារម្មណ៍។",
+   "ref_f0_std_st": 2.2143703008049784,
+   "ref_f0_median_hz": 106.73110150533867,
+   "ref_duration": 5.9480625
+  },
+  {
+   "speaker_id": "m-adt1-0005",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt1-0005_pursuing_hobbies_56_0001_0051.wav",
+   "text": "ក៏ជាវិធីដ៏មានប្រសិទ្ធភាពក្នុងការផ្តល់ព័ត៌មានលម្អិតអំពីម៉ឺនុយ កាលបរិច្ឆេទ ទីកន្លែង និងតម្លៃចូលរួម។",
+   "ref_f0_std_st": 5.3126520980809255,
+   "ref_f0_median_hz": 105.06139048399655,
+   "ref_duration": 7.85
+  },
+  {
+   "speaker_id": "m-adt1-0005",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/m-adt1-0005_pursuing_hobbies_57_0001_0020.wav",
+   "text": "ម៉ាស៊ីនត្រជាក់ ឬកង្ហារ ត្រូវមានដំណើរការល្អ ដើម្បីរក្សាសីតុណ្ហភាពក្នុងបន្ទប់ឱ្យមានភាពត្រជាក់ស្រួលសម្រាប់សមាជិកទាំងអស់។",
+   "ref_f0_std_st": 5.393130906624471,
+   "ref_f0_median_hz": 101.46333907641329,
+   "ref_duration": 8.32
+  },
+  {
+   "speaker_id": "f-adt1-0003",
+   "band": "flat",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0003_religious_practices_11_0001_0018.wav",
+   "text": "ការថ្វាយបង្គំភ្នំ គឺជាជំនឿបុរាណតាំងពីយូរលង់ណាស់មកហើយនៅក្នុងតំបន់អាស៊ីអាគ្នេយ៍ រួមទាំងកម្ពុជាផងដែរ។",
+   "ref_f0_std_st": 2.1615883172585093,
+   "ref_f0_median_hz": 229.09142884883627,
+   "ref_duration": 6.599875
+  },
+  {
+   "speaker_id": "f-adt1-0003",
+   "band": "flat",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0003_religious_practices_15_0001_0080.wav",
+   "text": "ព្រះនាងមទ្រី និងព្រះរាជបុត្រាបុត្រីទាំងពីរ ក៏បានយាងតាមព្រះវេស្សន្តរទៅជាមួយដែរ។",
+   "ref_f0_std_st": 2.701370171120862,
+   "ref_f0_median_hz": 234.46316872443873,
+   "ref_duration": 5.8491875
+  },
+  {
+   "speaker_id": "f-adt1-0003",
+   "band": "lively",
+   "slot": 0,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0003_police_interactions_35_0001_0006.wav",
+   "text": "ការស្លៀកពាក់ដែល បិទបាំងស្មា និងជង្គង់ គឺជាការបង្ហាញការគោរពដ៏ថ្លៃថ្លាបំផុត។",
+   "ref_f0_std_st": 8.29461391590283,
+   "ref_f0_median_hz": 215.69210694410123,
+   "ref_duration": 5.75675
+  },
+  {
+   "speaker_id": "f-adt1-0003",
+   "band": "lively",
+   "slot": 1,
+   "wav": "/run/media/pc/disk1/text-to-speech/finetune/data/wavs/f-adt1-0003_sport_30_0001_0016.wav",
+   "text": "ដោយការប្រកួតនេះ គឺជាការប្រកួតធំជាងគេនៅអាស៊ី និងមានការចូលរួមពីកីឡាករស្ទើរទាំងពិភពលោក។",
+   "ref_f0_std_st": 8.630801373384337,
+   "ref_f0_median_hz": 215.12177320144136,
+   "ref_duration": 6.383
+  }
+ ]
+}
