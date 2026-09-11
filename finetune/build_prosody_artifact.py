@@ -292,6 +292,7 @@ def main():
     args = ap.parse_args()
 
     doc = json.loads((SWEEP / "prompt_sweep.json").read_text(encoding="utf-8"))["axes"]
+    lv = json.loads((SWEEP / "prompt_levels.json").read_text(encoding="utf-8"))
     idx = {(ax, e["prompt_name"]): e for ax, es in doc.items() for e in es}
     rows = [json.loads(l) for l in
             (SWEEP / "rows.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
@@ -425,6 +426,92 @@ def main():
       'deliberately)</code> beats <code>(speaking slowly)</code> &mdash; '
       '&minus;2.32 against &minus;1.50&nbsp;char/s. Intensifiers help on the slow '
       'side of rate and nowhere else. <code>slightly</code> is inert everywhere.</p>')
+
+    a('<h2>How many levels can you actually ask for?</h2>')
+    a('<p class="sub">Writing nine levels does not give you nine levels. '
+      'Repeated generations of the <i>same</i> prompt on the <i>same</i> sentence '
+      'differ by 1.4 char/s, 24&ndash;28 Hz and 5.6 dB, and two rungs closer '
+      'together than that are the same rung wearing two names. So the number that '
+      'matters is the ladder\'s span divided by its own noise.</p>')
+    a('<div class="scroll"><table><thead><tr><th>axis</th><th>phrasing</th>'
+      '<th class="num">span</th><th class="num">noise</th>'
+      '<th class="num">steps</th></tr></thead><tbody>')
+    UN = {"rate": "char/s", "pitch": "Hz", "energy": "dB"}
+    order = [("pitch", "framing"), ("pitch", "adverb"), ("rate", "adverb"),
+             ("energy", "adverb"), ("rate", "multiplier"),
+             ("pitch", "multiplier"), ("energy", "multiplier"),
+             ("rate", "scale")]
+    for ax, fam in order:
+        f = lv.get(ax, {}).get(fam)
+        if not f:
+            continue
+        w = f["span"] / f["sd"]
+        strong = ' style="font-weight:600"' if w >= 3 else ''
+        a(f'<tr{strong}><td><code>{ax}</code></td><td>{fam}</td>'
+          f'<td class="num">{f["span"]:.2f} {UN[ax]}</td>'
+          f'<td class="num">{f["sd"]:.2f}</td>'
+          f'<td class="num">{w:.1f}&times; &rarr; {f["n_resolved"]} rungs</td></tr>')
+    a('</tbody></table></div>')
+    a('<p>Three usable steps for pitch and rate. For energy, 6.3&nbsp;dB of span '
+      'against 5.6&nbsp;dB of noise &mdash; about one step, across nine wordings. '
+      'Treat loudness as two states or normalise it afterwards; it will not give '
+      'you a dial.</p>')
+
+    a('<div class="note warn"><b>Numbers do not work, on any axis.</b> '
+      '<code>(a voice six semitones lower than normal)</code> moves pitch '
+      '<b>+7.3&nbsp;Hz</b> &mdash; upward, and by the same amount as '
+      '<code>(a voice six semitones higher than normal)</code>. Multipliers, '
+      'percentages and 1-to-5 scales all land between 0.0 and 0.3 noise-widths: '
+      'the number is not read, and what is left is the generic effect of having a '
+      'parenthetical at all. Do not build an interface that emits them.</div>')
+
+    a('<h3 style="font-family:Newsreader,Georgia,serif;font-weight:600;'
+      'font-size:19px;margin:30px 0 8px">For pitch, describe the person</h3>')
+    a('<p class="sub">The strongest, most reliable prompt found anywhere in this '
+      'project is not a description of pitch at all.</p>')
+    a('<div class="scroll"><table><thead><tr><th>prompt</th>'
+      '<th class="num">change in pitch</th><th class="num">hit rate</th>'
+      '</tr></thead><tbody>')
+    for ax, fam, nm in (("pitch", "framing", "lv_p_fr_p2"),
+                        ("pitch", "framing", "lv_p_fr_p1"),
+                        ("pitch", "adverb", "high"),
+                        ("pitch", "adverb", "low"),
+                        ("pitch", "framing", "deep")):
+        rr = lv[ax][fam]["rungs"].get(nm)
+        if not rr:
+            continue
+        e = idx.get((ax, nm))
+        hit = (f'{e["measures"]["f0_median_hz"]["hits"]}/'
+               f'{e["measures"]["f0_median_hz"]["n"]}' if e else "&mdash;")
+        strong = ' style="font-weight:600"' if nm == "lv_p_fr_p1" else ''
+        a(f'<tr{strong}><td><code>{html.escape(rr["prompt"])}</code></td>'
+          f'<td class="num">{rr["median_delta"]:+.1f} Hz</td>'
+          f'<td class="num">{hit}</td></tr>')
+    a('</tbody></table></div>')
+    a('<p><code>(a young woman speaking)</code> moved <b>24 of 24</b> pairs in the '
+      'direction asked &mdash; the only prompt in the sweep with a perfect hit '
+      'rate &mdash; and it beats <code>(a high-pitched voice)</code> by more than '
+      '20&nbsp;Hz. Naming a speaker outperforms naming the quantity.</p>')
+
+    a('<h3 style="font-family:Newsreader,Georgia,serif;font-weight:600;'
+      'font-size:19px;margin:30px 0 8px">For rate, slow is graded and fast is '
+      'not</h3>')
+    a('<div class="scroll"><table><thead><tr><th>prompt</th>'
+      '<th class="num">change in rate</th></tr></thead><tbody>')
+    for nm in ("lv_r_adv_m4", "very_slow", "slow", "lv_r_adv_m1", "normal_pace",
+               "lv_r_adv_p1", "quick", "very_quick", "lv_r_adv_p4"):
+        rr = lv["rate"]["adverb"]["rungs"].get(nm)
+        if not rr:
+            continue
+        a(f'<tr><td><code>{html.escape(rr["prompt"])}</code></td>'
+          f'<td class="num">{rr["median_delta"]:+.2f} char/s</td></tr>')
+    a('</tbody></table></div>')
+    a('<p>The slow half descends in order over five rungs and reaches '
+      '&minus;2.58&nbsp;char/s. The fast half stops ordering after '
+      '<code>(speaking quickly)</code> and saturates &mdash; the three strongest '
+      'fast wordings are one rung, not three. Which is the asymmetry you would '
+      'expect: speech can always be stretched out, but compressing it runs into '
+      'intelligibility.</p>')
 
     a('<h2>Faster, not truncated</h2>')
     a('<p class="sub">Speaking rate is characters divided by duration, so a model '

@@ -1,0 +1,795 @@
+{
+ "rate": {
+  "adverb": {
+   "rho": 0.6038828544997971,
+   "sd": 1.4359322328399555,
+   "span": 4.366260625545057,
+   "resolved": [
+    "lv_r_adv_m4",
+    "lv_r_adv_m1",
+    "lv_r_adv_p1"
+   ],
+   "n_resolved": 3,
+   "rungs": {
+    "lv_r_adv_m4": {
+     "prompt": "(speaking extremely slowly, drawing every word out)",
+     "level": -4,
+     "median_delta": -2.5839495797843997,
+     "n": 24,
+     "sd": 1.2525988401003865
+    },
+    "very_slow": {
+     "prompt": "(speaking very slowly and deliberately)",
+     "level": -3,
+     "median_delta": -2.3203647826990146,
+     "n": 24,
+     "sd": 1.5956722294895047
+    },
+    "slow": {
+     "prompt": "(speaking slowly)",
+     "level": -2,
+     "median_delta": -1.4998461507473992,
+     "n": 24,
+     "sd": 1.671756222001756
+    },
+    "lv_r_adv_m1": {
+     "prompt": "(speaking a little slowly)",
+     "level": -1,
+     "median_delta": -1.0985184132386738,
+     "n": 24,
+     "sd": 1.1736025671027241
+    },
+    "normal_pace": {
+     "prompt": "(speaking at a normal pace)",
+     "level": 0,
+     "median_delta": 0.07282174033918931,
+     "n": 24,
+     "sd": 1.5896549874233064
+    },
+    "lv_r_adv_p1": {
+     "prompt": "(speaking a little quickly)",
+     "level": 1,
+     "median_delta": 0.6675737765579512,
+     "n": 24,
+     "sd": 1.138744281054942
+    },
+    "quick": {
+     "prompt": "(speaking quickly)",
+     "level": 2,
+     "median_delta": 1.7823110457606575,
+     "n": 24,
+     "sd": 1.469589925399631
+    },
+    "very_quick": {
+     "prompt": "(speaking very quickly, rushed)",
+     "level": 3,
+     "median_delta": 1.1857405400870142,
+     "n": 24,
+     "sd": 1.5178821074211906
+    },
+    "lv_r_adv_p4": {
+     "prompt": "(speaking extremely quickly, racing through the words)",
+     "level": 4,
+     "median_delta": 1.6535163509141144,
+     "n": 24,
+     "sd": 1.5138889355661582
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_r_adv_m4",
+     "to": "very_slow",
+     "wins": 11,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 0.26358479708538507
+    },
+    {
+     "from": "very_slow",
+     "to": "slow",
+     "wins": 19,
+     "n": 24,
+     "p": 0.006610751152038574,
+     "gap": 0.8205186319516153
+    },
+    {
+     "from": "slow",
+     "to": "lv_r_adv_m1",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.4013277375087254
+    },
+    {
+     "from": "lv_r_adv_m1",
+     "to": "normal_pace",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 1.1713401535778631
+    },
+    {
+     "from": "normal_pace",
+     "to": "lv_r_adv_p1",
+     "wins": 17,
+     "n": 24,
+     "p": 0.06391465663909912,
+     "gap": 0.5947520362187619
+    },
+    {
+     "from": "lv_r_adv_p1",
+     "to": "quick",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 1.1147372692027062
+    },
+    {
+     "from": "quick",
+     "to": "very_quick",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": -0.5965705056736432
+    },
+    {
+     "from": "very_quick",
+     "to": "lv_r_adv_p4",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 0.4677758108271002
+    }
+   ]
+  },
+  "multiplier": {
+   "rho": -0.02313511410986766,
+   "sd": 1.5662346829470717,
+   "span": 0.4657858967658042,
+   "resolved": [
+    "lv_r_mul_13"
+   ],
+   "n_resolved": 1,
+   "rungs": {
+    "lv_r_mul_06": {
+     "prompt": "(speaking at 0.6x speed)",
+     "level": -2,
+     "median_delta": 0.14499309547812356,
+     "n": 24,
+     "sd": 1.821431134167968
+    },
+    "lv_r_mul_08": {
+     "prompt": "(speaking at 0.8x speed)",
+     "level": -1,
+     "median_delta": -0.007843572251699626,
+     "n": 24,
+     "sd": 1.7925824202653753
+    },
+    "lv_r_mul_10": {
+     "prompt": "(speaking at 1.0x speed)",
+     "level": 0,
+     "median_delta": 0.25170862011720896,
+     "n": 24,
+     "sd": 1.3111945959089633
+    },
+    "lv_r_mul_13": {
+     "prompt": "(speaking at 1.3x speed)",
+     "level": 1,
+     "median_delta": -0.21407727664859522,
+     "n": 24,
+     "sd": 1.4357432304843925
+    },
+    "lv_r_mul_16": {
+     "prompt": "(speaking at 1.6x speed)",
+     "level": 2,
+     "median_delta": 0.14824993425725985,
+     "n": 24,
+     "sd": 1.4702220339086585
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_r_mul_06",
+     "to": "lv_r_mul_08",
+     "wins": 9,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": -0.15283666772982318
+    },
+    {
+     "from": "lv_r_mul_08",
+     "to": "lv_r_mul_10",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.2595521923689086
+    },
+    {
+     "from": "lv_r_mul_10",
+     "to": "lv_r_mul_13",
+     "wins": 7,
+     "n": 24,
+     "p": 0.06391465663909912,
+     "gap": -0.4657858967658042
+    },
+    {
+     "from": "lv_r_mul_13",
+     "to": "lv_r_mul_16",
+     "wins": 12,
+     "n": 24,
+     "p": 1.0,
+     "gap": 0.36232721090585507
+    }
+   ]
+  },
+  "scale": {
+   "rho": -0.031102853852231997,
+   "sd": 1.4581221017563946,
+   "span": 0.3749324814965238,
+   "resolved": [
+    "lv_r_sc_3"
+   ],
+   "n_resolved": 1,
+   "rungs": {
+    "lv_r_sc_1": {
+     "prompt": "(speaking at a pace of 1 out of 5, where 5 is fastest)",
+     "level": -2,
+     "median_delta": 0.4652182903587132,
+     "n": 24,
+     "sd": 1.3137007704059278
+    },
+    "lv_r_sc_3": {
+     "prompt": "(speaking at a pace of 3 out of 5, where 5 is fastest)",
+     "level": 0,
+     "median_delta": 0.3486085791656972,
+     "n": 24,
+     "sd": 1.3908067630056202
+    },
+    "lv_r_sc_5": {
+     "prompt": "(speaking at a pace of 5 out of 5, where 5 is fastest)",
+     "level": 2,
+     "median_delta": 0.723541060662221,
+     "n": 24,
+     "sd": 1.669858771857635
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_r_sc_1",
+     "to": "lv_r_sc_3",
+     "wins": 12,
+     "n": 24,
+     "p": 1.0,
+     "gap": -0.116609711193016
+    },
+    {
+     "from": "lv_r_sc_3",
+     "to": "lv_r_sc_5",
+     "wins": 9,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.3749324814965238
+    }
+   ]
+  }
+ },
+ "pitch": {
+  "adverb": {
+   "rho": 0.6035665349093448,
+   "sd": 27.93927208217661,
+   "span": 84.8903423733783,
+   "resolved": [
+    "low",
+    "lv_p_adv_m1",
+    "very_high"
+   ],
+   "n_resolved": 3,
+   "rungs": {
+    "lv_p_adv_m4": {
+     "prompt": "(an extremely low, deep voice)",
+     "level": -4,
+     "median_delta": -30.254083622394575,
+     "n": 24,
+     "sd": 23.587151500289178
+    },
+    "lv_p_adv_m3": {
+     "prompt": "(a very low-pitched voice)",
+     "level": -3,
+     "median_delta": -30.003430204415025,
+     "n": 24,
+     "sd": 21.003473013897953
+    },
+    "low": {
+     "prompt": "(a low-pitched voice)",
+     "level": -2,
+     "median_delta": -39.74049952382005,
+     "n": 24,
+     "sd": 21.33433660173548
+    },
+    "lv_p_adv_m1": {
+     "prompt": "(a slightly low-pitched voice)",
+     "level": -1,
+     "median_delta": -7.138266043029745,
+     "n": 24,
+     "sd": 29.514869464763052
+    },
+    "normal_pitch": {
+     "prompt": "(a normal-pitched voice)",
+     "level": 0,
+     "median_delta": 1.0729183683288284,
+     "n": 24,
+     "sd": 38.19939040577733
+    },
+    "lv_p_adv_p1": {
+     "prompt": "(a slightly high-pitched voice)",
+     "level": 1,
+     "median_delta": 8.717221268338832,
+     "n": 24,
+     "sd": 34.924453259068
+    },
+    "high": {
+     "prompt": "(a high-pitched voice)",
+     "level": 2,
+     "median_delta": 39.76490608299741,
+     "n": 24,
+     "sd": 26.819943872778563
+    },
+    "very_high": {
+     "prompt": "(a very high-pitched voice)",
+     "level": 3,
+     "median_delta": 31.74486881841095,
+     "n": 24,
+     "sd": 30.099109236008797
+    },
+    "lv_p_adv_p4": {
+     "prompt": "(an extremely high-pitched voice)",
+     "level": 4,
+     "median_delta": 45.149842849558254,
+     "n": 24,
+     "sd": 25.970721385271172
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_p_adv_m4",
+     "to": "lv_p_adv_m3",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.25065341797954943
+    },
+    {
+     "from": "lv_p_adv_m3",
+     "to": "low",
+     "wins": 7,
+     "n": 24,
+     "p": 0.06391465663909912,
+     "gap": -9.737069319405023
+    },
+    {
+     "from": "low",
+     "to": "lv_p_adv_m1",
+     "wins": 16,
+     "n": 24,
+     "p": 0.15158963203430176,
+     "gap": 32.602233480790304
+    },
+    {
+     "from": "lv_p_adv_m1",
+     "to": "normal_pitch",
+     "wins": 20,
+     "n": 24,
+     "p": 0.001543879508972168,
+     "gap": 8.211184411358573
+    },
+    {
+     "from": "normal_pitch",
+     "to": "lv_p_adv_p1",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 7.644302900010004
+    },
+    {
+     "from": "lv_p_adv_p1",
+     "to": "high",
+     "wins": 16,
+     "n": 24,
+     "p": 0.15158963203430176,
+     "gap": 31.04768481465858
+    },
+    {
+     "from": "high",
+     "to": "very_high",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": -8.020037264586463
+    },
+    {
+     "from": "very_high",
+     "to": "lv_p_adv_p4",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 13.404974031147304
+    }
+   ]
+  },
+  "multiplier": {
+   "rho": 0.06488943948072186,
+   "sd": 35.63539534843521,
+   "span": 3.207872978843099,
+   "resolved": [
+    "lv_p_st_m6"
+   ],
+   "n_resolved": 1,
+   "rungs": {
+    "lv_p_st_m6": {
+     "prompt": "(a voice six semitones lower than normal)",
+     "level": -2,
+     "median_delta": 7.258998303046155,
+     "n": 24,
+     "sd": 34.97253992987896
+    },
+    "lv_p_st_m3": {
+     "prompt": "(a voice three semitones lower than normal)",
+     "level": -1,
+     "median_delta": 9.368872777368026,
+     "n": 24,
+     "sd": 31.454627065468078
+    },
+    "lv_p_st_p3": {
+     "prompt": "(a voice three semitones higher than normal)",
+     "level": 1,
+     "median_delta": 10.466871281889254,
+     "n": 24,
+     "sd": 41.60863318598419
+    },
+    "lv_p_st_p6": {
+     "prompt": "(a voice six semitones higher than normal)",
+     "level": 2,
+     "median_delta": 7.260202977725022,
+     "n": 24,
+     "sd": 34.505781212409616
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_p_st_m6",
+     "to": "lv_p_st_m3",
+     "wins": 17,
+     "n": 24,
+     "p": 0.06391465663909912,
+     "gap": 2.1098744743218703
+    },
+    {
+     "from": "lv_p_st_m3",
+     "to": "lv_p_st_p3",
+     "wins": 14,
+     "n": 24,
+     "p": 0.5412561893463135,
+     "gap": 1.0979985045212288
+    },
+    {
+     "from": "lv_p_st_p3",
+     "to": "lv_p_st_p6",
+     "wins": 5,
+     "n": 24,
+     "p": 0.006610751152038574,
+     "gap": -3.206668304164232
+    }
+   ]
+  },
+  "framing": {
+   "rho": 0.7413534406994389,
+   "sd": 24.22353341593337,
+   "span": 100.0876830548592,
+   "resolved": [
+    "deep",
+    "lv_p_fr_m2",
+    "lv_p_fr_p1"
+   ],
+   "n_resolved": 3,
+   "rungs": {
+    "lv_p_fr_m2": {
+     "prompt": "(an elderly man speaking)",
+     "level": -2,
+     "median_delta": -1.6065814048298321,
+     "n": 24,
+     "sd": 32.16036027520944
+    },
+    "deep": {
+     "prompt": "(a deep, low male voice)",
+     "level": -1,
+     "median_delta": -28.985492727719432,
+     "n": 24,
+     "sd": 15.957316226185087
+    },
+    "lv_p_fr_p1": {
+     "prompt": "(a young woman speaking)",
+     "level": 1,
+     "median_delta": 62.420097946233,
+     "n": 24,
+     "sd": 24.47856639960716
+    },
+    "lv_p_fr_p2": {
+     "prompt": "(a small child speaking)",
+     "level": 2,
+     "median_delta": 71.10219032713977,
+     "n": 24,
+     "sd": 24.297890762731797
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_p_fr_m2",
+     "to": "deep",
+     "wins": 10,
+     "n": 24,
+     "p": 0.5412561893463135,
+     "gap": -27.3789113228896
+    },
+    {
+     "from": "deep",
+     "to": "lv_p_fr_p1",
+     "wins": 24,
+     "n": 24,
+     "p": 1.1920928955078125e-07,
+     "gap": 91.40559067395243
+    },
+    {
+     "from": "lv_p_fr_p1",
+     "to": "lv_p_fr_p2",
+     "wins": 16,
+     "n": 24,
+     "p": 0.15158963203430176,
+     "gap": 8.682092380906766
+    }
+   ]
+  }
+ },
+ "energy": {
+  "adverb": {
+   "rho": 0.395083168474891,
+   "sd": 5.6311380445688615,
+   "span": 6.277050182743879,
+   "resolved": [
+    "lv_e_adv_m3",
+    "lv_e_adv_p4"
+   ],
+   "n_resolved": 2,
+   "rungs": {
+    "lv_e_adv_m4": {
+     "prompt": "(speaking extremely quietly, almost inaudibly)",
+     "level": -4,
+     "median_delta": -2.4695902043425715,
+     "n": 24,
+     "sd": 5.600213481008309
+    },
+    "lv_e_adv_m3": {
+     "prompt": "(speaking very quietly)",
+     "level": -3,
+     "median_delta": -4.105760691273518,
+     "n": 24,
+     "sd": 6.536886096161393
+    },
+    "soft": {
+     "prompt": "(speaking softly, quietly)",
+     "level": -2,
+     "median_delta": -2.906633906292079,
+     "n": 24,
+     "sd": 6.5021417210674075
+    },
+    "lv_e_adv_m1": {
+     "prompt": "(speaking a little quietly)",
+     "level": -1,
+     "median_delta": -0.9777791505022435,
+     "n": 24,
+     "sd": 5.943148886410906
+    },
+    "normal_vol": {
+     "prompt": "(speaking at a normal volume)",
+     "level": 0,
+     "median_delta": 0.4877782672639617,
+     "n": 24,
+     "sd": 5.371817687140913
+    },
+    "lv_e_adv_p1": {
+     "prompt": "(speaking a little loudly)",
+     "level": 1,
+     "median_delta": 0.9421090125779124,
+     "n": 24,
+     "sd": 5.113571633343783
+    },
+    "loud": {
+     "prompt": "(speaking loudly)",
+     "level": 2,
+     "median_delta": 1.3550687498479546,
+     "n": 24,
+     "sd": 5.202438214876977
+    },
+    "lv_e_adv_p3": {
+     "prompt": "(speaking very loudly)",
+     "level": 3,
+     "median_delta": 1.4365670016366634,
+     "n": 24,
+     "sd": 5.2186939569612605
+    },
+    "lv_e_adv_p4": {
+     "prompt": "(speaking extremely loudly, at full volume)",
+     "level": 4,
+     "median_delta": 2.171289491470361,
+     "n": 24,
+     "sd": 5.191330724148809
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_e_adv_m4",
+     "to": "lv_e_adv_m3",
+     "wins": 7,
+     "n": 24,
+     "p": 0.06391465663909912,
+     "gap": -1.6361704869309461
+    },
+    {
+     "from": "lv_e_adv_m3",
+     "to": "soft",
+     "wins": 14,
+     "n": 24,
+     "p": 0.5412561893463135,
+     "gap": 1.1991267849814387
+    },
+    {
+     "from": "soft",
+     "to": "lv_e_adv_m1",
+     "wins": 19,
+     "n": 24,
+     "p": 0.006610751152038574,
+     "gap": 1.9288547557898355
+    },
+    {
+     "from": "lv_e_adv_m1",
+     "to": "normal_vol",
+     "wins": 21,
+     "n": 24,
+     "p": 0.0002771615982055664,
+     "gap": 1.4655574177662052
+    },
+    {
+     "from": "normal_vol",
+     "to": "lv_e_adv_p1",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.4543307453139507
+    },
+    {
+     "from": "lv_e_adv_p1",
+     "to": "loud",
+     "wins": 11,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 0.4129597372700422
+    },
+    {
+     "from": "loud",
+     "to": "lv_e_adv_p3",
+     "wins": 19,
+     "n": 24,
+     "p": 0.006610751152038574,
+     "gap": 0.08149825178870884
+    },
+    {
+     "from": "lv_e_adv_p3",
+     "to": "lv_e_adv_p4",
+     "wins": 15,
+     "n": 24,
+     "p": 0.30745625495910645,
+     "gap": 0.7347224898336977
+    }
+   ]
+  },
+  "multiplier": {
+   "rho": 0.01391432275809231,
+   "sd": 5.717690602261574,
+   "span": 0.2154550921615348,
+   "resolved": [
+    "lv_e_pc_20"
+   ],
+   "n_resolved": 1,
+   "rungs": {
+    "lv_e_pc_20": {
+     "prompt": "(speaking at 20% volume)",
+     "level": -2,
+     "median_delta": 0.786754469492779,
+     "n": 24,
+     "sd": 5.467753270787
+    },
+    "lv_e_pc_50": {
+     "prompt": "(speaking at 50% volume)",
+     "level": -1,
+     "median_delta": 1.0022095616543139,
+     "n": 24,
+     "sd": 5.745722604934335
+    },
+    "lv_e_pc_100": {
+     "prompt": "(speaking at 100% volume)",
+     "level": 2,
+     "median_delta": 0.8844961285587578,
+     "n": 24,
+     "sd": 5.939595931063387
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_e_pc_20",
+     "to": "lv_e_pc_50",
+     "wins": 13,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": 0.2154550921615348
+    },
+    {
+     "from": "lv_e_pc_50",
+     "to": "lv_e_pc_100",
+     "wins": 11,
+     "n": 24,
+     "p": 0.8388197422027588,
+     "gap": -0.11771343309555604
+    }
+   ]
+  },
+  "framing": {
+   "rho": 0.1473281233209774,
+   "sd": 5.820181930460895,
+   "span": 2.4938747107151276,
+   "resolved": [
+    "lv_e_fr_m1"
+   ],
+   "n_resolved": 1,
+   "rungs": {
+    "lv_e_fr_m2": {
+     "prompt": "(speaking from the far side of a large room)",
+     "level": -2,
+     "median_delta": -0.23865065778204553,
+     "n": 24,
+     "sd": 4.872293639153369
+    },
+    "lv_e_fr_m1": {
+     "prompt": "(speaking quietly so as not to wake anyone)",
+     "level": -1,
+     "median_delta": -1.742752767358306,
+     "n": 24,
+     "sd": 6.537599602626335
+    },
+    "lv_e_fr_p2": {
+     "prompt": "(calling out to someone far away)",
+     "level": 2,
+     "median_delta": 0.7511219433568215,
+     "n": 24,
+     "sd": 6.050652549602983
+    }
+   },
+   "adjacent": [
+    {
+     "from": "lv_e_fr_m2",
+     "to": "lv_e_fr_m1",
+     "wins": 10,
+     "n": 24,
+     "p": 0.5412561893463135,
+     "gap": -1.5041021095762606
+    },
+    {
+     "from": "lv_e_fr_m1",
+     "to": "lv_e_fr_p2",
+     "wins": 21,
+     "n": 24,
+     "p": 0.0002771615982055664,
+     "gap": 2.4938747107151276
+    }
+   ]
+  }
+ }
+}

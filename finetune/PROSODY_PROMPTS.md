@@ -79,6 +79,104 @@ Intensifiers help on the slow side of rate and nowhere else.
 **Prompts compose poorly, because they collide.** Asking for expressiveness and
 a pitch in the same prompt does not give you both -- see the next section.
 
+## How many levels can you ask for?
+
+49 rungs were swept across four ways of phrasing a level. The short answer is
+**three steps per axis for pitch and rate, and barely more than one for
+energy** -- and the limit is set by noise, not by vocabulary.
+
+Repeated generations of the *same* prompt on the *same* sentence differ by
+1.44 char/s, 24-28 Hz and 5.6 dB. Two rungs closer together than that are the
+same rung wearing two names. So the useful figure is the ladder's span divided
+by its noise:
+
+| axis | best family | span | noise | steps that resolve |
+|---|---|---|---|---|
+| pitch | framing | 100.1 Hz | 24.2 Hz | **4.1** -> 3 of 4 rungs |
+| pitch | adverb | 84.9 Hz | 27.9 Hz | 3.0 -> 3 of 9 rungs |
+| rate | adverb | 4.37 char/s | 1.44 char/s | 3.0 -> 3 of 9 rungs |
+| energy | adverb | 6.28 dB | 5.63 dB | **1.1** -> 2 of 9 rungs |
+
+Writing nine levels does not give you nine levels. It gives you three, with six
+synonyms scattered among them.
+
+### Numbers do not work. At all.
+
+Every numeric phrasing failed on every axis, and this is the clearest negative
+result in the study:
+
+| family | span | noise | verdict |
+|---|---|---|---|
+| `(speaking at 0.6x ... 1.6x speed)` | 0.47 char/s | 1.57 | 0.3 noise-widths |
+| `(a voice three/six semitones lower/higher)` | 3.21 Hz | 35.6 | 0.1 noise-widths |
+| `(speaking at 20/50/100% volume)` | 0.22 dB | 5.72 | 0.0 noise-widths |
+| `(a pace of 1/3/5 out of 5)` | 0.37 char/s | 1.46 | 0.3 noise-widths |
+
+`(a voice six semitones lower than normal)` moves pitch **+7.3 Hz** -- upward,
+by the same amount as `(a voice six semitones higher than normal)`. The number
+is not read; what is left is the generic effect of having a parenthetical at
+all. Do not build an interface that emits multipliers, percentages or
+semitone offsets.
+
+### Pitch: describe the person, not the pitch
+
+The strongest and most reliable prompt found anywhere in this project is not a
+description of pitch:
+
+| prompt | delta | hit rate |
+|---|---|---|
+| `(a small child speaking)` | +71.1 Hz | 16/24 |
+| `(a young woman speaking)` | **+62.4 Hz** | **24/24** (p < 1e-4) |
+| `(a high-pitched voice)` | +39.8 Hz | 21/24 |
+| `(a deep, low male voice)` | -29.0 Hz | 18/24 |
+
+`(a young woman speaking)` is the only prompt in the whole sweep that moved
+every single pair in the direction asked. Naming a speaker beats naming the
+quantity by 20-30 Hz, and the framing family spans 100 Hz against the adverb
+family's 85.
+
+### Rate: slow is graded, fast is not
+
+| level | prompt | delta |
+|---|---|---|
+| -4 | `(speaking extremely slowly, drawing every word out)` | -2.58 char/s |
+| -3 | `(speaking very slowly and deliberately)` | -2.32 char/s |
+| -2 | `(speaking slowly)` | -1.50 char/s |
+| -1 | `(speaking a little slowly)` | -1.10 char/s |
+| 0 | `(speaking at a normal pace)` | +0.07 char/s |
+| +1 | `(speaking a little quickly)` | +0.67 char/s |
+| +2 | `(speaking quickly)` | +1.78 char/s |
+| +3 | `(speaking very quickly, rushed)` | +1.19 char/s |
+| +4 | `(speaking extremely quickly, racing through the words)` | +1.65 char/s |
+
+The slow half descends in order over five rungs and reaches -2.58 char/s. The
+fast half stops ordering after `(speaking quickly)` and saturates around
++1.2 to +1.8 -- the three strongest fast wordings are one rung, not three.
+Which is the asymmetry you would expect physically: speech can always be
+stretched, but compressing it runs into intelligibility.
+
+**Recommended three-step rate ladder**, each step about one noise-width apart:
+
+    slow    (speaking extremely slowly, drawing every word out)   -2.58
+    mid     (speaking a little slowly)                            -1.10
+    fast    (speaking a little quickly)                           +0.67
+
+That ladder looks odd -- the "fast" rung is a hedge -- but it is the set with
+genuinely separated steps. If you want maximum range instead of even spacing,
+use `extremely slowly` / `normal pace` / `quickly` and accept that the middle
+and top are about one noise-width apart rather than comfortably more.
+
+### Energy: not gradable
+
+The adverb ladder spans 6.28 dB against 5.63 dB of noise -- 1.1 noise-widths
+across nine rungs. It orders through the middle (`a little quietly` -0.98,
+`normal` +0.49, `a little loudly` +0.94, `loudly` +1.36) but scrambles at the
+quiet extreme: `(speaking extremely quietly, almost inaudibly)` is -2.47 dB,
+*weaker* than `(speaking very quietly)` at -4.11 dB.
+
+Treat energy as two states, loud and quiet, or normalize the level afterwards
+and ignore the axis. It will not give you a dial.
+
 ## Pitch variation: there is no control, and here is why
 
 28 wordings across seven strategies -- graded intensity (`slightly` / `fairly` /
@@ -130,6 +228,7 @@ onset, is the only ablation that turned a FAIL into a PASS.
 ## Reproducing
 
 ```
+.venv/bin/python finetune/sweep_prosody_levels.py --axes rate,pitch,energy
 .venv/bin/python finetune/sweep_prosody_prompts.py --axes var
 .venv/bin/python finetune/sweep_prosody_prompts.py --axes rate,pitch,energy
 .venv/bin/python finetune/sweep_prosody_prompts.py --axes var --report-only
