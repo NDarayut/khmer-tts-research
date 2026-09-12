@@ -91,3 +91,5 @@ finetune/results/prompt_sweep/*.html
 # built page. rows.jsonl, references.json and the summaries ARE tracked.
 finetune/results/style_reference/audio/
 finetune/results/style_reference/*.html
+finetune/results/prompt_sweep/prosody_clips/
+finetune/results/prompt_sweep/prosody_clips.zip
