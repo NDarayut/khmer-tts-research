@@ -34,7 +34,7 @@ DEMOS = ("A03", "A19")
 
 # axis, rung name, level label, file slug. Order is the ladder's own order.
 CARD = [
-    ("rate", "lv_r_adv_m4",  "slow",   "rate-1-slow"),
+    ("rate", "very_slow",     "slow",   "rate-1-slow"),
     ("rate", "normal_pace",  "normal", "rate-2-normal"),
     ("rate", "quick",        "fast",   "rate-3-fast"),
     ("pitch", "low",         "low",    "pitch-1-low"),
@@ -273,6 +273,32 @@ def main():
     sents = {e["id"]: e["sentence"] for e in json.loads(
         (ROOT / "eval-set" / "eval.json").read_text(encoding="utf-8"))}
 
+    # Per-SENTENCE reliability, not just per-generation. 24 pairs is 8 sentences
+    # at 3 seeds, so "18/24" can hide a prompt that fails on two whole texts.
+    # The count that matters for reuse is how many distinct sentences moved the
+    # way the wording asked, taking each sentence's median over its own seeds.
+    import numpy as np
+    rows_ = [json.loads(l) for l in
+             (SWEEP / "rows.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    PRIM = {"rate": "char_rate", "pitch": "f0_median_hz", "energy": "rms_dbfs"}
+    texts = {}
+    for ax, name, label, slug in CARD:
+        if label == "normal":
+            continue
+        mk = PRIM[ax]
+        d = -1 if label in ("slow", "low", "quiet") else 1
+        ref_ = {(r["id"], r["seed"]): r for r in rows_
+                if r["prompt_name"] == "__bare__" and r["axis"] == ax}
+        per = {}
+        for r in rows_:
+            if r["axis"] == ax and r["prompt_name"] == name:
+                b = ref_.get((r["id"], r["seed"]))
+                if b:
+                    per.setdefault(r["id"], []).append(r[mk] - b[mk])
+        if per:
+            ok = sum(1 for v in per.values() if np.median(v) * d > 0)
+            texts[(ax, name)] = (ok, len(per))
+
     pack, zp, manifest = bundle(SWEEP, args.kbps)
 
     def rung(axis, name):
@@ -299,6 +325,13 @@ def main():
     a('</header>')
 
     a('<pre>audio = model.generate(text=PROMPT + khmer_sentence)</pre>')
+    a('<div class="note"><b>How these were chosen.</b> Each was generated over '
+      '8 Khmer sentences at 3 seeds &mdash; 24 clips &mdash; each paired against '
+      'the same sentence at the same seed with no prompt. The two counts under '
+      'each string are how many of those 24 clips moved the way the wording '
+      'asked, and how many of the 8 <i>distinct sentences</i> did, taking each '
+      'sentence\'s median over its own seeds. The second is the one that says '
+      'whether a prompt travels to new text.</div>')
     a('<div class="note"><b>One prompt at a time.</b> Do not put two of these in '
       'the same parenthetical. Combining is what broke the expressiveness axis '
       '&mdash; asked for a pitch and a delivery together, the model obeyed only '
@@ -328,12 +361,14 @@ def main():
             if not r:
                 continue
             h, nn = hits.get((ax, name), (None, None))
+            tx = texts.get((ax, name))
             mid = " mid" if label == "normal" else ""
             a(f'<div class="lvl{mid}"><span class="tag">{label}</span>')
             a(f'<div><button class="pstr" data-copy="{html.escape(r["prompt"])}">'
               f'{html.escape(r["prompt"])}</button>'
               f'<div class="eff">{r["median_delta"]:+.2f} {AXIS_UNIT[axis]}'
-              + (f' &middot; {h}/{nn} clips moved this way' if h else '')
+              + (f' &middot; {h}/{nn} clips' if h else '')
+              + (f' &middot; {tx[0]}/{tx[1]} sentences' if tx else '')
               + '</div></div>')
             a('<div class="plays">')
             for si, sid in enumerate(DEMOS, 1):

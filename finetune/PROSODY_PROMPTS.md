@@ -12,6 +12,13 @@ Everything here is measured on the **unmodified** model -- no adapter. Source:
 frozen eval set x 3 seeds, each prompt paired against the *same sentence at the
 same seed with no parenthetical at all*.
 
+**The sample is 8 sentences x 3 seeds = 24 clips per prompt, not 24 sentences.**
+That distinction matters: a prompt can score 18/24 by working on six sentences
+and failing on two entirely. Where a per-sentence count is given below, it is
+the number of the 8 distinct sentences whose median across its own seeds moved
+the way the wording asked -- the figure that says whether a prompt travels to
+text it has not seen.
+
 Two numbers decide whether a prompt is usable, and they answer different
 questions:
 
@@ -123,17 +130,25 @@ semitone offsets.
 The strongest and most reliable prompt found anywhere in this project is not a
 description of pitch:
 
-| prompt | delta | hit rate |
-|---|---|---|
-| `(a small child speaking)` | +71.1 Hz | 16/24 |
-| `(a young woman speaking)` | **+62.4 Hz** | **24/24** (p < 1e-4) |
-| `(a high-pitched voice)` | +39.8 Hz | 21/24 |
-| `(a deep, low male voice)` | -29.0 Hz | 18/24 |
+| prompt | delta | pairs | sentences |
+|---|---|---|---|
+| `(a small child speaking)` | **+71.1 Hz** | **24/24** | **8/8** |
+| `(a young woman speaking)` | +62.4 Hz | 19/24 | 6/8 |
+| `(a high-pitched voice)` | +39.8 Hz | 21/24 | 8/8 |
+| `(a deep, low male voice)` | -29.0 Hz | 18/24 | 7/8 |
 
-`(a young woman speaking)` is the only prompt in the whole sweep that moved
-every single pair in the direction asked. Naming a speaker beats naming the
-quantity by 20-30 Hz, and the framing family spans 100 Hz against the adverb
-family's 85.
+`(a small child speaking)` is the strongest prompt in the sweep on every count:
+the largest effect, every one of the 24 clips moving the way asked, and all 8
+sentences. Naming a speaker beats naming the quantity by 20-30 Hz, and the
+framing family spans 100 Hz against the adverb family's 85.
+
+The cost is that it changes *who* the voice sounds like, not just its pitch.
+`(a high-pitched voice)` is the strongest wording that keeps a neutral adult
+voice: +39.8 Hz, 21/24, and also all 8 sentences.
+
+**Correction:** an earlier version of this file credited `(a young woman
+speaking)` with 24/24. That figure was its separation from the rung *below* it
+on the ladder, not its hit rate against no prompt, which is 19/24.
 
 ### Rate: slow is graded, fast is not
 
@@ -155,16 +170,15 @@ fast half stops ordering after `(speaking quickly)` and saturates around
 Which is the asymmetry you would expect physically: speech can always be
 stretched, but compressing it runs into intelligibility.
 
-**Recommended three-step rate ladder**, each step about one noise-width apart:
+**Recommended three-step rate ladder:**
 
-    slow    (speaking extremely slowly, drawing every word out)   -2.58
-    mid     (speaking a little slowly)                            -1.10
-    fast    (speaking a little quickly)                           +0.67
+    slow    (speaking very slowly and deliberately)   -2.32   22/24   8/8 sentences
+    mid     (speaking at a normal pace)               +0.07
+    fast    (speaking quickly)                        +1.78   18/24   7/8 sentences
 
-That ladder looks odd -- the "fast" rung is a hedge -- but it is the set with
-genuinely separated steps. If you want maximum range instead of even spacing,
-use `extremely slowly` / `normal pace` / `quickly` and accept that the middle
-and top are about one noise-width apart rather than comfortably more.
+`(speaking extremely slowly, drawing every word out)` reaches further, -2.58,
+but on 20/24 and only 7 of 8 sentences. The 0.26 char/s it adds is not worth
+the sentence it loses, so the `very slowly` wording is the one to use.
 
 ### Energy: not gradable
 

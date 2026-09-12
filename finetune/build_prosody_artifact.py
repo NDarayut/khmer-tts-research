@@ -483,15 +483,17 @@ def main():
         e = idx.get((ax, nm))
         hit = (f'{e["measures"]["f0_median_hz"]["hits"]}/'
                f'{e["measures"]["f0_median_hz"]["n"]}' if e else "&mdash;")
-        strong = ' style="font-weight:600"' if nm == "lv_p_fr_p1" else ''
+        strong = ' style="font-weight:600"' if nm == "lv_p_fr_p2" else ''
         a(f'<tr{strong}><td><code>{html.escape(rr["prompt"])}</code></td>'
           f'<td class="num">{rr["median_delta"]:+.1f} Hz</td>'
           f'<td class="num">{hit}</td></tr>')
     a('</tbody></table></div>')
-    a('<p><code>(a young woman speaking)</code> moved <b>24 of 24</b> pairs in the '
-      'direction asked &mdash; the only prompt in the sweep with a perfect hit '
-      'rate &mdash; and it beats <code>(a high-pitched voice)</code> by more than '
-      '20&nbsp;Hz. Naming a speaker outperforms naming the quantity.</p>')
+    a('<p><code>(a small child speaking)</code> is the strongest prompt in the '
+      'sweep on every count &mdash; the largest effect, all 24 clips moving the '
+      'way asked, and all 8 sentences. Naming a speaker outperforms naming the '
+      'quantity by 20&ndash;30&nbsp;Hz. The cost is that it changes <i>who</i> '
+      'the voice sounds like; <code>(a high-pitched voice)</code> is the '
+      'strongest wording that keeps a neutral adult voice.</p>')
 
     a('<h3 style="font-family:Newsreader,Georgia,serif;font-weight:600;'
       'font-size:19px;margin:30px 0 8px">For rate, slow is graded and fast is '
