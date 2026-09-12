@@ -1,0 +1,2370 @@
+[
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៃទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A03",
+  "cer": 0.06060606060606061,
+  "hyp": "ក្មេងៗកំពុងលេងបាននៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗ កំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់ នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A03_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះ មានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅ ភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A04_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A05",
+  "cer": 0.0,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A05",
+  "cer": 0.0,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "វាយាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A05",
+  "cer": 0.09375,
+  "hyp": "វាយើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A05_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណរហn បានច្រើន និងសំម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសាស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូនហោះណាឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A19",
+  "cer": 0.04081632653061224,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧនហoមឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ អ៊ុណរ onaឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺ ផឹកទឹកក្តៅឧណហក់ណាឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអ៊ុហhរថែឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ អូនអហោឲ្យបានច្រើននិងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណាអត់ដែលបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A19_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថា ដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថា ដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញ ប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថា ដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោននេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A24_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានមាត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A25",
+  "cer": 0.0,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានហ្មត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A25_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A35",
+  "cer": 0.0967741935483871,
+  "hyp": "ហើយបីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A35",
+  "cer": 0.04838709677419355,
+  "hyp": "ហើlអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A35_very_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "__bare__",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37___bare__.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "normal_pace",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_normal_pace.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "quick",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_quick",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_slight_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slight_slow",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_slight_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "slow",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_slow.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_quick",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_very_quick.wav"
+ },
+ {
+  "axis": "rate",
+  "prompt_name": "very_slow",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/rate/A37_very_slow.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A03",
+  "cer": 0.09090909090909091,
+  "hyp": "ក្មេងៗកំពុងលេខបាល់នៅពីរធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៃទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៃទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A03",
+  "cer": 0.7575757575757576,
+  "hyp": "និយាយរៀបស្មើគ្មានអារម្មណ៍ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A03",
+  "cer": 0.7272727272727273,
+  "hyp": "និយាយដោយមានអារម្មណ៍រំភើប ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A03",
+  "cer": 0.18181818181818182,
+  "hyp": "ក្មេងៗងកំពុងលេខបាននៅពីរធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៃទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A03",
+  "cer": 0.06060606060606061,
+  "hyp": "ក្មេងៗកំពុងលេងបាននៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A03",
+  "cer": 0.030303030303030304,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៃទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A03",
+  "cer": 0.06060606060606061,
+  "hyp": "ក្មេងៗកំពុងលេងបាននៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A03",
+  "cer": 0.06060606060606061,
+  "hyp": "ក្មេងៗកំពុងលេងបាននៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A03",
+  "cer": 0.0,
+  "hyp": "ក្មេងៗកំពុងលេងបាល់នៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A03",
+  "cer": 0.06060606060606061,
+  "hyp": "ក្មេងៗកំពុងលេងបាននៅទីធ្លាខាងក្រោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A03_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A04",
+  "cer": 0.025,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរថជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A04",
+  "cer": 0.075,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋានេះមានរសជាតិឆ្ងាញ់ណា?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A04",
+  "cer": 0.025,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋានេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A04",
+  "cer": 0.625,
+  "hyp": "មិយាយរៀបស្មើគ្មានអារម្មណ៍ ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A04",
+  "cer": 0.025,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋានេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A04",
+  "cer": 0.05,
+  "hyp": "ម្ហូបនៅភោoជនីយដ្ឋានេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះ មានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A04",
+  "cer": 0.1,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននីmiនរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A04",
+  "cer": 0.025,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋានេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A04",
+  "cer": 0.0,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននេះមានរសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A04",
+  "cer": 0.125,
+  "hyp": "ម្ហូបនៅភោជនីយដ្ឋាននីm រសជាតិឆ្ងាញ់ណាស់",
+  "wav": "finetune/results/prompt_sweep/audio/var/A04_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A05",
+  "cer": 0.0,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A05",
+  "cer": 0.3125,
+  "hyp": "យើខ្ញុំនយកចិត្តដាំការនៅមុខផ្ទះ ទេ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A05",
+  "cer": 0.21875,
+  "hyp": "គេខ្ញុំចូលចិត្តដាំការនៅមុកផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A05",
+  "cer": 0.15625,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំការនៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A05",
+  "cer": 0.1875,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំcaនៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A05",
+  "cer": 0.15625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំការនៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A05",
+  "cer": 0.0,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A05",
+  "cer": 0.8125,
+  "hyp": "និយាយ readស្មើគ្មានអារម្មណ៍ យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A05",
+  "cer": 0.8125,
+  "hyp": "និយាយដូចមានអារម្មណ៍រំភើប និយាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យាយខ្ញុំចូលចិត្តដើមផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A05",
+  "cer": 0.09375,
+  "hyp": "គេខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A05",
+  "cer": 0.125,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានិងមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំmផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A05",
+  "cer": 0.21875,
+  "hyp": "គេខ្ញុំចូលចិត្តដាំង់cនៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A05",
+  "cer": 0.0,
+  "hyp": "យាយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A05",
+  "cer": 0.15625,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំការនៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A05",
+  "cer": 0.09375,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំផ្ការនៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A05",
+  "cer": 0.15625,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំការនៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើងខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A05",
+  "cer": 0.03125,
+  "hyp": "យើយខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A05",
+  "cer": 0.0625,
+  "hyp": "យើខ្ញុំចូលចិត្តដាំផ្កានៅមុខផ្ទះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A05",
+  "cer": 0.125,
+  "hyp": "គេខ្ញុំចូលចិត្តដាំផ្ការនៅមុខផ្ទះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A05_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណរហn បានច្រើន និងសំម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសាស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A19",
+  "cer": 0.04081632653061224,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ ឧណាហnrរ ឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A19",
+  "cer": 0.08163265306122448,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧនហោះឧណាឲ្យបានច្រើន និងសម្រាលឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧនហហnឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាsស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A19",
+  "cer": 0.11224489795918367,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺ pakទឹកក្តៅអូn hartaឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A19",
+  "cer": 0.08163265306122448,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូនហោrក៏បានច្រើននិងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូនhm ឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទៅក្តៅoនហោងឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A19",
+  "cer": 0.09183673469387756,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអ៊ុនហត់ noi ឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A19",
+  "cer": 0.04081632653061224,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណរអណៈឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអនអហោo ឱ្យបានច្រើន និងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A19",
+  "cer": 0.32653061224489793,
+  "hyp": "និយាយរាបស្មើគ្មានអារម្មណ៍ គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអ៊ុនហៀអាឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "ទូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧនហរឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ ohharg ឲ្យបានច្រើន និងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧnoហពីបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ onahoមឲ្យបានច្រើននិងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសាស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូននហណកឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូនហោះឲ្យបានច្រើននិងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A19",
+  "cer": 0.030612244897959183,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅ ឧណឧៗឲ្យបានច្រើននិងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅoនអាhរឲ្យបានច្រើន និងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណរហោះអីបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសាស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទៅក្តៅឧនហបោរបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A19",
+  "cer": 0.08163265306122448,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧរណក់holowឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A19",
+  "cer": 0.05102040816326531,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណហនៅឲ្យបានច្រើន និងសំម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A19",
+  "cer": 0.07142857142857142,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទៅក្តៅឧនក់ហោះឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A19",
+  "cer": 0.09183673469387756,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទៅក្តៅ onហាបឲ្យបានច្រើន និងសម្រាកឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសាសស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧhayor ឲ្យបានច្រើននិងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A19",
+  "cer": 0.09183673469387756,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅអូnhtៗឲ្យបានច្រើន និងសំម្រាលឲ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាsសស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A19",
+  "cer": 0.061224489795918366,
+  "hyp": "គ្រូពេទ្យបានណែនាំឲ្យអ្នកជំងឺផឹកទឹកក្តៅឧណហត់niឲ្យបានច្រើន និងសម្រាកឱ្យបានគ្រប់គ្រាន់ដើម្បីឆាប់ជាសះស្បើយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A19_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A24",
+  "cer": 0.02654867256637168,
+  "hyp": "អ្នកស្រីបានរៀបរដ្ឋថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A24",
+  "cer": 0.017699115044247787,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថា ដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញ បោរនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញ ប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោននេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A24",
+  "cer": 0.23008849557522124,
+  "hyp": "និយាយរាបស្មើគ្មានអារម្មណ៍ អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោននេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A24",
+  "cer": 0.21238938053097345,
+  "hyp": "និយាយដោយមានអារម្មណ៍រំភើប អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោននេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A24",
+  "cer": 0.02654867256637168,
+  "hyp": "អ្នកស្រីបានរៀបរដ្ឋថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A24",
+  "cer": 0.0,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A24",
+  "cer": 0.061946902654867256,
+  "hyp": "ងារស្រីបានរៀបរាប់ថាដំណើរកសាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោននេះ បានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A24",
+  "cer": 0.008849557522123894,
+  "hyp": "អ្នកស្រីបានរៀបរាប់ថាដំណើរកម្សាន្តទៅកាន់តំបន់ភ្នំពេញប៉ោwនេះបានផ្តល់បទពិសោធន៍ដ៏មានតម្លៃជាច្រើនសម្រាប់គ្រួសាររបស់គាត់។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A24_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A25",
+  "cer": 0.06140350877192982,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបាន ម៉ot ចoត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A25",
+  "cer": 0.0,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានហ្មត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A25",
+  "cer": 0.0,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានហ្មត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A25",
+  "cer": 0.07017543859649122,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចot មុននឹងធ្វើការសម្រេចចិត្តវិនិទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A25",
+  "cer": 0.043859649122807015,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចoត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A25",
+  "cer": 0.0,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានហ្មត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A25",
+  "cer": 0.008771929824561403,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានហ្មត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A25",
+  "cer": 0.043859649122807015,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉oត់ចot មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A25",
+  "cer": 0.03508771929824561,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឱ្យបានម៉ត់ចត់ មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A25",
+  "cer": 0.02631578947368421,
+  "hyp": "យើងគួរតែពិនិត្យមើលស្ថានភាពហិរញ្ញវត្ថុរបស់ក្រុមហ៊ុនឲ្យបានម៉ត់ចត់មុននឹងធ្វើការសម្រេចចិត្តវិនិយោគទៅលើគម្រោងថ្មីណាមួយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A25_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A35",
+  "cer": 0.016129032258064516,
+  "hyp": "ហាតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A35",
+  "cer": 0.03225806451612903,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើihក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A35",
+  "cer": 0.04838709677419355,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើម ហើighក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A35",
+  "cer": 0.04838709677419355,
+  "hyp": "ហានអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A35",
+  "cer": 0.04838709677419355,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើម ហើighក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A35",
+  "cer": 0.4032258064516129,
+  "hyp": "និយាយរាបស្មើគ្មានអារម្មណ៍ ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A35",
+  "cer": 0.3870967741935484,
+  "hyp": "វិយាយដែលមានអារម្មណ៍រំភើប ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A35",
+  "cer": 0.04838709677419355,
+  "hyp": "ហិនអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A35",
+  "cer": 0.06451612903225806,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើម high ក៏ដោយ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A35",
+  "cer": 0.03225806451612903,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើម ហើih ក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A35",
+  "cer": 0.0,
+  "hyp": "ហេតុអ្វីបានជាគាត់មិនទាន់មកដល់ ទោះបីជាការប្រជុំចាប់ផ្តើមហើយក៏ដោយ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A35_wide_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "__bare__",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37___bare__.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_extreme",
+  "id": "A37",
+  "cer": 0.14035087719298245,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាស់សម្រាប់cmrបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_anim_extreme.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_fairly",
+  "id": "A37",
+  "cer": 0.05263157894736842,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើជម្រើសមួយណាស់សម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_anim_fairly.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_slight",
+  "id": "A37",
+  "cer": 0.08771929824561403,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសឬជម្រើសមួយណាស់សម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_anim_slight.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "anim_very",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_anim_very.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "bored",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_bored.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "dramatic",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណា សម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_dramatic.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "emphasis",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_emphasis.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "even_stress",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_even_stress.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "excited",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_excited.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "flat_monotone",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_flat_monotone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_flat",
+  "id": "A37",
+  "cer": 0.47368421052631576,
+  "hyp": "និយាយរៀបស្មើគ្មានអារម្មណ៍ អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាស់សម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_kh_flat.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "kh_lively",
+  "id": "A37",
+  "cer": 0.42105263157894735,
+  "hyp": "និយាយឲ្យមានអារម្មណ៍រំភើម អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_kh_lively.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "level_tone",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_level_tone.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lively_expressive",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_lively_expressive.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "lots_of_into",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_lots_of_into.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "loud_soft",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_loud_soft.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "melody",
+  "id": "A37",
+  "cer": 0.03508771929824561,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាស់សម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_melody.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "narrow_pitch",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_narrow_pitch.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "newsreader",
+  "id": "A37",
+  "cer": 0.017543859649122806,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_newsreader.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "normal_delivery",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_normal_delivery.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pauses",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_pauses.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_low_expr",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_pin_low_expr.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_normal_wide",
+  "id": "A37",
+  "cer": 0.05263157894736842,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាស់សម្រាប់គម្រោបន្ទាប់នេះ",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_pin_normal_wide.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "pin_same_emph",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_pin_same_emph.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "robot",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_robot.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "sportscaster",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_sportscaster.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "storyteller",
+  "id": "A37",
+  "cer": 0.0,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាសម្រាប់គម្រោងបន្ទាប់នេះ។",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_storyteller.wav"
+ },
+ {
+  "axis": "var",
+  "prompt_name": "wide_pitch",
+  "id": "A37",
+  "cer": 0.03508771929824561,
+  "hyp": "អ្នកគិតថាយើងគួរជ្រើសរើសជម្រើសមួយណាស់សម្រាប់គម្រោងបន្ទាប់នេះ?",
+  "wav": "finetune/results/prompt_sweep/audio/var/A37_wide_pitch.wav"
+ }
+]

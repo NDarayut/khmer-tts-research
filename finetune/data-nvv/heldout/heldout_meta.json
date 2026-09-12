@@ -1,0 +1,450 @@
+{
+  "per_tag": 4,
+  "tags": [
+    "[cough]",
+    "[sniff]",
+    "[throat-clear]",
+    "[groan]",
+    "[laughing]",
+    "[sigh]"
+  ],
+  "n": 48,
+  "n_train": 24,
+  "n_val": 24,
+  "source": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/manifests_v2",
+  "note": "train rows were seen ~21 times during training; val rows were never seen and their speakers are disjoint from train",
+  "clips": [
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id01543_e8SgXA4yTBo_00125.wav",
+      "text": "So I just knew at some point it was gonna happen [cough] when I did not know.",
+      "duration": 5.184,
+      "tag": "[cough]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/000_train_cough.wav",
+      "overfit_index": 0
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00195_6VUcCaNmjZo_00031.wav",
+      "text": "Just see the ball and hit it. [cough] Pretty much that's that's what I did. I don't try to think too much.",
+      "duration": 4.928,
+      "tag": "[cough]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/001_train_cough.wav",
+      "overfit_index": 1
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00592_QrkFgD_X7k_00096.wav",
+      "text": "Besides academic [cough] competences which affect kids when they go, that transiti",
+      "duration": 5.056,
+      "tag": "[cough]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/002_train_cough.wav",
+      "overfit_index": 2
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id00190_V2UxwEp_EVg_00055.wav",
+      "text": "That's gross. And we're eating and drinking and, you know, so I don't know, maybe I'm deranged inside, but I feel okay. [cough]",
+      "duration": 6.656,
+      "tag": "[cough]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/003_train_cough.wav",
+      "overfit_index": 3
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id02116_NYl9q_IwVcg_00128.wav",
+      "text": "And it was, we were right at the back. [sniff] I mean, we had, I mean, mom and dad, those seats were not great for my first concert.",
+      "duration": 7.424,
+      "tag": "[sniff]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/004_train_sniff.wav",
+      "overfit_index": 4
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10986_Hyck_yynhF4_00020.wav",
+      "text": "[sniff] Years trying to get it made and finally we were able to put it together.",
+      "duration": 5.2,
+      "tag": "[sniff]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/005_train_sniff.wav",
+      "overfit_index": 5
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id04358_fw4jhO7I4h0_00323.wav",
+      "text": "To some extent is the victim of this. [sniff] We are not.",
+      "duration": 4.032,
+      "tag": "[sniff]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/006_train_sniff.wav",
+      "overfit_index": 6
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10240_e5mhg5NBBl0_00007.wav",
+      "text": "[sniff] I wanted to try more adventurous things for myself. And I think that I didn't know how. And I was also.",
+      "duration": 5.48,
+      "tag": "[sniff]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/007_train_sniff.wav",
+      "overfit_index": 7
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id04159_Ckr9diRv4DE_00027.wav",
+      "text": "You don't really go to have a holiday. You've got to go there to do the right things. And [throat-clear] if you do well, you can enjoy it. And if you don't.",
+      "duration": 5.44,
+      "tag": "[throat-clear]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/008_train_throat-clear.wav",
+      "overfit_index": 8
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id08002_hFUamTl5NFk_00293.wav",
+      "text": "I'm comfortable or never happy with what I do. I'm always trying to be better [throat-clear] and I'm always trying to think ways of better myself and better my performance and better my math.",
+      "duration": 7.872,
+      "tag": "[throat-clear]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/009_train_throat-clear.wav",
+      "overfit_index": 9
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10970_YoVTbyIwAH0_00004.wav",
+      "text": "[throat-clear] Calling the mad hatter the mad hatter, but he's mad in a different way to Tarrant. He's very.",
+      "duration": 6.68,
+      "tag": "[throat-clear]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/010_train_throat-clear.wav",
+      "overfit_index": 10
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07305_XmIGqDB9_Ac_00100.wav",
+      "text": "[throat-clear] Maybe not as critical as other people do because I realized look we're playing without our four top receiver.",
+      "duration": 7.296,
+      "tag": "[throat-clear]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/011_train_throat-clear.wav",
+      "overfit_index": 11
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_007_ex04_disgusted_css003.wav",
+      "text": "Yeah, they definitely connect because we did not eat mac and cheese. [groan]",
+      "duration": 5.25,
+      "tag": "[groan]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/012_train_groan.wav",
+      "overfit_index": 12
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_007_ex04_disgusted_css008.wav",
+      "text": "Ugh, yeah, I don't know, maybe several times in a row, maybe a month, who knows, that is, ugh, [groan] ugh.",
+      "duration": 8.8,
+      "tag": "[groan]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/013_train_groan.wav",
+      "overfit_index": 13
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_003_ex04_disgusted_css002.wav",
+      "text": "[groan] I don't know where we can go with with this all over us.",
+      "duration": 5.29,
+      "tag": "[groan]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/014_train_groan.wav",
+      "overfit_index": 14
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_001_ex01_disgusted_css028.wav",
+      "text": "Oh my goodness. Okay. [groan]",
+      "duration": 5.09,
+      "tag": "[groan]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/015_train_groan.wav",
+      "overfit_index": 15
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_laughing_00339.wav",
+      "text": "[laughing] Were there any other fraudulent charges?",
+      "duration": 5.668,
+      "tag": "[laughing]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/016_train_laughing.wav",
+      "overfit_index": 16
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id02724_YBSFS1j4ems_00187.wav",
+      "text": "Because [laughing] I was so frustrated with yet another part that I didn't get.",
+      "duration": 5.568,
+      "tag": "[laughing]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/017_train_laughing.wav",
+      "overfit_index": 17
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_laughing_001_ex04_laughing_css009.wav",
+      "text": "[laughing] I was just on a roll. I was going.",
+      "duration": 5.95,
+      "tag": "[laughing]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/018_train_laughing.wav",
+      "overfit_index": 18
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_calm_003_ex04_calm_css010.wav",
+      "text": "I know. Give me all the food, please. [laughing] Oh, boy.",
+      "duration": 5.8,
+      "tag": "[laughing]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/019_train_laughing.wav",
+      "overfit_index": 19
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_happy_003_ex01_happy_css043.wav",
+      "text": "That's crazy! Oh my goodness. And what if it gets renewed for another season and we go to the ninth dimension? [sigh]",
+      "duration": 7.27,
+      "tag": "[sigh]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/020_train_sigh.wav",
+      "overfit_index": 20
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_sarcastic_003_ex01_sarcastic_css017.wav",
+      "text": "you served? Ugh. [sigh]",
+      "duration": 2.62,
+      "tag": "[sigh]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/021_train_sigh.wav",
+      "overfit_index": 21
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex01_disgusted_006_ex01_disgusted_css012.wav",
+      "text": "Oh no, that's not good. [sigh]",
+      "duration": 2.39,
+      "tag": "[sigh]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/022_train_sigh.wav",
+      "overfit_index": 22
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id07256_lQ9t_OhvpkY_00387.wav",
+      "text": "[sigh] My childhood celebrity crush was weirdly Robert Mitchum.",
+      "duration": 4.224,
+      "tag": "[sigh]",
+      "split": "train",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/023_train_sigh.wav",
+      "overfit_index": 23
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id03889_xq6vpHp1FFE_00226.wav",
+      "text": "Since they spend [cough] most of their time primarily in Korea, they don't really think about it. But when we do stuff like.",
+      "duration": 5.824,
+      "tag": "[cough]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/024_val_cough.wav",
+      "overfit_index": 24
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10613_ziZ11Y0CC_w_00005.wav",
+      "text": "[cough] of my, you know, bottom of my barrel. I had no money. I was eating top ramen every single day. I hadn't booked anything in months.",
+      "duration": 7.56,
+      "tag": "[cough]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/025_val_cough.wav",
+      "overfit_index": 25
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id08928_beS1JcR8ExI_00255.wav",
+      "text": "She made it clear to me that she saw her function in a special way, [cough] where she will not be just performing.",
+      "duration": 6.208,
+      "tag": "[cough]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/026_val_cough.wav",
+      "overfit_index": 26
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_nonverbal_006_ex03_nonverbal_css002.wav",
+      "text": "[cough] Oh my god, it's rough.",
+      "duration": 5.68,
+      "tag": "[cough]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/027_val_cough.wav",
+      "overfit_index": 27
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id03767_4Pyl3vEAjUs_00022.wav",
+      "text": "You know, I think hopefully that confidence that we can beat these teams, we had a good result at Chelsea as well, obviously. And [sniff] I think their way forward has been pretty good if.",
+      "duration": 6.72,
+      "tag": "[sniff]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/028_val_sniff.wav",
+      "overfit_index": 28
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_laughing_004_ex02_laughing_css016.wav",
+      "text": "Stage and she was just like panicking like you could hear her backstage going no no no no [sniff] no",
+      "duration": 5.85,
+      "tag": "[sniff]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/029_val_sniff.wav",
+      "overfit_index": 29
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id06124_LFeaHFzqeVo_00077.wav",
+      "text": "So every time [sniff] we put a new record out, I ask his opinion.",
+      "duration": 5.888,
+      "tag": "[sniff]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/030_val_sniff.wav",
+      "overfit_index": 30
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10231_Cfz6KgPti3Y_00015.wav",
+      "text": "[sniff] So I went to school and I studied for four years with Reverend Doctor Johnny Coleman.",
+      "duration": 6.84,
+      "tag": "[sniff]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/031_val_sniff.wav",
+      "overfit_index": 31
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10931_DxNk7tLkPbM_00015.wav",
+      "text": "[throat-clear] There was an interview on sixty minutes with Mike Williams and he talked about that moment.",
+      "duration": 4.8,
+      "tag": "[throat-clear]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/032_val_throat-clear.wav",
+      "overfit_index": 32
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id10326_NKOA_Q89wDM_00080.wav",
+      "text": "But Phil [throat-clear] knew it by he did sounds, which was an interesting thing.",
+      "duration": 8.04,
+      "tag": "[throat-clear]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/033_val_throat-clear.wav",
+      "overfit_index": 33
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id02021_LjnJukUh55k_00149.wav",
+      "text": "So [throat-clear] I think we both have great motivation to win the game and we both have a great deal to gain from a victory tomorrow night.",
+      "duration": 7.808,
+      "tag": "[throat-clear]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/034_val_throat-clear.wav",
+      "overfit_index": 34
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_sleepy_003_ex03_sleepy_css057.wav",
+      "text": "[throat-clear] Okay. I'll see you upstairs.",
+      "duration": 4.4,
+      "tag": "[throat-clear]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/035_val_throat-clear.wav",
+      "overfit_index": 35
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_laughing_005_ex03_laughing_css006.wav",
+      "text": "Yeah, [groan] like I'm trying to walk over to you, but there's like so many people here. All right.",
+      "duration": 6.67,
+      "tag": "[groan]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/036_val_groan.wav",
+      "overfit_index": 36
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css006.wav",
+      "text": "else or something that got in there. [groan]",
+      "duration": 3.09,
+      "tag": "[groan]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/037_val_groan.wav",
+      "overfit_index": 37
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_005_ex03_disgusted_css029.wav",
+      "text": "I don't think I can do it. [groan]",
+      "duration": 4.18,
+      "tag": "[groan]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/038_val_groan.wav",
+      "overfit_index": 38
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_disgusted_007_ex03_disgusted_css027.wav",
+      "text": "[groan] This is so disgusting.",
+      "duration": 3.34,
+      "tag": "[groan]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/039_val_groan.wav",
+      "overfit_index": 39
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_laughing_008_ex03_laughing_css004.wav",
+      "text": "Okay. [laughing] kay",
+      "duration": 2.26,
+      "tag": "[laughing]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/040_val_laughing.wav",
+      "overfit_index": 40
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id01489_V_Hte14dHj0_00170.wav",
+      "text": "So I hope they see what we can do. [laughing] We can give jobs.",
+      "duration": 4.288,
+      "tag": "[laughing]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/041_val_laughing.wav",
+      "overfit_index": 41
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_awe_001_ex02_awe_css014.wav",
+      "text": "Yeah. [laughing] Is there anything for you?",
+      "duration": 4.09,
+      "tag": "[laughing]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/042_val_laughing.wav",
+      "overfit_index": 42
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex03_default_006_ex03_default_css007.wav",
+      "text": "and I'm like, and I'm smiling. [laughing]",
+      "duration": 6.0,
+      "tag": "[laughing]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/043_val_laughing.wav",
+      "overfit_index": 43
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_disgusted_001_ex02_disgusted_css006.wav",
+      "text": "Nope, no, no, no, that was just boiled chicken, baby. [sigh] That was... Sorry.",
+      "duration": 6.41,
+      "tag": "[sigh]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/044_val_sigh.wav",
+      "overfit_index": 44
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex04_ex02_happy_013_ex02_happy_css006.wav",
+      "text": "We're going to stop in Havana. Of course we're going to stop in Havana. [sigh]",
+      "duration": 3.47,
+      "tag": "[sigh]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/045_val_sigh.wav",
+      "overfit_index": 45
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/id11240_dRbaSN2_vLQ_00001.wav",
+      "text": "Um, [sigh] well, I haven't undergone quite as dramatic a transformation.",
+      "duration": 4.04,
+      "tag": "[sigh]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/046_val_sigh.wav",
+      "overfit_index": 46
+    },
+    {
+      "audio": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/wavs/ex03_ex01_nonverbal_008_ex03_nonverbal_css000.wav",
+      "text": "[sigh] We made it.",
+      "duration": 3.47,
+      "tag": "[sigh]",
+      "split": "val",
+      "original": "/run/media/pc/disk1/text-to-speech/finetune/data-nvv/heldout/originals/047_val_sigh.wav",
+      "overfit_index": 47
+    }
+  ]
+}
